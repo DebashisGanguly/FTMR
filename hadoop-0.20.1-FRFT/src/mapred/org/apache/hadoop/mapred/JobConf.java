@@ -947,7 +947,61 @@ public class JobConf extends Configuration {
     setBoolean("mapred.reduce.tasks.speculative.execution", 
                speculativeExecution);
   }
+    
+  /**
+   * Get the number of faults that can be handled by mappers.
+   * Defaults to <code>1</code>.
+   *
+   * @return the number of faults to be tolerated.
+   */
+  public int getNumMapFaults() { return getInt("mapred.map.tasks.fault.tolerance", 1); }
+    
+  /**
+   * Set the number of faults that can be handled by mappers.
+   *
+   * @param f is the number of  faults to be tolerated by map tasks for this job.
+   */
+  public void setNumMapFaults(int f) {
+      return setInt("mapred.map.tasks.fault.tolerance", f);
+  }
+    
+  /**
+   * Get the nature of faults that can be handled by mappers.
+   * 1 - fail-stop errors or crash faults,
+   * 2 - silent-data errors or Byzantine faults,
+   * 3 - both of the above.
+   * Defaults to <code>2</code>.
+   *
+   * @return the nature of faults to be tolerated.
+   */
+  public int getNatureMapFaults() { return getInt("mapred.map.tasks.fault.nature", 2); }
+    
+  /**
+   * Set the nature of faults that can be handled by mappers.
+   *
+   * @param nature is the nature of faults to be tolerated.
+   */
+  public void setNatureMapFaults(int nature) {
+      return setInt("mapred.map.tasks.fault.nature", nature);
+  }
+    
+  /**
+   * Get whether to emulate faults in mappers or not.
+   * Defaults to <code>false</code>.
+   *
+   * @return whether faults to be injected in mappers.
+   */
+   public int getMapFaultInjection() { return getBoolean("mapred.map.tasks.fault.inject", false); }
 
+  /**
+   * Set whether to emulate faults in mappers or not.
+   *
+   * @param inject denotes whether faults to be injected in mappers.
+   */
+   public void setMapFaultInjection(boolean inject) {
+       return setBoolean("mapred.map.tasks.fault.inject", false);
+   }
+    
   /**
    * Get configured the number of reduce tasks for this job.
    * Defaults to <code>1</code>.
