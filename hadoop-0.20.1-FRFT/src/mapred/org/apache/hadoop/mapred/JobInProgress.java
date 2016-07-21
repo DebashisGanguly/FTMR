@@ -210,6 +210,27 @@ class JobInProgress {
 
   private Object schedulingInfo;
 
+  //declare variables related to fault-tolerance scheme
+  private static enum NatureOfFaults {
+    FAIL_STOP,
+    SILENT_ERROR;
+        
+    public static NatureOfFaults fromInteger(int nature) {
+        switch (nature) {
+            case 1:
+                return FAIL_STOP;
+            case 2:
+                return SILENT_ERROR;
+        }
+        return null;
+    }
+  }
+    
+  private int numberOfFaults;
+  private NatureOfFaults natureOfFaults;
+  private int numberOfReplicas;
+  private int replicatedNumMapTasks;
+  private boolean injectFaults;
   
   /**
    * Create an almost empty JobInProgress, which can be used only for tests
@@ -223,6 +244,13 @@ class JobInProgress {
     this.anyCacheLevel = this.maxLevel+1;
     this.jobtracker = null;
     this.restartCount = 0;
+      
+    //set variables related to fault-tolerance scheme
+    this.numberOfFaults = conf.getNumMapFaults();
+    this.natureOfFaults = NatureOfFaults.fromInteger(conf.getNatureMapFaults());
+    this.numberOfReplicas = this.natureOfFaults == NatureOfFaults.FAIL_STOP ? numberOfFaults + 1 : 2 * numberOfFaults +1;
+    this.replicatedNumMapTasks = this.numberOfReplicas * numMapTasks;
+    this.injectFaults = conf.getMapFaultInjection();
   }
   
   /**
@@ -269,8 +297,16 @@ class JobInProgress {
 
     this.numMapTasks = conf.getNumMapTasks();
     this.numReduceTasks = conf.getNumReduceTasks();
+      
+    //set variables related to fault-tolerance scheme
+    this.numberOfFaults = conf.getNumMapFaults();
+    this.natureOfFaults = NatureOfFaults.fromInteger(conf.getNatureMapFaults());
+    this.numberOfReplicas = this.natureOfFaults == NatureOfFaults.FAIL_STOP ? numberOfFaults + 1 : 2 * numberOfFaults +1;
+    this.replicatedNumMapTasks = this.numberOfReplicas * numMapTasks;
+    this.injectFaults = conf.getMapFaultInjection();
+      
     this.taskCompletionEvents = new ArrayList<TaskCompletionEvent>
-       (numMapTasks + numReduceTasks + 10);
+       (replicatedNumMapTasks + numReduceTasks + 10);
 
     this.mapFailuresPercent = conf.getMaxMapTaskFailuresPercent();
     this.reduceFailuresPercent = conf.getMaxReduceTaskFailuresPercent();
@@ -281,7 +317,7 @@ class JobInProgress {
     this.jobMetrics.setTag("sessionId", conf.getSessionId());
     this.jobMetrics.setTag("jobName", conf.getJobName());
     this.jobMetrics.setTag("jobId", jobid.toString());
-    hasSpeculativeMaps = conf.getMapSpeculativeExecution();
+    hasSpeculativeMaps = this.numberOfFaults > 0 ? false :conf.getMapSpeculativeExecution(); //disable speculative map execution
     hasSpeculativeReduces = conf.getReduceSpeculativeExecution();
     this.maxLevel = jobtracker.getNumTaskCacheLevels();
     this.anyCacheLevel = this.maxLevel+1;
@@ -341,10 +377,15 @@ class JobInProgress {
     for (int i = 0; i < splits.length; i++) {
       String[] splitLocations = splits[i].getLocations();
       if (splitLocations.length == 0) {
-        nonLocalMaps.add(maps[i]);
+        for(int replica = 0; replica < numberOfReplicas; replica++) {
+            int idx = replica + (numberOfReplicas * i);
+            nonLocalMaps.add(maps[idx]);
+        }
         continue;
       }
 
+      int replica = 0;
+        
       for(String host: splitLocations) {
         Node node = jobtracker.resolveAndAddToTopology(host);
         LOG.info("tip:" + maps[i].getTIPId() + " has split on node:" + node);
@@ -360,11 +401,16 @@ class JobInProgress {
           //the rack contain the input for a tip. Note that if it already
           //exists in the hostMaps, it must be the last element there since
           //we process one TIP at a time sequentially in the split-size order
-          if (hostMaps.get(hostMaps.size() - 1) != maps[i]) {
-            hostMaps.add(maps[i]);
+            
+          int idx = replica + (numberOfReplicas * i);
+            
+          if (hostMaps.get(hostMaps.size() - 1) != maps[idx]) {
+            hostMaps.add(maps[idx]);
           }
           node = node.getParent();
         }
+          
+        replica++;
       }
     }
     return cache;
@@ -423,26 +469,32 @@ class JobInProgress {
       splitFile.close();
     }
     numMapTasks = splits.length;
+    replicatedNumMapTasks = numberOfReplicas * numMapTasks;
 
 
     // if the number of splits is larger than a configured value
     // then fail the job.
     int maxTasks = jobtracker.getMaxTasksPerJob();
-    if (maxTasks > 0 && numMapTasks + numReduceTasks > maxTasks) {
+    if (maxTasks > 0 && replicatedNumMapTasks + numReduceTasks > maxTasks) {
       throw new IOException(
                 "The number of tasks for this job " + 
-                (numMapTasks + numReduceTasks) +
+                (replicatedNumMapTasks + numReduceTasks) +
                 " exceeds the configured limit " + maxTasks);
     }
     jobtracker.getInstrumentation().addWaiting(
-        getJobID(), numMapTasks + numReduceTasks);
+        getJobID(), replicatedNumMapTasks + numReduceTasks);
 
-    maps = new TaskInProgress[numMapTasks];
+    maps = new TaskInProgress[replicatedNumMapTasks];
     for(int i=0; i < numMapTasks; ++i) {
       inputLength += splits[i].getDataLength();
-      maps[i] = new TaskInProgress(jobId, jobFile, 
+      
+      for (int j = 0; j < numberOfReplicas; j++) {
+          int idx = (i * numberOfReplicas) + j;
+      
+          maps[idx] = new TaskInProgress(jobId, jobFile,
                                    splits[i], 
-                                   jobtracker, conf, this, i);
+                                   jobtracker, conf, this, i, j);
+      }
     }
     LOG.info("Input size for job " + jobId + " = " + inputLength
         + ". Number of splits = " + splits.length);
@@ -466,7 +518,7 @@ class JobInProgress {
 
     // Calculate the minimum number of maps to be complete before 
     // we should start scheduling reduces
-    completedMapsForReduceSlowstart = 
+    completedMapsForReduceSlowstart = this.numberOfFaults > 0 ? replicatedNumMapTasks :
       (int)Math.ceil(
           (conf.getFloat("mapred.reduce.slowstart.completed.maps", 
                          DEFAULT_COMPLETED_MAPS_PERCENT_FOR_REDUCE_SLOWSTART) * 
@@ -479,11 +531,11 @@ class JobInProgress {
     // split.
     JobClient.RawSplit emptySplit = new JobClient.RawSplit();
     cleanup[0] = new TaskInProgress(jobId, jobFile, emptySplit, 
-            jobtracker, conf, this, numMapTasks);
+            jobtracker, conf, this, replicatedNumMapTasks);
     cleanup[0].setJobCleanupTask();
 
     // cleanup reduce tip.
-    cleanup[1] = new TaskInProgress(jobId, jobFile, numMapTasks,
+    cleanup[1] = new TaskInProgress(jobId, jobFile, replicatedNumMapTasks,
                        numReduceTasks, jobtracker, conf, this);
     cleanup[1].setJobCleanupTask();
 
@@ -493,11 +545,11 @@ class JobInProgress {
     // setup map tip. This map doesn't use any split. Just assign an empty
     // split.
     setup[0] = new TaskInProgress(jobId, jobFile, emptySplit, 
-            jobtracker, conf, this, numMapTasks + 1 );
+            jobtracker, conf, this, replicatedNumMapTasks + 1 );
     setup[0].setJobSetupTask();
 
     // setup reduce tip.
-    setup[1] = new TaskInProgress(jobId, jobFile, numMapTasks,
+    setup[1] = new TaskInProgress(jobId, jobFile, replicatedNumMapTasks,
                        numReduceTasks + 1, jobtracker, conf, this);
     setup[1].setJobSetupTask();
     
@@ -510,7 +562,7 @@ class JobInProgress {
     
     tasksInited.set(true);
     JobHistory.JobInfo.logInited(profile.getJobID(), this.launchTime, 
-                                 numMapTasks, numReduceTasks);
+                                 replicatedNumMapTasks, numReduceTasks);
   }
 
   /////////////////////////////////////////////////////
@@ -532,7 +584,7 @@ class JobInProgress {
     return finishTime;
   }
   public int desiredMaps() {
-    return numMapTasks;
+    return replicatedNumMapTasks;
   }
   public synchronized int finishedMaps() {
     return finishedMapTasks;
@@ -550,7 +602,7 @@ class JobInProgress {
     return finishedReduceTasks;
   }
   public synchronized int pendingMaps() {
-    return numMapTasks - runningMapTasks - failedMapTIPs - 
+    return replicatedNumMapTasks - runningMapTasks - failedMapTIPs -
     finishedMapTasks + speculativeMapTasks;
   }
   public synchronized int pendingReduces() {
@@ -1117,7 +1169,7 @@ class JobInProgress {
     }
     // Check if all maps and reducers have finished.
     boolean launchCleanupTask = 
-        ((finishedMapTasks + failedMapTIPs) == (numMapTasks));
+        ((finishedMapTasks + failedMapTIPs) == (replicatedNumMapTasks));
     if (launchCleanupTask) {
       launchCleanupTask = 
         ((finishedReduceTasks + failedReduceTIPs) == numReduceTasks);

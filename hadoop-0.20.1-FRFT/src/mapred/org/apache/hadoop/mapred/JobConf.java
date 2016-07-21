@@ -968,8 +968,7 @@ public class JobConf extends Configuration {
   /**
    * Get the nature of faults that can be handled by mappers.
    * 1 - fail-stop errors or crash faults,
-   * 2 - silent-data errors or Byzantine faults,
-   * 3 - both of the above.
+   * 2 - silent-data errors or Byzantine faults.
    * Defaults to <code>2</code>.
    *
    * @return the nature of faults to be tolerated.
@@ -991,7 +990,7 @@ public class JobConf extends Configuration {
    *
    * @return whether faults to be injected in mappers.
    */
-   public int getMapFaultInjection() { return getBoolean("mapred.map.tasks.fault.inject", false); }
+   public boolean getMapFaultInjection() { return getBoolean("mapred.map.tasks.fault.inject", false); }
 
   /**
    * Set whether to emulate faults in mappers or not.
