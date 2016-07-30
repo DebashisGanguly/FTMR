@@ -962,7 +962,7 @@ public class JobConf extends Configuration {
    * @param f is the number of  faults to be tolerated by map tasks for this job.
    */
   public void setNumMapFaults(int f) {
-      return setInt("mapred.map.tasks.fault.tolerance", f);
+      setInt("mapred.map.tasks.fault.tolerance", f);
   }
     
   /**
@@ -981,7 +981,7 @@ public class JobConf extends Configuration {
    * @param nature is the nature of faults to be tolerated.
    */
   public void setNatureMapFaults(int nature) {
-      return setInt("mapred.map.tasks.fault.nature", nature);
+       setInt("mapred.map.tasks.fault.nature", nature);
   }
     
   /**
@@ -998,7 +998,7 @@ public class JobConf extends Configuration {
    * @param inject denotes whether faults to be injected in mappers.
    */
    public void setMapFaultInjection(boolean inject) {
-       return setBoolean("mapred.map.tasks.fault.inject", false);
+       setBoolean("mapred.map.tasks.fault.inject", false);
    }
     
   /**

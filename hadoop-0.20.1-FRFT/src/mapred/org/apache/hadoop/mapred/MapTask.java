@@ -66,6 +66,11 @@ import org.apache.hadoop.util.QuickSort;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.apache.hadoop.util.StringUtils;
 
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.io.ByteArrayOutputStream;
+import java.security.MessageDigest;
+
 /** A Map task. */
 class MapTask extends Task {
   /**
@@ -1174,7 +1179,7 @@ class MapTask extends Task {
       //buffer + header lengths for the partitions
       long size = (bufend >= bufstart
           ? bufend - bufstart
-          : (bufvoid - bufend) + bufstart) +
+          : (bufvoid - bufstart) + bufend) +
                   partitions * APPROX_HEADER_LENGTH;
       FSDataOutputStream out = null;
       try {
@@ -1393,6 +1398,49 @@ class MapTask extends Task {
       public void close() { }
     }
 
+    private String generateHash(Path finalOutputFile, SpillRecord spillRec) throws IOException {
+      byte[] bytes = Files.readAllBytes(Paths.get(finalOutputFile.toString()));
+      return generateHash(bytes, spillRec);
+    }
+    
+    private String generateHash(byte[] bytes, SpillRecord spillRec) throws IOException {
+      ByteArrayOutputStream bos = new ByteArrayOutputStream();
+          
+      for(int spillIdx=0; spillIdx<spillRec.size(); spillIdx++) {
+        IndexRecord index = spillRec.getIndex(spillIdx);
+        if(codec != null) {
+          bos.write(bytes, (int) index.startOffset, (int) index.partLength);
+        } else {
+          bos.write(bytes, (int) index.startOffset, (int) index.rawLength);
+        }
+      }
+        
+      byte[] digest = null;
+        
+      try {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        md.update(bos.toByteArray());
+        digest = md.digest();
+      }catch(Exception exc) { }
+      
+      StringBuilder sb = new StringBuilder();
+        
+      for (int i = 0; digest != null && i < digest.length; i++) {
+        if ((0xff & digest[i]) < 0x10) {
+          sb.append("0").append(Integer.toHexString((0xFF & digest[i])));
+        } else {
+          sb.append(Integer.toHexString(0xFF & digest[i]));
+        }
+      }
+          
+      return sb.toString();
+    }
+      
+    private void sendDigest(String digest) throws IOException {
+      //if(digest != null)
+        //umbilical.sendDigest(getTaskID(), digest);
+    }
+      
     private void mergeParts() throws IOException, InterruptedException, 
                                      ClassNotFoundException {
       // get the approximate size of the final output/index files
@@ -1401,20 +1449,35 @@ class MapTask extends Task {
       final Path[] filename = new Path[numSpills];
       final TaskAttemptID mapId = getTaskID();
 
+      String hash = null;
+
       for(int i = 0; i < numSpills; i++) {
         filename[i] = mapOutputFile.getSpillFile(mapId, i);
         finalOutFileSize += rfs.getFileStatus(filename[i]).getLen();
       }
       if (numSpills == 1) { //the spill is the final output
-        rfs.rename(filename[0],
-            new Path(filename[0].getParent(), "file.out"));
+        Path finalOutputFile = new Path(filename[0].getParent(), "file.out");
+        rfs.rename(filename[0], finalOutputFile);
+          
         if (indexCacheList.size() == 0) {
-          rfs.rename(mapOutputFile.getSpillIndexFile(mapId, 0),
+          Path spillIndexFile = mapOutputFile.getSpillIndexFile(mapId, 0);
+          SpillRecord spillRecord = new SpillRecord(spillIndexFile, job);
+          
+          hash = generateHash(finalOutputFile, spillRecord);
+            
+          rfs.rename(spillIndexFile,
               new Path(filename[0].getParent(),"file.out.index"));
         } else {
-          indexCacheList.get(0).writeToFile(
+          SpillRecord spillRecord = indexCacheList.get(0);
+            
+          hash = generateHash(finalOutputFile, spillRecord);
+        
+          spillRecord.writeToFile(
                 new Path(filename[0].getParent(),"file.out.index"), job);
         }
+          
+        sendDigest(hash);
+          
         return;
       }
 
@@ -1452,6 +1515,9 @@ class MapTask extends Task {
             sr.putIndex(rec, i);
           }
           sr.writeToFile(finalIndexFile, job);
+            
+          hash = generateHash(new byte[0], sr);
+          sendDigest(hash);
         } finally {
           finalOut.close();
         }
@@ -1460,6 +1526,7 @@ class MapTask extends Task {
       {
         IndexRecord rec = new IndexRecord();
         final SpillRecord spillRec = new SpillRecord(partitions);
+          
         for (int parts = 0; parts < partitions; parts++) {
           //create the segments to be merged
           List<Segment<K,V>> segmentList =
@@ -1514,6 +1581,9 @@ class MapTask extends Task {
         for(int i = 0; i < numSpills; i++) {
           rfs.delete(filename[i],true);
         }
+         
+        hash = generateHash(finalOutputFile, spillRec);
+        sendDigest(hash);
       }
     }
 

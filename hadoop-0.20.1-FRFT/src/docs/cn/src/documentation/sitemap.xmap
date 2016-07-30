@@ -21,7 +21,7 @@
       <map:serializer name="fo2pdf"
                 src="org.apache.cocoon.serialization.FOPSerializer"
                 mime-type="application/pdf">
-        <user-config src="/home/oom/work/eclipse/hadoop-20/src/docs/cn/uming.conf"/>
+        <user-config src="/Users/DebashisGanguly/Dropbox/Summer15Research/MapReduce/FTMR/hadoop-0.20.1-FRFT/src/docs/cn/uming.conf"/>
         </map:serializer>
     </map:serializers>
   </map:components>
