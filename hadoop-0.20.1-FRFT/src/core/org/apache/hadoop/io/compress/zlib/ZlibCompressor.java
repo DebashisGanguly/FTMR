@@ -52,7 +52,7 @@ public class ZlibCompressor implements Compressor {
   /**
    * The compression level for zlib library.
    */
-  public static enum CompressionLevel {
+  public enum CompressionLevel {
     /**
      * Compression level for no compression.
      */
@@ -83,12 +83,12 @@ public class ZlibCompressor implements Compressor {
     int compressionLevel() {
       return compressionLevel;
     }
-  };
-  
+  }
+
   /**
    * The compression level for zlib library.
    */
-  public static enum CompressionStrategy {
+  public enum CompressionStrategy {
     /**
      * Compression strategy best used for data consisting mostly of small
      * values with a somewhat random distribution. Forces more Huffman coding
@@ -128,12 +128,12 @@ public class ZlibCompressor implements Compressor {
     int compressionStrategy() {
       return compressionStrategy;
     }
-  };
+  }
 
   /**
    * The type of header for compressed data.
    */
-  public static enum CompressionHeader {
+  public enum CompressionHeader {
     /**
      * No headers/trailers/checksums.
      */

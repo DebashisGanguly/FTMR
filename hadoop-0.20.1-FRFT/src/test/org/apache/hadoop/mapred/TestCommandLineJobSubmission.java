@@ -81,8 +81,8 @@ public class TestCommandLineJobSubmission extends TestCase {
       f.delete();
       thisbuildDir.delete();
     } finally {
-      if (dfs != null) {dfs.shutdown();};
-      if (mr != null) {mr.shutdown();};
+      if (dfs != null) {dfs.shutdown();}
+      if (mr != null) {mr.shutdown();}
     }
   }
   

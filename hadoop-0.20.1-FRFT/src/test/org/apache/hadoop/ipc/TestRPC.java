@@ -56,7 +56,7 @@ public class TestRPC extends TestCase {
   public TestRPC(String name) { super(name); }
 	
   public interface TestProtocol extends VersionedProtocol {
-    public static final long versionID = 1L;
+    long versionID = 1L;
     
     void ping() throws IOException;
     void slowPing(boolean shouldSlow) throws IOException;
@@ -300,13 +300,13 @@ public class TestRPC extends TestCase {
 
     // try some multi-calls
     Method echo =
-      TestProtocol.class.getMethod("echo", new Class[] { String.class });
+      TestProtocol.class.getMethod("echo", String.class);
     String[] strings = (String[])RPC.call(echo, new String[][]{{"a"},{"b"}},
                                           new InetSocketAddress[] {addr, addr}, conf);
     assertTrue(Arrays.equals(strings, new String[]{"a","b"}));
 
-    Method ping = TestProtocol.class.getMethod("ping", new Class[] {});
-    Object[] voids = (Object[])RPC.call(ping, new Object[][]{{},{}},
+    Method ping = TestProtocol.class.getMethod("ping");
+    Object[] voids = RPC.call(ping, new Object[][]{{},{}},
                                         new InetSocketAddress[] {addr, addr}, conf);
     assertEquals(voids, null);
     } finally {

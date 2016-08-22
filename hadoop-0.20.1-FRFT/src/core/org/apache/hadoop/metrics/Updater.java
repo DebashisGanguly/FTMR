@@ -28,6 +28,6 @@ public interface Updater {
   /**
    * Timer-based call-back from the metric library. 
    */
-  public abstract void doUpdates(MetricsContext context);
+  void doUpdates(MetricsContext context);
 
 }

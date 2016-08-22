@@ -26,7 +26,7 @@ enum Status {
   FATAL (-1);
   
   int state;
-  private Status(int state) {
+  Status(int state) {
     this.state = state;
   }
 }

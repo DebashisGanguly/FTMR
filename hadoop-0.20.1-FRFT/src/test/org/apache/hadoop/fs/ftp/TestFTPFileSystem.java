@@ -18,6 +18,7 @@
 package org.apache.hadoop.fs.ftp;
 
 import java.net.URI;
+
 import junit.framework.TestCase;
 
 import org.apache.ftpserver.DefaultFtpServerContext;
@@ -28,10 +29,10 @@ import org.apache.ftpserver.listener.mina.MinaListener;
 import org.apache.ftpserver.usermanager.BaseUser;
 import org.apache.ftpserver.usermanager.WritePermission;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hdfs.DFSTestUtil;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hdfs.DFSTestUtil;
 import org.apache.hadoop.mapred.JobConf;
 
 /**

@@ -113,7 +113,7 @@ public class LoadGenerator extends Configured implements Tool {
   final private String hostname;
   
   /** Constructor */
-  public LoadGenerator() throws IOException, UnknownHostException {
+  public LoadGenerator() throws IOException {
     InetAddress addr = InetAddress.getLocalHost();
     hostname = addr.getHostName();
   }

@@ -60,7 +60,7 @@ abstract class INode implements Comparable<byte[]> {
   //Other codes should not modify it.
   private long permission;
 
-  private static enum PermissionStatusFormat {
+  private enum PermissionStatusFormat {
     MODE(0, 16),
     GROUP(MODE.OFFSET + MODE.LENGTH, 25),
     USER(GROUP.OFFSET + GROUP.LENGTH, 23);

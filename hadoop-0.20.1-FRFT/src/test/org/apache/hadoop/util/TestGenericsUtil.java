@@ -58,7 +58,7 @@ public class TestGenericsUtil extends TestCase {
   public void testWithEmptyList2() {
     List<String> list = new ArrayList<String>();
     //this method should not throw IndexOutOfBoundsException
-    String[] arr = GenericsUtil.<String>toArray(String.class, list);
+    String[] arr = GenericsUtil.toArray(String.class, list);
     
     assertEquals(0, arr.length);
   }

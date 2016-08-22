@@ -31,5 +31,5 @@ public interface Progressable {
   /**
    * Report progress to the Hadoop framework.
    */
-  public void progress();
+  void progress();
 }

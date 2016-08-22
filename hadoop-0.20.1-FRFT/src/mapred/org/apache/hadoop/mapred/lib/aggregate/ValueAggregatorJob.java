@@ -80,8 +80,8 @@ import org.apache.hadoop.util.GenericOptionsParser;
  */
 public class ValueAggregatorJob {
 
-  public static JobControl createValueAggregatorJobs(String args[]
-    , Class<? extends ValueAggregatorDescriptor>[] descriptors) throws IOException {
+  public static JobControl createValueAggregatorJobs(String args[],
+		  Class<? extends ValueAggregatorDescriptor>[] descriptors) throws IOException {
     
     JobControl theControl = new JobControl("ValueAggregatorJobs");
     ArrayList<Job> dependingJobs = new ArrayList<Job>();
@@ -129,8 +129,7 @@ public class ValueAggregatorJob {
       numOfReducers = Integer.parseInt(args[2]);
     }
 
-    Class<? extends InputFormat> theInputFormat =
-      TextInputFormat.class;
+    Class<? extends InputFormat> theInputFormat = TextInputFormat.class;
     if (args.length > 3 && 
         args[3].compareToIgnoreCase("textinputformat") == 0) {
       theInputFormat = TextInputFormat.class;
@@ -168,6 +167,7 @@ public class ValueAggregatorJob {
     
     theJob.setMapperClass(ValueAggregatorMapper.class);
     FileOutputFormat.setOutputPath(theJob, new Path(outputDir));
+    FileOutputFormat.setOutputDigestsPath(theJob, new Path(outputDir));
     theJob.setOutputFormat(TextOutputFormat.class);
     theJob.setMapOutputKeyClass(Text.class);
     theJob.setMapOutputValueClass(Text.class);

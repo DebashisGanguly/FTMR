@@ -94,7 +94,7 @@ public abstract class Storage extends StorageInfo {
     RECOVER_ROLLBACK,
     COMPLETE_CHECKPOINT,
     RECOVER_CHECKPOINT,
-    NORMAL;
+    NORMAL
   }
   
   /**
@@ -103,8 +103,8 @@ public abstract class Storage extends StorageInfo {
    * this interface.
    */
   public interface StorageDirType {
-    public StorageDirType getStorageDirType();
-    public boolean isOfType(StorageDirType type);
+    StorageDirType getStorageDirType();
+    boolean isOfType(StorageDirType type);
   }
   
   private NodeType storageType;    // Type of the node using this storage 

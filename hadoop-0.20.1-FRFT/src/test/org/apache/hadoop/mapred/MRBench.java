@@ -43,8 +43,8 @@ public class MRBench {
   private static Path INPUT_DIR = new Path(BASE_DIR, "mr_input");
   private static Path OUTPUT_DIR = new Path(BASE_DIR, "mr_output");
   
-  public static enum Order {RANDOM, ASCENDING, DESCENDING}; 
-  
+  public enum Order {RANDOM, ASCENDING, DESCENDING}
+
   /**
    * Takes input format as text lines, runs some processing on it and 
    * writes out data as text again. 

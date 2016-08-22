@@ -17,6 +17,9 @@
  */
 package org.apache.hadoop.mapred;
 
+import org.apache.hadoop.fs.*;
+import org.apache.hadoop.io.IOUtils;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
@@ -25,129 +28,123 @@ import java.util.zip.CheckedInputStream;
 import java.util.zip.CheckedOutputStream;
 import java.util.zip.Checksum;
 
-import org.apache.hadoop.fs.ChecksumException;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FSDataOutputStream;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IOUtils;
-
 import static org.apache.hadoop.mapred.MapTask.MAP_OUTPUT_INDEX_RECORD_LENGTH;
+
 
 class SpillRecord {
 
-  /** Backing store */
-  private final ByteBuffer buf;
-  /** View of backing storage as longs */
-  private final LongBuffer entries;
+	/** Backing store */
+	private final ByteBuffer buf;
 
-  public SpillRecord(int numPartitions) {
-    buf = ByteBuffer.allocate(
-        numPartitions * MapTask.MAP_OUTPUT_INDEX_RECORD_LENGTH);
-    entries = buf.asLongBuffer();
-  }
+	/** View of backing storage as longs */
+	private final LongBuffer entries;
 
-  public SpillRecord(Path indexFileName, JobConf job) throws IOException {
-    this(indexFileName, job, new CRC32());
-  }
+	public SpillRecord(int numPartitions) {
+		buf = ByteBuffer.allocate(numPartitions * MapTask.MAP_OUTPUT_INDEX_RECORD_LENGTH);
+		entries = buf.asLongBuffer();
+	}
 
-  public SpillRecord(Path indexFileName, JobConf job, Checksum crc)
-      throws IOException {
+	public SpillRecord(Path indexFileName, JobConf job) throws IOException {
+		this(indexFileName, job, new CRC32());
+	}
 
-    final FileSystem rfs = FileSystem.getLocal(job).getRaw();
-    final FSDataInputStream in = rfs.open(indexFileName);
-    try {
-      final long length = rfs.getFileStatus(indexFileName).getLen();
-      final int partitions = (int) length / MAP_OUTPUT_INDEX_RECORD_LENGTH;
-      final int size = partitions * MAP_OUTPUT_INDEX_RECORD_LENGTH;
+	public SpillRecord(Path indexFileName, JobConf job, Checksum crc)
+	throws IOException {
 
-      buf = ByteBuffer.allocate(size);
-      if (crc != null) {
-        crc.reset();
-        CheckedInputStream chk = new CheckedInputStream(in, crc);
-        IOUtils.readFully(chk, buf.array(), 0, size);
-        if (chk.getChecksum().getValue() != in.readLong()) {
-          throw new ChecksumException("Checksum error reading spill index: " +
-                                indexFileName, -1);
-        }
-      } else {
-        IOUtils.readFully(in, buf.array(), 0, size);
-      }
-      entries = buf.asLongBuffer();
-    } finally {
-      in.close();
-    }
-  }
+		final FileSystem rfs = FileSystem.getLocal(job).getRaw();
+		final FSDataInputStream in = rfs.open(indexFileName);
+		try {
+			final long length = rfs.getFileStatus(indexFileName).getLen();
+			final int partitions = (int) length / MAP_OUTPUT_INDEX_RECORD_LENGTH;
+			final int size = partitions * MAP_OUTPUT_INDEX_RECORD_LENGTH;
 
-  /**
-   * Return number of IndexRecord entries in this spill.
-   */
-  public int size() {
-    return entries.capacity() / (MapTask.MAP_OUTPUT_INDEX_RECORD_LENGTH / 8);
-  }
+			buf = ByteBuffer.allocate(size);
+			if (crc != null) {
+				crc.reset();
+				CheckedInputStream chk = new CheckedInputStream(in, crc);
+				IOUtils.readFully(chk, buf.array(), 0, size);
+				if (chk.getChecksum().getValue() != in.readLong()) {
+					throw new ChecksumException("Checksum error reading spill index: " + indexFileName, -1);
+				}
+			} else {
+				IOUtils.readFully(in, buf.array(), 0, size);
+			}
+			entries = buf.asLongBuffer();
+		} finally {
+			in.close();
+		}
+	}
 
-  /**
-   * Get spill offsets for given partition.
-   */
-  public IndexRecord getIndex(int partition) {
-    final int pos = partition * MapTask.MAP_OUTPUT_INDEX_RECORD_LENGTH / 8;
-    return new IndexRecord(entries.get(pos), entries.get(pos + 1),
-                           entries.get(pos + 2));
-  }
+	/**
+	 * Return number of IndexRecord entries in this spill.
+	 */
+	public int size() {
+		return entries.capacity() / (MapTask.MAP_OUTPUT_INDEX_RECORD_LENGTH / 8);
+	}
 
-  /**
-   * Set spill offsets for given partition.
-   */
-  public void putIndex(IndexRecord rec, int partition) {
-    final int pos = partition * MapTask.MAP_OUTPUT_INDEX_RECORD_LENGTH / 8;
-    entries.put(pos, rec.startOffset);
-    entries.put(pos + 1, rec.rawLength);
-    entries.put(pos + 2, rec.partLength);
-  }
+	/**
+	 * Get spill offsets for given partition.
+	 */
+	public IndexRecord getIndex(int partition) {
+		final int pos = partition * MapTask.MAP_OUTPUT_INDEX_RECORD_LENGTH / 8;
+		return new IndexRecord(entries.get(pos), entries.get(pos + 1), entries.get(pos + 2));
+	}
 
-  /**
-   * Write this spill record to the location provided.
-   */
-  public void writeToFile(Path loc, JobConf job)
-      throws IOException {
-    writeToFile(loc, job, new CRC32());
-  }
+	/**
+	 * Set spill offsets for given partition.
+	 */
+	public void putIndex(IndexRecord rec, int partition) {
+		final int pos = partition * MapTask.MAP_OUTPUT_INDEX_RECORD_LENGTH / 8;
+		entries.put(pos, rec.startOffset);
+		entries.put(pos + 1, rec.rawLength);
+		entries.put(pos + 2, rec.partLength);
+	}
 
-  public void writeToFile(Path loc, JobConf job, Checksum crc)
-      throws IOException {
-    final FileSystem rfs = FileSystem.getLocal(job).getRaw();
-    CheckedOutputStream chk = null;
-    final FSDataOutputStream out = rfs.create(loc);
-    try {
-      if (crc != null) {
-        crc.reset();
-        chk = new CheckedOutputStream(out, crc);
-        chk.write(buf.array());
-        out.writeLong(chk.getChecksum().getValue());
-      } else {
-        out.write(buf.array());
-      }
-    } finally {
-      if (chk != null) {
-        chk.close();
-      } else {
-        out.close();
-      }
-    }
-  }
+	/**
+	 * Write this spill record to the location provided.
+	 */
+	public void writeToFile(Path loc, JobConf job)
+	throws IOException {
+		writeToFile(loc, job, new CRC32());
+	}
+
+	public void writeToFile(Path loc, JobConf job, Checksum crc)
+	throws IOException {
+		final FileSystem rfs = FileSystem.getLocal(job).getRaw();
+		CheckedOutputStream chk = null;
+		final FSDataOutputStream out = rfs.create(loc);
+		try {
+			if (crc != null) {
+				crc.reset();
+				chk = new CheckedOutputStream(out, crc);
+				chk.write(buf.array());
+				out.writeLong(chk.getChecksum().getValue());
+			} else {
+				out.write(buf.array());
+			}
+		} finally {
+			if (chk != null) {
+				chk.close();
+			} else {
+				out.close();
+			}
+		}
+	}
 
 }
 
 class IndexRecord {
-  long startOffset;
-  long rawLength;
-  long partLength;
+	long startOffset;
+	long rawLength;
+	long partLength;
+	boolean compressOutput;
+	String compressType;
 
-  public IndexRecord() { }
+	public IndexRecord() { }
 
-  public IndexRecord(long startOffset, long rawLength, long partLength) {
-    this.startOffset = startOffset;
-    this.rawLength = rawLength;
-    this.partLength = partLength;
-  }
+	public IndexRecord(long startOffset, long rawLength, long partLength) {
+		this.startOffset = startOffset;
+		this.rawLength = rawLength;
+		this.partLength = partLength;
+	}
 }

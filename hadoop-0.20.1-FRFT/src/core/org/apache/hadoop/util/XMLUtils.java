@@ -39,7 +39,7 @@ public class XMLUtils {
   public static void transform(
                                InputStream styleSheet, InputStream xml, Writer out
                                ) 
-    throws TransformerConfigurationException, TransformerException {
+    throws TransformerException {
     // Instantiate a TransformerFactory
     TransformerFactory tFactory = TransformerFactory.newInstance();
 

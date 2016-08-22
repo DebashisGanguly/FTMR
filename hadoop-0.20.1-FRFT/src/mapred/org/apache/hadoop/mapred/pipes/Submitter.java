@@ -25,15 +25,12 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.OptionGroup;
-import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.Parser;
@@ -406,15 +403,17 @@ public class Submitter extends Configured implements Tool {
       JobConf job = new JobConf(getConf());
       
       if (results.hasOption("input")) {
-        FileInputFormat.setInputPaths(job, 
-                          (String) results.getOptionValue("input"));
+        FileInputFormat.setInputPaths(job,
+                results.getOptionValue("input"));
       }
       if (results.hasOption("output")) {
         FileOutputFormat.setOutputPath(job, 
-          new Path((String) results.getOptionValue("output")));
+          new Path(results.getOptionValue("output")));
+        FileOutputFormat.setOutputDigestsPath(job, 
+                new Path(results.getOptionValue("output")));
       }
       if (results.hasOption("jar")) {
-        job.setJar((String) results.getOptionValue("jar"));
+        job.setJar(results.getOptionValue("jar"));
       }
       if (results.hasOption("inputformat")) {
         setIsJavaRecordReader(job, true);
@@ -437,8 +436,7 @@ public class Submitter extends Configured implements Tool {
         job.setReducerClass(getClass(results, "reduce", job, Reducer.class));
       }
       if (results.hasOption("reduces")) {
-        job.setNumReduceTasks(Integer.parseInt((String) 
-                                            results.getOptionValue("reduces")));
+        job.setNumReduceTasks(Integer.parseInt(results.getOptionValue("reduces")));
       }
       if (results.hasOption("writer")) {
         setIsJavaRecordWriter(job, true);
@@ -446,11 +444,11 @@ public class Submitter extends Configured implements Tool {
                                       OutputFormat.class));
       }
       if (results.hasOption("program")) {
-        setExecutable(job, (String) results.getOptionValue("program"));
+        setExecutable(job, results.getOptionValue("program"));
       }
       if (results.hasOption("jobconf")) {
         LOG.warn("-jobconf option is deprecated, please use -D instead.");
-        String options = (String)results.getOptionValue("jobconf");
+        String options = results.getOptionValue("jobconf");
         StringTokenizer tokenizer = new StringTokenizer(options, ",");
         while (tokenizer.hasMoreTokens()) {
           String keyVal = tokenizer.nextToken().trim();

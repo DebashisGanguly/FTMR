@@ -220,10 +220,7 @@ public class JobEndNotifier {
       if (!(o instanceof JobEndStatusInfo)) {
         return false;
       }
-      if (delayTime == ((JobEndStatusInfo)o).delayTime) {
-        return true;
-      }
-      return false;
+      return delayTime == ((JobEndStatusInfo) o).delayTime;
     }
 
     @Override

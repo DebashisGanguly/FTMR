@@ -337,7 +337,7 @@ public class TestCLI extends TestCase {
     // Run the tests defined in the testConf.xml config file.
     for (int index = 0; index < testsFromConfigFile.size(); index++) {
       
-      CLITestData testdata = (CLITestData) testsFromConfigFile.get(index);
+      CLITestData testdata = testsFromConfigFile.get(index);
    
       // Execute the test commands
       ArrayList<TestCmd> testCommands = testdata.getTestCommands();

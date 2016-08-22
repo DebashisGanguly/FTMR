@@ -28,7 +28,7 @@ import org.apache.hadoop.io.Writable;
  */
 public interface ResetableIterator<T extends Writable> {
 
-  public static class EMPTY<U extends Writable>
+  class EMPTY<U extends Writable>
     implements ResetableIterator<U> {
     public boolean hasNext() { return false; }
     public void reset() { }
@@ -49,7 +49,7 @@ public interface ResetableIterator<T extends Writable> {
    * True if a call to next may return a value. This is permitted false
    * positives, but not false negatives.
    */
-  public boolean hasNext();
+  boolean hasNext();
 
   /**
    * Assign next value to actual.
@@ -59,35 +59,35 @@ public interface ResetableIterator<T extends Writable> {
    * Note that a call to this may fail for nested joins (i.e. more elements
    * available, but none satisfying the constraints of the join)
    */
-  public boolean next(T val) throws IOException;
+  boolean next(T val) throws IOException;
 
   /**
    * Assign last value returned to actual.
    */
-  public boolean replay(T val) throws IOException;
+  boolean replay(T val) throws IOException;
 
   /**
    * Set iterator to return to the start of its range. Must be called after
    * calling {@link #add} to avoid a ConcurrentModificationException.
    */
-  public void reset();
+  void reset();
 
   /**
    * Add an element to the collection of elements to iterate over.
    */
-  public void add(T item) throws IOException;
+  void add(T item) throws IOException;
 
   /**
    * Close datasources and release resources. Calling methods on the iterator
    * after calling close has undefined behavior.
    */
   // XXX is this necessary?
-  public void close() throws IOException;
+  void close() throws IOException;
 
   /**
    * Close datasources, but do not release internal resources. Calling this
    * method should permit the object to be reused with a different datasource.
    */
-  public void clear();
+  void clear();
 
 }

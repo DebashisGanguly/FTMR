@@ -351,7 +351,7 @@ public class GenericOptionsParser {
         finalPath = path.makeQualified(fs).toString();
         try {
           fs.close();
-        } catch(IOException e){};
+        } catch(IOException e){}
       }
       finalArr[i] = finalPath;
     }

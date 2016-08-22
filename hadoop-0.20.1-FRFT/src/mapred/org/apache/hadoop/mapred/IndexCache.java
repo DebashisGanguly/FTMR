@@ -18,6 +18,7 @@
 package org.apache.hadoop.mapred;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -28,139 +29,173 @@ import org.apache.hadoop.fs.Path;
 
 class IndexCache {
 
-  private final JobConf conf;
-  private final int totalMemoryAllowed;
-  private AtomicInteger totalMemoryUsed = new AtomicInteger();
-  private static final Log LOG = LogFactory.getLog(IndexCache.class);
+	private final JobConf conf;
+	private final int totalMemoryAllowed;
+	private AtomicInteger totalMemoryUsed = new AtomicInteger();
+	private static final Log LOG = LogFactory.getLog(IndexCache.class);
 
-  private final ConcurrentHashMap<String,IndexInformation> cache =
-    new ConcurrentHashMap<String,IndexInformation>();
-  
-  private final LinkedBlockingQueue<String> queue = 
-    new LinkedBlockingQueue<String>();
+	private final ConcurrentHashMap<String, IndexInformation> cache = new ConcurrentHashMap<String,IndexInformation>();
+	private final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<String>();
 
-  public IndexCache(JobConf conf) {
-    this.conf = conf;
-    totalMemoryAllowed =
-      conf.getInt("mapred.tasktracker.indexcache.mb", 10) * 1024 * 1024;
-    LOG.info("IndexCache created with max memory = " + totalMemoryAllowed);
-  }
+	public IndexCache(JobConf conf) {
+		this.conf = conf;
+		totalMemoryAllowed = conf.getInt("mapred.tasktracker.indexcache.mb", 10) * 1024 * 1024;
 
-  /**
-   * This method gets the index information for the given mapId and reduce.
-   * It reads the index file into cache if it is not already present.
-   * @param mapId
-   * @param reduce
-   * @param fileName The file to read the index information from if it is not
-   *                 already present in the cache
-   * @return The Index Information
-   * @throws IOException
-   */
-  public IndexRecord getIndexInformation(String mapId, int reduce,
-      Path fileName) throws IOException {
+		LOG.info("IndexCache created with max memory = " + totalMemoryAllowed);
+	}
 
-    IndexInformation info = cache.get(mapId);
+	/**
+	 * This method gets the index information for the given mapId and reduce.
+	 * It reads the index file into cache if it is not already present.
+	 * 
+	 * @param mapId
+	 * @param reduce
+	 * @param fileName The file to read the index information from if it is not
+	 *                 already present in the cache
+	 * @return The Index Information
+	 * @throws IOException
+	 */
+	public IndexRecord getIndexInformation(String mapId, int reduce, Path fileName) 
+			throws IOException {
+		IndexInformation info = cache.get(mapId);
 
-    if (info == null) {
-      info = readIndexFileToCache(fileName, mapId);
-    } else {
-      synchronized (info) {
-        while (null == info.mapSpillRecord) {
-          try {
-            info.wait();
-          } catch (InterruptedException e) {
-            throw new IOException("Interrupted waiting for construction", e);
-          }
-        }
-      }
-      LOG.debug("IndexCache HIT: MapId " + mapId + " found");
-    }
+		if (info == null) {
+			info = readIndexFileToCache(fileName, mapId);
+		} else {
+			synchronized (info) {
+				while (null == info.mapSpillRecord) {
+					try {
+						info.wait();
+					} catch (InterruptedException e) {
+						throw new IOException("Interrupted waiting for construction", e);
+					}
+				}
+			}
 
-    if (info.mapSpillRecord.size() == 0 ||
-        info.mapSpillRecord.size() < reduce) {
-      throw new IOException("Invalid request " +
-        " Map Id = " + mapId + " Reducer = " + reduce +
-        " Index Info Length = " + info.mapSpillRecord.size());
-    }
-    return info.mapSpillRecord.getIndex(reduce);
-  }
+			LOG.debug("IndexCache HIT: MapId " + mapId + " found");
+		}
 
-  private IndexInformation readIndexFileToCache(Path indexFileName,
-      String mapId) throws IOException {
-    IndexInformation info;
-    IndexInformation newInd = new IndexInformation();
-    if ((info = cache.putIfAbsent(mapId, newInd)) != null) {
-      synchronized (info) {
-        while (null == info.mapSpillRecord) {
-          try {
-            info.wait();
-          } catch (InterruptedException e) {
-            throw new IOException("Interrupted waiting for construction", e);
-          }
-        }
-      }
-      LOG.debug("IndexCache HIT: MapId " + mapId + " found");
-      return info;
-    }
-    LOG.debug("IndexCache MISS: MapId " + mapId + " not found") ;
-    SpillRecord tmp = null;
-    try { 
-      tmp = new SpillRecord(indexFileName, conf);
-    } catch (Throwable e) { 
-      tmp = new SpillRecord(0);
-      cache.remove(mapId);
-      throw new IOException("Error Reading IndexFile", e);
-    } finally { 
-      synchronized (newInd) { 
-        newInd.mapSpillRecord = tmp;
-        newInd.notifyAll();
-      } 
-    } 
-    queue.add(mapId);
-    
-    if (totalMemoryUsed.addAndGet(newInd.getSize()) > totalMemoryAllowed) {
-      freeIndexInformation();
-    }
-    return newInd;
-  }
+		if (info.mapSpillRecord.size() == 0 || info.mapSpillRecord.size() < reduce) {
+			throw new IOException("Invalid request " +
+					" Map Id = " + mapId + " Reducer = " + reduce +
+					" Index Info Length = " + info.mapSpillRecord.size());
+		}
 
-  /**
-   * This method removes the map from the cache. It should be called when
-   * a map output on this tracker is discarded.
-   * @param mapId The taskID of this map.
-   */
-  public void removeMap(String mapId) {
-    IndexInformation info = cache.remove(mapId);
-    if (info != null) {
-      totalMemoryUsed.addAndGet(-info.getSize());
-      if (!queue.remove(mapId)) {
-        LOG.warn("Map ID" + mapId + " not found in queue!!");
-      }
-    } else {
-      LOG.info("Map ID " + mapId + " not found in cache");
-    }
-  }
+		// the reduce is the split nr
+		return info.mapSpillRecord.getIndex(reduce);
+	}
 
-  /**
-   * Bring memory usage below totalMemoryAllowed.
-   */
-  private synchronized void freeIndexInformation() {
-    while (totalMemoryUsed.get() > totalMemoryAllowed) {
-      String s = queue.remove();
-      IndexInformation info = cache.remove(s);
-      if (info != null) {
-        totalMemoryUsed.addAndGet(-info.getSize());
-      }
-    }
-  }
+	/**
+	 * 
+	 * @param indexFileName
+	 * @param mapId
+	 * @param numReplica number of replica
+	 * @return
+	 * @throws IOException
+	 */
+	private IndexInformation readIndexFileToCache(Path indexFileName, String mapId) 
+			throws IOException {
+		IndexInformation info;
+		IndexInformation newInd = new IndexInformation();
 
-  private static class IndexInformation {
-    SpillRecord mapSpillRecord;
+		if ((info = cache.putIfAbsent(mapId, newInd)) != null) {
+			synchronized (info) {
+				while (null == info.mapSpillRecord) {
+					try {
+						info.wait();
+					} catch (InterruptedException e) {
+						throw new IOException("Interrupted waiting for construction", e);
+					}
+				}
+			}
+			LOG.debug("IndexCache HIT: MapId " + mapId + " found");
 
-    int getSize() {
-      return mapSpillRecord == null
-        ? 0
-        : mapSpillRecord.size() * MapTask.MAP_OUTPUT_INDEX_RECORD_LENGTH;
-    }
-  }
+			return info;
+		}
+
+		LOG.debug("IndexCache MISS: MapId " + mapId + " not found") ;
+		SpillRecord tmp = null;
+
+		try { 
+			tmp = new SpillRecord(indexFileName, conf);
+		} catch (Throwable e) { 
+			tmp = new SpillRecord(0);
+			cache.remove(mapId);
+			throw new IOException("Error Reading IndexFile", e);
+		} finally { 
+			synchronized (newInd) { 
+				newInd.mapSpillRecord = tmp;
+				newInd.notifyAll();
+			} 
+		} 
+
+		queue.add(mapId);
+
+		if (totalMemoryUsed.addAndGet(newInd.getSize()) > totalMemoryAllowed) {
+			freeIndexInformation();
+		}
+
+		return newInd;
+	}
+
+	/**
+	 * This method removes the map from the cache. It should be called when
+	 * a map output on this tracker is discarded.
+	 * @param mapId The taskID of this map.
+	 */
+	public void removeMap(String mapId) {
+		LOG.debug("Trying to remove: " + mapId);
+		if(LOG.isDebugEnabled())
+			printCache(cache);
+
+		IndexInformation info = cache.remove(mapId);
+		if (info != null) {
+			totalMemoryUsed.addAndGet(-info.getSize());
+			if (!queue.remove(mapId)) {
+				LOG.warn("Map ID" + mapId + " not found in queue!!");
+			}
+		} else {
+			LOG.info("Map ID " + mapId + " not found in cache");
+		}
+	}
+
+	private void printCache(ConcurrentHashMap<String, IndexInformation> cache) {
+		Iterator<String> node = cache.keySet().iterator();
+		StringBuffer res = new StringBuffer("IndexCache --------\n");
+		while(node.hasNext()) {
+			String n = node.next();
+			IndexInformation idx = cache.get(n);
+			if(idx != null) {
+				StringBuffer buf = new StringBuffer("<");
+				buf.append(idx.getSize() + ">");
+				res.append(n + " - " + buf.toString() + "\n");
+			}
+		}
+
+		res.append("-----------------------------");
+
+		LOG.debug(res);
+	}
+
+	/**
+	 * Bring memory usage below totalMemoryAllowed.
+	 */
+	private synchronized void freeIndexInformation() {
+		while (totalMemoryUsed.get() > totalMemoryAllowed) {
+			String s = queue.remove();
+			IndexInformation info = cache.remove(s);
+			if (info != null) {
+				totalMemoryUsed.addAndGet(-info.getSize());
+			}
+		}
+	}
+
+	private static class IndexInformation {
+		SpillRecord mapSpillRecord;
+
+		int getSize() {
+			return mapSpillRecord == null ? 0 
+					: mapSpillRecord.size() * MapTask.MAP_OUTPUT_INDEX_RECORD_LENGTH;
+		}
+	}
 }

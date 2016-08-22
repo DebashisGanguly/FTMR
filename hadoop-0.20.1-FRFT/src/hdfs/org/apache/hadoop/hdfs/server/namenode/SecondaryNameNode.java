@@ -277,7 +277,7 @@ public class SecondaryNameNode implements Runnable {
       InetAddress.getLocalHost().getHostAddress() +
       "&token=" + sig.toString();
     LOG.info("Posted URL " + fsName + fileid);
-    TransferFsImage.getFileClient(fsName, fileid, (File[])null);
+    TransferFsImage.getFileClient(fsName, fileid, null);
   }
 
   /**
@@ -302,7 +302,7 @@ public class SecondaryNameNode implements Runnable {
 
     // Tell the namenode to start logging transactions in a new edit file
     // Retuns a token that would be used to upload the merged image.
-    CheckpointSignature sig = (CheckpointSignature)namenode.rollEditLog();
+    CheckpointSignature sig = namenode.rollEditLog();
 
     // error simulation code for junit test
     if (ErrorSimulator.getErrorSimulation(0)) {

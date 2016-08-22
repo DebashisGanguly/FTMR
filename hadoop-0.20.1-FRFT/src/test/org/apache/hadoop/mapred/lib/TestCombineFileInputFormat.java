@@ -42,11 +42,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.SequenceFile.CompressionType;
 import org.apache.hadoop.fs.PathFilter;
-import org.apache.hadoop.mapred.InputSplit;
-import org.apache.hadoop.mapred.JobConf;
-import org.apache.hadoop.mapred.Reporter;
-import org.apache.hadoop.mapred.RecordReader;
-import org.apache.hadoop.mapred.MiniMRCluster;
+import org.apache.hadoop.mapred.*;
 
 public class TestCombineFileInputFormat extends TestCase{
 
@@ -130,7 +126,7 @@ public class TestCombineFileInputFormat extends TestCase{
 
       // split it using a CombinedFile input format
       DummyInputFormat inFormat = new DummyInputFormat();
-      inFormat.setInputPaths(conf, dir1 + "," + dir2);
+      FileInputFormat.setInputPaths(conf, dir1 + "," + dir2);
       inFormat.setMinSplitSizeRack(BLOCKSIZE);
       InputSplit[] splits = inFormat.getSplits(conf, 1);
       System.out.println("Made splits(Test1): " + splits.length);
@@ -166,7 +162,7 @@ public class TestCombineFileInputFormat extends TestCase{
       Path file3 = new Path(dir3 + "/file3");
       writeFile(conf, new Path(dir3 + "/file3"), (short)3, 3);
       inFormat = new DummyInputFormat();
-      inFormat.setInputPaths(conf, dir1 + "," + dir2 + "," + dir3);
+      FileInputFormat.setInputPaths(conf, dir1 + "," + dir2 + "," + dir3);
       inFormat.setMinSplitSizeRack(BLOCKSIZE);
       splits = inFormat.getSplits(conf, 1);
       for (int i = 0; i < splits.length; ++i) {
@@ -209,7 +205,7 @@ public class TestCombineFileInputFormat extends TestCase{
       Path file4 = new Path(dir4 + "/file4");
       writeFile(conf, file4, (short)3, 3);
       inFormat = new DummyInputFormat();
-      inFormat.setInputPaths(conf, dir1 + "," + dir2 + "," + dir3 + "," + dir4);
+      FileInputFormat.setInputPaths(conf, dir1 + "," + dir2 + "," + dir3 + "," + dir4);
       inFormat.setMinSplitSizeRack(BLOCKSIZE);
       splits = inFormat.getSplits(conf, 1);
       for (int i = 0; i < splits.length; ++i) {
@@ -252,7 +248,7 @@ public class TestCombineFileInputFormat extends TestCase{
       inFormat = new DummyInputFormat();
       inFormat.setMinSplitSizeNode(BLOCKSIZE);
       inFormat.setMaxSplitSize(2*BLOCKSIZE);
-      inFormat.setInputPaths(conf, dir1 + "," + dir2 + "," + dir3 + "," + dir4);
+      FileInputFormat.setInputPaths(conf, dir1 + "," + dir2 + "," + dir3 + "," + dir4);
       splits = inFormat.getSplits(conf, 1);
       for (int i = 0; i < splits.length; ++i) {
         fileSplit = (CombineFileSplit) splits[i];
@@ -292,7 +288,7 @@ public class TestCombineFileInputFormat extends TestCase{
       inFormat = new DummyInputFormat();
       inFormat.setMinSplitSizeNode(BLOCKSIZE);
       inFormat.setMaxSplitSize(3*BLOCKSIZE);
-      inFormat.setInputPaths(conf, dir1 + "," + dir2 + "," + dir3 + "," + dir4);
+      FileInputFormat.setInputPaths(conf, dir1 + "," + dir2 + "," + dir3 + "," + dir4);
       splits = inFormat.getSplits(conf, 1);
       for (int i = 0; i < splits.length; ++i) {
         fileSplit = (CombineFileSplit) splits[i];
@@ -344,7 +340,7 @@ public class TestCombineFileInputFormat extends TestCase{
       // maximum split size is 4 blocks 
       inFormat = new DummyInputFormat();
       inFormat.setMaxSplitSize(4*BLOCKSIZE);
-      inFormat.setInputPaths(conf, dir1 + "," + dir2 + "," + dir3 + "," + dir4);
+      FileInputFormat.setInputPaths(conf, dir1 + "," + dir2 + "," + dir3 + "," + dir4);
       splits = inFormat.getSplits(conf, 1);
       for (int i = 0; i < splits.length; ++i) {
         fileSplit = (CombineFileSplit) splits[i];
@@ -392,7 +388,7 @@ public class TestCombineFileInputFormat extends TestCase{
       inFormat.setMaxSplitSize(7*BLOCKSIZE);
       inFormat.setMinSplitSizeNode(3*BLOCKSIZE);
       inFormat.setMinSplitSizeRack(3*BLOCKSIZE);
-      inFormat.setInputPaths(conf, dir1 + "," + dir2 + "," + dir3 + "," + dir4);
+      FileInputFormat.setInputPaths(conf, dir1 + "," + dir2 + "," + dir3 + "," + dir4);
       splits = inFormat.getSplits(conf, 1);
       for (int i = 0; i < splits.length; ++i) {
         fileSplit = (CombineFileSplit) splits[i];
@@ -418,7 +414,7 @@ public class TestCombineFileInputFormat extends TestCase{
 
       // setup a filter so that only file1 and file2 can be combined
       inFormat = new DummyInputFormat();
-      inFormat.addInputPath(conf, inDir);
+      FileInputFormat.addInputPath(conf, inDir);
       inFormat.setMinSplitSizeRack(1); // everything is at least rack local
       inFormat.createPool(conf, new TestFilter(dir1), 
                           new TestFilter(dir2));
@@ -472,10 +468,7 @@ public class TestCombineFileInputFormat extends TestCase{
     // returns true if the specified path matches the prefix stored
     // in this TestFilter.
     public boolean accept(Path path) {
-      if (path.toString().indexOf(p.toString()) == 0) {
-        return true;
-      }
-      return false;
+      return path.toString().indexOf(p.toString()) == 0;
     }
 
     public String toString() {
@@ -496,7 +489,7 @@ public class TestCombineFileInputFormat extends TestCase{
 
     DummyInputFormat inFormat = new DummyInputFormat();
     for (int i = 0; i < args.length; i++) {
-      inFormat.addInputPaths(conf, args[i]);
+      FileInputFormat.addInputPaths(conf, args[i]);
     }
     inFormat.setMinSplitSizeRack(blockSize);
     inFormat.setMaxSplitSize(10 * blockSize);

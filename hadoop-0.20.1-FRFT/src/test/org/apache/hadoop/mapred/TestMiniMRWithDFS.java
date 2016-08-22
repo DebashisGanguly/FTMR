@@ -32,11 +32,11 @@ import junit.framework.TestCase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hdfs.MiniDFSCluster;
-import org.apache.hadoop.hdfs.server.namenode.NameNode;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hdfs.MiniDFSCluster;
+import org.apache.hadoop.hdfs.server.namenode.NameNode;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 
@@ -183,8 +183,7 @@ public class TestMiniMRWithDFS extends TestCase {
     LOG.info("runWordCount");
     // Run a word count example
     // Keeping tasks that match this pattern
-    String pattern = 
-      TaskAttemptID.getTaskAttemptIDsPattern(null, null, true, 1, null);
+    String pattern = TaskAttemptID.getTaskAttemptIDsPattern(null, null, true, 1, 0, 0);
     jobConf.setKeepTaskFilesPattern(pattern);
     TestResult result;
     final Path inDir = new Path("./wc/input");

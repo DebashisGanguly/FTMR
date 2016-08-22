@@ -28,12 +28,12 @@ import org.apache.hadoop.ipc.VersionedProtocol;
 /** An inter-datanode protocol for updating generation stamp
  */
 public interface InterDatanodeProtocol extends VersionedProtocol {
-  public static final Log LOG = LogFactory.getLog(InterDatanodeProtocol.class);
+  Log LOG = LogFactory.getLog(InterDatanodeProtocol.class);
 
   /**
    * 3: added a finalize parameter to updateBlock
    */
-  public static final long versionID = 3L;
+  long versionID = 3L;
 
   /** @return the BlockMetaDataInfo of a block;
    *  null if the block is not found 

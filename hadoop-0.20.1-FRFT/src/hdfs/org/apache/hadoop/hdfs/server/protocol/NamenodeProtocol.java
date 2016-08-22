@@ -32,7 +32,7 @@ public interface NamenodeProtocol extends VersionedProtocol {
   /**
    * 2: Added getEditLogSize(), rollEditLog(), rollFSImage().
    */
-  public static final long versionID = 2L;
+  long versionID = 2L;
 
   /** Get a list of blocks belonged to <code>datanode</code>
     * whose total size is equal to <code>size</code>
@@ -42,7 +42,7 @@ public interface NamenodeProtocol extends VersionedProtocol {
    * @throws RemoteException if size is less than or equal to 0 or
                                    datanode does not exist
    */
-  public BlocksWithLocations getBlocks(DatanodeInfo datanode, long size)
+  BlocksWithLocations getBlocks(DatanodeInfo datanode, long size)
   throws IOException;
 
   /**
@@ -50,7 +50,7 @@ public interface NamenodeProtocol extends VersionedProtocol {
    * @return The number of bytes in the current edit log.
    * @throws IOException
    */
-  public long getEditLogSize() throws IOException;
+  long getEditLogSize() throws IOException;
 
   /**
    * Closes the current edit log and opens a new one. The 
@@ -58,7 +58,7 @@ public interface NamenodeProtocol extends VersionedProtocol {
    * @throws IOException
    * @return a unique token to identify this transaction.
    */
-  public CheckpointSignature rollEditLog() throws IOException;
+  CheckpointSignature rollEditLog() throws IOException;
 
   /**
    * Rolls the fsImage log. It removes the old fsImage, copies the
@@ -66,5 +66,5 @@ public interface NamenodeProtocol extends VersionedProtocol {
    * to edits. The call fails if any of the four files are missing.
    * @throws IOException
    */
-  public void rollFsImage() throws IOException;
+  void rollFsImage() throws IOException;
 }

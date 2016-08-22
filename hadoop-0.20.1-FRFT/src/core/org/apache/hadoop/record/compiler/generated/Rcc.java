@@ -128,7 +128,6 @@ public class Rcc implements RccConstants {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case MODULE_TKN:
       case INCLUDE_TKN:
-        ;
         break;
       default:
         jj_la1[1] = jj_gen;
@@ -199,7 +198,6 @@ public class Rcc implements RccConstants {
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case DOT_TKN:
-        ;
         break;
       default:
         jj_la1[2] = jj_gen;
@@ -222,7 +220,6 @@ public class Rcc implements RccConstants {
       rlist.add(r);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case RECORD_TKN:
-        ;
         break;
       default:
         jj_la1[3] = jj_gen;
@@ -259,7 +256,6 @@ public class Rcc implements RccConstants {
       case VECTOR_TKN:
       case MAP_TKN:
       case IDENT_TKN:
-        ;
         break;
       default:
         jj_la1[4] = jj_gen;

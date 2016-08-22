@@ -600,8 +600,6 @@ public class StreamJob implements Tool {
     File tmpDir = (tmp == null) ? null : new File(tmp);
     // tmpDir=null means OS default tmp dir
     File jobJar = File.createTempFile("streamjob", ".jar", tmpDir);
-    System.out.println("packageJobJar: " + packageFiles_ + " " + unjarFiles + " " + jobJar
-                       + " tmpDir=" + tmpDir);
     if (debug_ == 0) {
       jobJar.deleteOnExit();
     }

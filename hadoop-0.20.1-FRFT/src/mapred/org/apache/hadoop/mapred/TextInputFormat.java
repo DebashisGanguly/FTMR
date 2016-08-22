@@ -18,12 +18,13 @@
 
 package org.apache.hadoop.mapred;
 
-import java.io.*;
+import java.io.IOException;
 
-import org.apache.hadoop.fs.*;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.compress.*;
+import org.apache.hadoop.io.compress.CompressionCodecFactory;
 
 /** An {@link InputFormat} for plain text files.  Files are broken into lines.
  * Either linefeed or carriage-return are used to signal end of line.  Keys are

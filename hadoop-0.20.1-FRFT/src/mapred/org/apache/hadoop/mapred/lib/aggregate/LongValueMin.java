@@ -61,7 +61,7 @@ public class LongValueMin implements ValueAggregator {
   public void addNextValue(long newVal) {
     if (this.minVal > newVal) {
       this.minVal = newVal;
-    };
+    }
   }
     
   /**

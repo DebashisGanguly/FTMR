@@ -5,7 +5,7 @@
 # Hadoop installation
 # set var only if it has not already been set externally
 if [ -z "${HADOOP_HOME}" ] ; then
-  export HADOOP_HOME=
+  export HADOOP_HOME="$HOME/hadoop/hadoop-0.20.1_bkp"
 fi
 # Base directory for gridmix install
 # set var only if it has not already been set externally
@@ -15,7 +15,7 @@ fi
 # Hadoop example jar
 # set var only if it has not already been set externally
 if [ -z "${EXAMPLE_JAR}" ] ; then
-  export EXAMPLE_JAR="${HADOOP_HOME}/hadoop-*examples.jar"
+  export EXAMPLE_JAR="${HADOOP_HOME}/build/hadoop-*examples.jar"
 fi
 # Hadoop test jar
 # set var only if it has not already been set externally

@@ -212,11 +212,11 @@ public class TotalOrderPartitioner<K extends WritableComparable,V>
       JobConf job) throws IOException {
     SequenceFile.Reader reader = new SequenceFile.Reader(fs, p, job);
     ArrayList<K> parts = new ArrayList<K>();
-    K key = (K) ReflectionUtils.newInstance(keyClass, job);
+    K key = ReflectionUtils.newInstance(keyClass, job);
     NullWritable value = NullWritable.get();
     while (reader.next(key, value)) {
       parts.add(key);
-      key = (K) ReflectionUtils.newInstance(keyClass, job);
+      key = ReflectionUtils.newInstance(keyClass, job);
     }
     reader.close();
     return parts.toArray((K[])Array.newInstance(keyClass, parts.size()));

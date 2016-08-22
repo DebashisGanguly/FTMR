@@ -39,5 +39,5 @@ public interface RetryPolicy {
    * @throws Exception The re-thrown exception <code>e</code> indicating
    *   that the method failed and should not be retried further. 
    */
-  public boolean shouldRetry(Exception e, int retries) throws Exception;
+  boolean shouldRetry(Exception e, int retries) throws Exception;
 }

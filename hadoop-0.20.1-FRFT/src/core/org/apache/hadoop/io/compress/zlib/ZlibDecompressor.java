@@ -51,7 +51,7 @@ public class ZlibDecompressor implements Decompressor {
   /**
    * The headers to detect from compressed data.
    */
-  public static enum CompressionHeader {
+  public enum CompressionHeader {
     /**
      * No headers/trailers/checksums.
      */

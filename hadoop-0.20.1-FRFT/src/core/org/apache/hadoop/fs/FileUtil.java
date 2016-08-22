@@ -535,7 +535,7 @@ public class FileUtil {
       OS_TYPE_UNIX, 
       OS_TYPE_WINXP,
       OS_TYPE_SOLARIS,
-      OS_TYPE_MAC; 
+      OS_TYPE_MAC
     }
   
     private static String[] hardLinkCommand;

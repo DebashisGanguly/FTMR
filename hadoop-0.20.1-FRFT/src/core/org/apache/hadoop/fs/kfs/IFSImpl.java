@@ -35,24 +35,24 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.Path;
 
 interface IFSImpl {
-    public boolean exists(String path) throws IOException;
-    public boolean isDirectory(String path) throws IOException;
-    public boolean isFile(String path) throws IOException;
-    public String[] readdir(String path) throws IOException;
-    public FileStatus[] readdirplus(Path path) throws IOException;
+    boolean exists(String path) throws IOException;
+    boolean isDirectory(String path) throws IOException;
+    boolean isFile(String path) throws IOException;
+    String[] readdir(String path) throws IOException;
+    FileStatus[] readdirplus(Path path) throws IOException;
 
-    public int mkdirs(String path) throws IOException;
-    public int rename(String source, String dest) throws IOException;
+    int mkdirs(String path) throws IOException;
+    int rename(String source, String dest) throws IOException;
 
-    public int rmdir(String path) throws IOException; 
-    public int remove(String path) throws IOException;
-    public long filesize(String path) throws IOException;
-    public short getReplication(String path) throws IOException;
-    public short setReplication(String path, short replication) throws IOException;
-    public String[][] getDataLocation(String path, long start, long len) throws IOException;
+    int rmdir(String path) throws IOException;
+    int remove(String path) throws IOException;
+    long filesize(String path) throws IOException;
+    short getReplication(String path) throws IOException;
+    short setReplication(String path, short replication) throws IOException;
+    String[][] getDataLocation(String path, long start, long len) throws IOException;
 
-    public long getModificationTime(String path) throws IOException;
-    public FSDataOutputStream create(String path, short replication, int bufferSize) throws IOException;
-    public FSDataInputStream open(String path, int bufferSize) throws IOException;
+    long getModificationTime(String path) throws IOException;
+    FSDataOutputStream create(String path, short replication, int bufferSize) throws IOException;
+    FSDataInputStream open(String path, int bufferSize) throws IOException;
     
-};
+}

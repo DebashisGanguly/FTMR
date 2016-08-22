@@ -367,7 +367,7 @@ public class NNBench {
     double longestMapTimeTPmS = (double) (mapEndTimeTPmS - mapStartTimeTPmS);
     double totalTimeTPS = (longestMapTimeTPmS == 0) ?
             (1000 * successfulFileOps) :
-            (double) (1000 * successfulFileOps) / (double) longestMapTimeTPmS;
+            (double) (1000 * successfulFileOps) / longestMapTimeTPmS;
             
     // The time it takes to perform 'n' operations is calculated (in ms),
     // n being the number of files. Using that time, the average execution 
@@ -382,15 +382,15 @@ public class NNBench {
       // since a file create from a client perspective involves create and close
       resultTPSLine1 = "               TPS: Create/Write/Close: " + 
         (int) (totalTimeTPS * 2);
-      resultTPSLine2 = "Avg exec time (ms): Create/Write/Close: " + 
-        (double) AverageExecutionTime;
+      resultTPSLine2 = "Avg exec time (ms): Create/Write/Close: " +
+              AverageExecutionTime;
       resultALLine1 = "            Avg Lat (ms): Create/Write: " + avgLatency1;
       resultALLine2 = "                   Avg Lat (ms): Close: " + avgLatency2;
     } else if (operation.equals(OP_OPEN_READ)) {
       resultTPSLine1 = "                        TPS: Open/Read: " + 
         (int) totalTimeTPS;
-      resultTPSLine2 = "         Avg Exec time (ms): Open/Read: " + 
-        (double) AverageExecutionTime;
+      resultTPSLine2 = "         Avg Exec time (ms): Open/Read: " +
+              AverageExecutionTime;
       resultALLine1 = "                    Avg Lat (ms): Open: " + avgLatency1;
       if (readFileAfterOpen) {
         resultALLine2 = "                  Avg Lat (ms): Read: " + avgLatency2;
@@ -398,14 +398,14 @@ public class NNBench {
     } else if (operation.equals(OP_RENAME)) {
       resultTPSLine1 = "                           TPS: Rename: " + 
         (int) totalTimeTPS;
-      resultTPSLine2 = "            Avg Exec time (ms): Rename: " + 
-        (double) AverageExecutionTime;
+      resultTPSLine2 = "            Avg Exec time (ms): Rename: " +
+              AverageExecutionTime;
       resultALLine1 = "                  Avg Lat (ms): Rename: " + avgLatency1;
     } else if (operation.equals(OP_DELETE)) {
       resultTPSLine1 = "                           TPS: Delete: " + 
         (int) totalTimeTPS;
-      resultTPSLine2 = "            Avg Exec time (ms): Delete: " + 
-        (double) AverageExecutionTime;
+      resultTPSLine2 = "            Avg Exec time (ms): Delete: " +
+              AverageExecutionTime;
       resultALLine1 = "                  Avg Lat (ms): Delete: " + avgLatency1;
     }
     

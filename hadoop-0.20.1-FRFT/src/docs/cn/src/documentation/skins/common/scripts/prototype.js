@@ -15,7 +15,7 @@ var Prototype = {
   
   emptyFunction: function() {},
   K: function(x) {return x}
-}
+};
 
 var Class = {
   create: function() {
@@ -23,36 +23,36 @@ var Class = {
       this.initialize.apply(this, arguments);
     }
   }
-}
+};
 
-var Abstract = new Object();
+var Abstract = {};
 
 Object.extend = function(destination, source) {
   for (property in source) {
     destination[property] = source[property];
   }
   return destination;
-}
+};
 
 Function.prototype.bind = function(object) {
   var __method = this;
   return function() {
     return __method.apply(object, arguments);
   }
-}
+};
 
 Function.prototype.bindAsEventListener = function(object) {
   var __method = this;
   return function(event) {
     return __method.call(object, event || window.event);
   }
-}
+};
 
 Number.prototype.toColorPart = function() {
   var digits = this.toString(16);
   if (this < 16) return '0' + digits;
   return digits;
-}
+};
 
 var Try = {
   these: function() {
@@ -68,7 +68,7 @@ var Try = {
 
     return returnValue;
   }
-}
+};
 
 /*--------------------------------------------------------------------------*/
 
@@ -96,12 +96,12 @@ PeriodicalExecuter.prototype = {
       }
     }
   }
-}
+};
 
 /*--------------------------------------------------------------------------*/
 
 function $() {
-  var elements = new Array();
+  var elements = [];
 
   for (var i = 0; i < arguments.length; i++) {
     var element = arguments[i];
@@ -129,9 +129,9 @@ if (!Array.prototype.push) {
 if (!Function.prototype.apply) {
   // Based on code from http://www.youngpup.net/
   Function.prototype.apply = function(object, parameters) {
-    var parameterStrings = new Array();
+    var parameterStrings = [];
     if (!object)     object = window;
-    if (!parameters) parameters = new Array();
+    if (!parameters) parameters = [];
     
     for (var i = 0; i < parameters.length; i++)
       parameterStrings[i] = 'parameters[' + i + ']';
@@ -179,8 +179,8 @@ Object.extend(String.prototype, {
 });
 
 
-var _break    = new Object();
-var _continue = new Object();
+var _break    = {};
+var _continue = {};
 
 var Enumerable = {
   each: function(iterator) {
@@ -250,7 +250,7 @@ var Enumerable = {
       var stringValue = value.toString();
       if (stringValue.match(pattern))
         results.push((iterator || Prototype.K)(value, index));
-    })
+    });
     return results;
   },
   
@@ -349,7 +349,7 @@ var Enumerable = {
       return value;
     });
   }
-}
+};
 
 Object.extend(Enumerable, {
   map:     Enumerable.collect,
@@ -364,7 +364,7 @@ $A = Array.from = function(iterable) {
   for (var i = 0; i < iterable.length; i++)
     results.push(iterable[i]);
   return results;
-}
+};
 
 Object.extend(Array.prototype, {
   _each: function(iterator) {
@@ -392,7 +392,7 @@ var Ajax = {
       function() {return new XMLHttpRequest()}
     ) || false;
   }
-}
+};
 
 Ajax.Base = function() {};
 Ajax.Base.prototype = {
@@ -401,7 +401,7 @@ Ajax.Base.prototype = {
       method:       'post',
       asynchronous: true,
       parameters:   ''
-    }
+    };
     Object.extend(this.options, options || {});
   },
 
@@ -414,7 +414,7 @@ Ajax.Base.prototype = {
   responseIsFailure: function() {
     return !this.responseIsSuccess();
   }
-}
+};
 
 Ajax.Request = Class.create();
 Ajax.Request.Events = 
@@ -507,7 +507,7 @@ Object.extend(Object.extend(Ajax.Updater.prototype, Ajax.Request.prototype), {
       success: container.success ? $(container.success) : $(container),
       failure: container.failure ? $(container.failure) :
         (container.success ? null : $(container))
-    }
+    };
 
     this.transport = Ajax.getTransport();
     this.setOptions(options);
@@ -598,7 +598,7 @@ Ajax.PeriodicalUpdater.prototype = Object.extend(new Ajax.Base(), {
 
 document.getElementsByClassName = function(className) {
   var children = document.getElementsByTagName('*') || document.all;
-  var elements = new Array();
+  var elements = [];
   
   for (var i = 0; i < children.length; i++) {
     var child = children[i];
@@ -612,12 +612,12 @@ document.getElementsByClassName = function(className) {
   }
   
   return elements;
-}
+};
 
 /*--------------------------------------------------------------------------*/
 
 if (!window.Element) {
-  var Element = new Object();
+  var Element = {};
 }
 
 Object.extend(Element, {
@@ -698,14 +698,14 @@ Object.extend(Element, {
   }
 });
 
-var Toggle = new Object();
+var Toggle = {};
 Toggle.display = Element.toggle;
 
 /*--------------------------------------------------------------------------*/
 
 Abstract.Insertion = function(adjacency) {
   this.adjacency = adjacency;
-}
+};
 
 Abstract.Insertion.prototype = {
   initialize: function(element, content) {
@@ -721,9 +721,9 @@ Abstract.Insertion.prototype = {
       this.insertContent();
     }
   }
-}
+};
 
-var Insertion = new Object();
+var Insertion = {};
 
 Insertion.Before = Class.create();
 Insertion.Before.prototype = Object.extend(new Abstract.Insertion('beforeBegin'), {
@@ -796,14 +796,14 @@ var Field = {
     $(element).focus();
     $(element).select();
   }
-}
+};
 
 /*--------------------------------------------------------------------------*/
 
 var Form = {
   serialize: function(form) {
     var elements = Form.getElements($(form));
-    var queryComponents = new Array();
+    var queryComponents = [];
     
     for (var i = 0; i < elements.length; i++) {
       var queryComponent = Form.Element.serialize(elements[i]);
@@ -816,7 +816,7 @@ var Form = {
   
   getElements: function(form) {
     var form = $(form);
-    var elements = new Array();
+    var elements = [];
 
     for (tagName in Form.Element.Serializers) {
       var tagElements = form.getElementsByTagName(tagName);
@@ -833,7 +833,7 @@ var Form = {
     if (!typeName && !name)
       return inputs;
       
-    var matchingInputs = new Array();
+    var matchingInputs = [];
     for (var i = 0; i < inputs.length; i++) {
       var input = inputs[i];
       if ((typeName && input.type != typeName) ||
@@ -877,7 +877,7 @@ var Form = {
   reset: function(form) {
     $(form).reset();
   }
-}
+};
 
 Form.Element = {
   serialize: function(element) {
@@ -898,7 +898,7 @@ Form.Element = {
     if (parameter) 
       return parameter[1];
   }
-}
+};
 
 Form.Element.Serializers = {
   input: function(element) {
@@ -931,7 +931,7 @@ Form.Element.Serializers = {
       if (index >= 0)
         value = element.options[index].value || element.options[index].text;
     } else {
-      value = new Array();
+      value = [];
       for (var i = 0; i < element.length; i++) {
         var opt = element.options[i];
         if (opt.selected)
@@ -940,7 +940,7 @@ Form.Element.Serializers = {
     }
     return [element.name, value];
   }
-}
+};
 
 /*--------------------------------------------------------------------------*/
 
@@ -948,7 +948,7 @@ var $F = Form.Element.getValue;
 
 /*--------------------------------------------------------------------------*/
 
-Abstract.TimedObserver = function() {}
+Abstract.TimedObserver = function() {};
 Abstract.TimedObserver.prototype = {
   initialize: function(element, frequency, callback) {
     this.frequency = frequency;
@@ -970,7 +970,7 @@ Abstract.TimedObserver.prototype = {
       this.lastValue = value;
     }
   }
-}
+};
 
 Form.Element.Observer = Class.create();
 Form.Element.Observer.prototype = Object.extend(new Abstract.TimedObserver(), {
@@ -988,7 +988,7 @@ Form.Observer.prototype = Object.extend(new Abstract.TimedObserver(), {
 
 /*--------------------------------------------------------------------------*/
 
-Abstract.EventObserver = function() {}
+Abstract.EventObserver = function() {};
 Abstract.EventObserver.prototype = {
   initialize: function(element, callback) {
     this.element  = $(element);
@@ -1025,7 +1025,7 @@ Abstract.EventObserver.prototype = {
           element.onclick = function() {
             this.prev_onclick(); 
             this.target.onElementEvent();
-          }
+          };
           break;
         case 'password':
         case 'text':
@@ -1037,12 +1037,12 @@ Abstract.EventObserver.prototype = {
           element.onchange = function() {
             this.prev_onchange(); 
             this.target.onElementEvent();
-          }
+          };
           break;
       }
     }    
   }
-}
+};
 
 Form.Element.EventObserver = Class.create();
 Form.Element.EventObserver.prototype = Object.extend(new Abstract.EventObserver(), {
@@ -1060,7 +1060,7 @@ Form.EventObserver.prototype = Object.extend(new Abstract.EventObserver(), {
 
 
 if (!window.Event) {
-  var Event = new Object();
+  var Event = {};
 }
 
 Object.extend(Event, {
@@ -1254,4 +1254,4 @@ var Position = {
     target.style.width  = source.offsetWidth + 'px';
     target.style.height = source.offsetHeight + 'px';
   }
-}
+};

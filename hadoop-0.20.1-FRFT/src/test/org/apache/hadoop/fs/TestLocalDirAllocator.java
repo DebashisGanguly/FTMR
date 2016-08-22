@@ -100,7 +100,7 @@ public class TestLocalDirAllocator extends TestCase {
       validateTempDirCreation(1);
       validateTempDirCreation(1);
     } finally {
-      Shell.execCommand(new String[]{"chmod", "u+w", BUFFER_DIR_ROOT});
+      Shell.execCommand("chmod", "u+w", BUFFER_DIR_ROOT);
       rmBufferDirs();
     }
   }
@@ -118,7 +118,7 @@ public class TestLocalDirAllocator extends TestCase {
       validateTempDirCreation(2);
       validateTempDirCreation(2);
     } finally {
-      Shell.execCommand(new String[]{"chmod", "u+w", BUFFER_DIR_ROOT});
+      Shell.execCommand("chmod", "u+w", BUFFER_DIR_ROOT);
       rmBufferDirs();
     }
   }

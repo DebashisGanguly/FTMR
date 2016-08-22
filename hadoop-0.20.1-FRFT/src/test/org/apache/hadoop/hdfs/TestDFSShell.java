@@ -150,8 +150,8 @@ public class TestDFSShell extends TestCase {
         assert(false);
       }
     } finally {  
-      try { fs.close();}catch(IOException e){};
-      cluster.shutdown();
+      try { fs.close();}catch(IOException e){}
+        cluster.shutdown();
     }
   }
     
@@ -1136,7 +1136,7 @@ public class TestDFSShell extends TestCase {
     }
   }
 
-  static interface TestGetRunner {
+  interface TestGetRunner {
     String run(int exitcode, String... options) throws IOException;
   }
 

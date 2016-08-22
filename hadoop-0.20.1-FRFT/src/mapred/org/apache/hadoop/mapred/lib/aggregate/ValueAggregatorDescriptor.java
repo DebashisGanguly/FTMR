@@ -38,9 +38,9 @@ import org.apache.hadoop.mapred.JobConf;
  */
 public interface ValueAggregatorDescriptor {
 
-  public static final String TYPE_SEPARATOR = ":";
+  String TYPE_SEPARATOR = ":";
 
-  public static final Text ONE = new Text("1");
+  Text ONE = new Text("1");
 
   /**
    * Generate a list of aggregation-id/value pairs for the given key/value pair.
@@ -54,8 +54,8 @@ public interface ValueAggregatorDescriptor {
    *         aggregation type which is used to guide the way to aggregate the
    *         value in the reduce/combiner phrase of an Aggregate based job.
    */
-  public ArrayList<Entry<Text, Text>> generateKeyValPairs(Object key,
-                                                          Object val);
+  ArrayList<Entry<Text, Text>> generateKeyValPairs(Object key,
+                                                   Object val);
 
   /**
    * Configure the object
@@ -64,5 +64,5 @@ public interface ValueAggregatorDescriptor {
    *          a JobConf object that may contain the information that can be used
    *          to configure the object.
    */
-  public void configure(JobConf job);
+  void configure(JobConf job);
 }

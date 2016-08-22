@@ -38,7 +38,7 @@
     TaskID tipidObj = TaskID.forName(tipid);
     TaskAttemptID taskidObj = TaskAttemptID.forName(taskid);
     
-    JobInProgress job = (JobInProgress) tracker.getJob(jobidObj);
+    JobInProgress job = tracker.getJob(jobidObj);
     
     boolean privateActions = JSPUtil.conf.getBoolean(PRIVATE_ACTIONS_KEY,
         false);
@@ -106,17 +106,12 @@
 %>
 <table border=2 cellpadding="5" cellspacing="2">
 <tr><td align="center">Task Attempts</td><td>Machine</td><td>Status</td><td>Progress</td><td>Start Time</td> 
-  <%
-   if (!ts[0].getIsMap() && !isCleanupOrSetup) {
-   %>
-<td>Shuffle Finished</td><td>Sort Finished</td>
-  <%
-  }
-  %>
 <td>Finish Time</td><td>Errors</td><td>Task Logs</td><td>Counters</td><td>Actions</td></tr>
   <%
     for (int i = 0; i < ts.length; i++) {
       TaskStatus status = ts[i];
+      if(status == null) continue;
+
       String taskTrackerName = status.getTaskTracker();
       TaskTrackerStatus taskTracker = tracker.getTaskTracker(taskTrackerName);
       out.print("<tr><td>" + status.getTaskID() + "</td>");
@@ -162,15 +157,6 @@
         out.print("<td>"
           + StringUtils.getFormattedTimeWithDiff(dateFormat, status
           .getStartTime(), 0) + "</td>");
-        if (!ts[i].getIsMap() && !isCleanupOrSetup) {
-          out.print("<td>"
-          + StringUtils.getFormattedTimeWithDiff(dateFormat, status
-          .getShuffleFinishTime(), status.getStartTime()) + "</td>");
-        out.println("<td>"
-          + StringUtils.getFormattedTimeWithDiff(dateFormat, status
-          .getSortFinishTime(), status.getShuffleFinishTime())
-          + "</td>");
-        }
         out.println("<td>"
           + StringUtils.getFormattedTimeWithDiff(dateFormat, status
           .getFinishTime(), status.getStartTime()) + "</td>");

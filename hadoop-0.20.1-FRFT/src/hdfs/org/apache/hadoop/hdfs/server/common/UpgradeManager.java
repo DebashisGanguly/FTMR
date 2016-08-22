@@ -77,10 +77,7 @@ public abstract class UpgradeManager {
   }
 
   public boolean isUpgradeCompleted() {
-    if (currentUpgrades == null) {
-      return true;
-    }
-    return false;
+    return currentUpgrades == null;
   }
 
   public abstract HdfsConstants.NodeType getType();

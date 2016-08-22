@@ -58,10 +58,11 @@ public class DefaultTaskSelector extends TaskSelector {
   @Override
   public Task obtainNewMapTask(TaskTrackerStatus taskTracker, JobInProgress job)
       throws IOException {
+	  
     ClusterStatus clusterStatus = taskTrackerManager.getClusterStatus();
     int numTaskTrackers = clusterStatus.getTaskTrackers();
-    return job.obtainNewMapTask(taskTracker, numTaskTrackers,
-        taskTrackerManager.getNumberOfUniqueHosts());
+    
+    return job.obtainNewMapTask(taskTracker, numTaskTrackers, taskTrackerManager.getNumberOfUniqueHosts());
   }
 
   @Override

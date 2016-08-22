@@ -18,15 +18,15 @@
 package org.apache.hadoop.mapred;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Collection;
+import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.util.StringUtils;
 import org.apache.hadoop.util.ServletUtil;
+import org.apache.hadoop.util.StringUtils;
 
 class JSPUtil {
   private static final String PRIVATE_ACTIONS_KEY = "webinterface.private.actions";
@@ -129,6 +129,7 @@ class JSPUtil {
       sb.append("<td><b>Reduce Total</b></td>");
       sb.append("<td><b>Reduces Completed</b></td>");
       sb.append("<td><b>Job Scheduling Information</b></td>");
+      sb.append("<td><b>TaskTracker</b></td>");
       sb.append("</tr>\n");
       for (Iterator<JobInProgress> it = jobs.iterator(); it.hasNext(); ++rowId) {
         JobInProgress job = it.next();

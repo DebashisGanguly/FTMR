@@ -175,8 +175,8 @@ public class TestFileAppend extends TestCase {
       // Create hard links for a few of the blocks
       //
       for (int i = 0; i < blocks.size(); i = i + 2) {
-        Block b = (Block) blocks.get(i).getBlock();
-        FSDataset fsd = (FSDataset) dataset;
+        Block b = blocks.get(i).getBlock();
+        FSDataset fsd = dataset;
         File f = fsd.getFile(b);
         File link = new File(f.toString() + ".link");
         System.out.println("Creating hardlink for File " + f + 
@@ -188,7 +188,7 @@ public class TestFileAppend extends TestCase {
       // Detach all blocks. This should remove hardlinks (if any)
       //
       for (int i = 0; i < blocks.size(); i++) {
-        Block b = (Block) blocks.get(i).getBlock();
+        Block b = blocks.get(i).getBlock();
         System.out.println("testCopyOnWrite detaching block " + b);
         assertTrue("Detaching block " + b + " should have returned true",
                    dataset.detachBlock(b, 1) == true);
@@ -198,7 +198,7 @@ public class TestFileAppend extends TestCase {
       // return false
       //
       for (int i = 0; i < blocks.size(); i++) {
-        Block b = (Block) blocks.get(i).getBlock();
+        Block b = blocks.get(i).getBlock();
         System.out.println("testCopyOnWrite detaching block " + b);
         assertTrue("Detaching block " + b + " should have returned false",
                    dataset.detachBlock(b, 1) == false);

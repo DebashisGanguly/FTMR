@@ -380,11 +380,11 @@ public class DataNode extends Configured
     // set service-level authorization security policy
     if (conf.getBoolean(
           ServiceAuthorizationManager.SERVICE_AUTHORIZATION_CONFIG, false)) {
-      PolicyProvider policyProvider = 
-        (PolicyProvider)(ReflectionUtils.newInstance(
-            conf.getClass(PolicyProvider.POLICY_PROVIDER_CONFIG, 
-                HDFSPolicyProvider.class, PolicyProvider.class), 
-            conf));
+      PolicyProvider policyProvider =
+              ReflectionUtils.newInstance(
+                  conf.getClass(PolicyProvider.POLICY_PROVIDER_CONFIG,
+                      HDFSPolicyProvider.class, PolicyProvider.class),
+                  conf);
       SecurityUtil.setPolicy(new ConfiguredPolicy(conf, policyProvider));
     }
 

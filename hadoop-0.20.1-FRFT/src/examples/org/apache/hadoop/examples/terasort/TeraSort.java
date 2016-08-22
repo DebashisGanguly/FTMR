@@ -225,6 +225,7 @@ public class TeraSort extends Configured implements Tool {
   
   public int run(String[] args) throws Exception {
     LOG.info("starting");
+    
     JobConf job = (JobConf) getConf();
     Path inputDir = new Path(args[0]);
     inputDir = inputDir.makeQualified(inputDir.getFileSystem(job));
@@ -245,8 +246,14 @@ public class TeraSort extends Configured implements Tool {
     DistributedCache.createSymlink(job);
     job.setInt("dfs.replication", 1);
     TeraOutputFormat.setFinalSync(job, true);
+    
+    long start = System.currentTimeMillis();
     JobClient.runJob(job);
+    long end = System.currentTimeMillis();
+    
     LOG.info("done");
+    System.out.println("TeraSort duration: " + ((end - start)/1000) + " sec");
+    
     return 0;
   }
 

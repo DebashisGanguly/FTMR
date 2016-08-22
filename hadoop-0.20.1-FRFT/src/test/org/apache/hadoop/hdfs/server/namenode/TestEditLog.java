@@ -114,7 +114,7 @@ public class TestEditLog extends TestCase {
     FSEditLog editLog = fsimage.getEditLog();
 
     // set small size of flush buffer
-    editLog.setBufferCapacity(2048);
+    FSEditLog.setBufferCapacity(2048);
     editLog.close();
     editLog.open();
   

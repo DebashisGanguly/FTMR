@@ -26,12 +26,12 @@ import org.apache.hadoop.ipc.VersionedProtocol;
 /** An client-datanode protocol for block recovery
  */
 public interface ClientDatanodeProtocol extends VersionedProtocol {
-  public static final Log LOG = LogFactory.getLog(ClientDatanodeProtocol.class);
+  Log LOG = LogFactory.getLog(ClientDatanodeProtocol.class);
 
   /**
    * 3: add keepLength parameter.
    */
-  public static final long versionID = 3L;
+  long versionID = 3L;
 
   /** Start generation-stamp recovery for specified block
    * @param block the specified block

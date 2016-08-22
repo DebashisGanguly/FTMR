@@ -464,7 +464,7 @@ public class HttpServer implements FilterContainer {
           // then try the next port number.
           if (ex instanceof BindException) {
             if (!findPort) {
-              throw (BindException) ex;
+              throw ex;
             }
           } else {
             LOG.info("HttpServer.start() threw a non Bind IOException"); 

@@ -17,6 +17,7 @@
  */
 package org.apache.hadoop.hdfs;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 import java.io.*;
 import java.util.Random;
@@ -52,9 +53,9 @@ public class TestSmallBlock extends TestCase {
   
   private void checkAndEraseData(byte[] actual, int from, byte[] expected, String message) {
     for (int idx = 0; idx < actual.length; idx++) {
-      this.assertEquals(message+" byte "+(from+idx)+" differs. expected "+
-                        expected[from+idx]+" actual "+actual[idx],
-                        actual[idx], expected[from+idx]);
+      assertEquals(message + " byte " + (from + idx) + " differs. expected " +
+                      expected[from + idx] + " actual " + actual[idx],
+              actual[idx], expected[from + idx]);
       actual[idx] = 0;
     }
   }

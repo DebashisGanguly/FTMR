@@ -836,7 +836,7 @@ public class DFSClient implements FSConstants, java.io.Closeable {
    * 
    * @see ClientProtocol#saveNamespace()
    */
-  void saveNamespace() throws AccessControlException, IOException {
+  void saveNamespace() throws IOException {
     try {
       namenode.saveNamespace();
     } catch(RemoteException re) {
@@ -2088,8 +2088,8 @@ public class DFSClient implements FSConstants, java.io.Closeable {
     private Packet currentPacket = null;
     private int maxPackets = 80; // each packet 64K, total 5MB
     // private int maxPackets = 1000; // each packet 64K, total 64MB
-    private DataStreamer streamer = new DataStreamer();;
-    private ResponseProcessor response = null;
+    private DataStreamer streamer = new DataStreamer();
+      private ResponseProcessor response = null;
     private long currentSeqno = 0;
     private long bytesCurBlock = 0; // bytes writen in current block
     private int packetSize = 0; // write packet size, including the header.

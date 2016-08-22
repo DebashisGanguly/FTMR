@@ -54,8 +54,10 @@ class QueueManager {
                                                         = "mapred.queue.";
   // Configured queues
   private Set<String> queueNames;
+  
   // Map of a queue and ACL property name with an ACL
   private HashMap<String, AccessControlList> aclsMap;
+  
   // Map of a queue name to any generic object that represents 
   // scheduler information 
   private HashMap<String, Object> schedulerInfoObjects;
@@ -65,7 +67,7 @@ class QueueManager {
   /**
    * Enum representing an operation that can be performed on a queue.
    */
-  static enum QueueOperation {
+  enum QueueOperation {
     SUBMIT_JOB ("acl-submit-job", false),
     ADMINISTER_JOBS ("acl-administer-jobs", true);
     // TODO: Add ACL for LIST_JOBS when we have ability to authenticate 
@@ -245,8 +247,8 @@ class QueueManager {
   
   private void initialize(Configuration conf) {
     aclsEnabled = conf.getBoolean("mapred.acls.enabled", false);
-    String[] queues = conf.getStrings("mapred.queue.names", 
-                                  new String[] {JobConf.DEFAULT_QUEUE_NAME});
+    String[] queues = conf.getStrings("mapred.queue.names",
+            JobConf.DEFAULT_QUEUE_NAME);
     addToSet(queueNames, queues);
     
     // for every queue, and every operation, get the ACL
@@ -273,7 +275,9 @@ class QueueManager {
   
   synchronized JobQueueInfo[] getJobQueueInfos() {
     ArrayList<JobQueueInfo> queueInfoList = new ArrayList<JobQueueInfo>();
-    for(String queue : queueNames) {
+    
+    for(String queue : queueNames)
+    {
       Object schedulerInfo = schedulerInfoObjects.get(queue);
       if(schedulerInfo != null) {
         queueInfoList.add(new JobQueueInfo(queue,schedulerInfo.toString()));
@@ -281,7 +285,7 @@ class QueueManager {
         queueInfoList.add(new JobQueueInfo(queue,null));
       }
     }
-    return (JobQueueInfo[]) queueInfoList.toArray(new JobQueueInfo[queueInfoList
+    return queueInfoList.toArray(new JobQueueInfo[queueInfoList
         .size()]);
   }
 

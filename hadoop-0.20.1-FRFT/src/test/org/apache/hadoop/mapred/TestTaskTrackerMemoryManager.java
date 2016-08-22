@@ -365,9 +365,9 @@ public class TestTaskTrackerMemoryManager extends TestCase {
     while (true) {
       List<TaskReport> allTaskReports = new ArrayList<TaskReport>();
       allTaskReports.addAll(Arrays.asList(jClient
-          .getSetupTaskReports((org.apache.hadoop.mapred.JobID) job.getID())));
+          .getSetupTaskReports(job.getID())));
       allTaskReports.addAll(Arrays.asList(jClient
-          .getMapTaskReports((org.apache.hadoop.mapred.JobID) job.getID())));
+          .getMapTaskReports(job.getID())));
       for (TaskReport tr : allTaskReports) {
         String[] diag = tr.getDiagnostics();
         for (String str : diag) {

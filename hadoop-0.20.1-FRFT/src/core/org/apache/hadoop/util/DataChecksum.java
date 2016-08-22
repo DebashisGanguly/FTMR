@@ -243,5 +243,5 @@ public class DataChecksum implements Checksum {
     public void reset() {}
     public void update(byte[] b, int off, int len) {}
     public void update(int b) {}
-  };
+  }
 }

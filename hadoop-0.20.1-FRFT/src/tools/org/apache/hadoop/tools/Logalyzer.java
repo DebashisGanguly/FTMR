@@ -147,10 +147,10 @@ public class Logalyzer {
           String c2 = logColumns2[column];
           
           //Compare columns
-          int comparision = super.compareBytes(
-                                               c1.getBytes(), 0, c1.length(),
-                                               c2.getBytes(), 0, c2.length()
-                                               );
+          int comparision = compareBytes(
+                  c1.getBytes(), 0, c1.length(),
+                  c2.getBytes(), 0, c2.length()
+          );
           
           //They differ!
           if (comparision != 0) {

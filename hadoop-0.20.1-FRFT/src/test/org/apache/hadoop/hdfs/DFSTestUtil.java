@@ -242,7 +242,7 @@ public class DFSTestUtil extends TestCase {
   
   public static Block getFirstBlock(FileSystem fs, Path path) throws IOException {
     DFSDataInputStream in = 
-      (DFSDataInputStream) ((DistributedFileSystem)fs).open(path);
+      (DFSDataInputStream) fs.open(path);
     in.readByte();
     return in.getCurrentBlock();
   }  

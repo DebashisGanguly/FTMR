@@ -14,23 +14,26 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-var PREPREND_CRUMBS=new Array();
+var PREPREND_CRUMBS=[];
 var link1="@skinconfig.trail.link1.name@";
 var link2="@skinconfig.trail.link2.name@";
 var link3="@skinconfig.trail.link3.name@";
 if(!(link1=="")&&!link1.indexOf( "@" ) == 0){
-  PREPREND_CRUMBS.push( new Array( link1, @skinconfig.trail.link1.href@ ) ); }
+	PREPREND_CRUMBS.push(new Array(link1,; @skinconfig.trail.link1.href@ ) )
+};
 if(!(link2=="")&&!link2.indexOf( "@" ) == 0){
-  PREPREND_CRUMBS.push( new Array( link2, @skinconfig.trail.link2.href@ ) ); }
+	PREPREND_CRUMBS.push(new Array(link2,; @skinconfig.trail.link2.href@ ) )
+};
 if(!(link3=="")&&!link3.indexOf( "@" ) == 0){
-  PREPREND_CRUMBS.push( new Array( link3, @skinconfig.trail.link3.href@ ) ); }
+	PREPREND_CRUMBS.push(new Array(link3,; @skinconfig.trail.link3.href@ ) )
+};
 var DISPLAY_SEPARATOR=" &gt; ";
 var DISPLAY_PREPREND=" &gt; ";
 var DISPLAY_POSTPREND=":";
 var CSS_CLASS_CRUMB="breadcrumb";
 var CSS_CLASS_TRAIL="breadcrumbTrail";
 var CSS_CLASS_SEPARATOR="crumbSeparator";
-var FILE_EXTENSIONS=new Array( ".html", ".htm", ".jsp", ".php", ".php3", ".php4" );
+var FILE_EXTENSIONS=[".html", ".htm", ".jsp", ".php", ".php3", ".php4"];
 var PATH_SEPARATOR="/";
 
 function sc(s) {
@@ -50,12 +53,12 @@ function getcrumbs( d )
 {
 	var pre = "/";
 	var post = "/";
-	var c = new Array();
+	var c = [];
 	if( d != null )
 	{
 		for(var i=0;i < d.length;i++) {
 			pre+=d[i]+postfix;
-			c.push(new Array(d[i],pre)); }
+			c.push([d[i],pre]); }
 	}
 	if(PREPREND_CRUMBS.length > 0 )
 		return PREPREND_CRUMBS.concat( c );

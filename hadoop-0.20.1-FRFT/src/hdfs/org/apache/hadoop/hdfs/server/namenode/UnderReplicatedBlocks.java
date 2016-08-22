@@ -220,6 +220,6 @@ class UnderReplicatedBlocks implements Iterable<Block> {
       
       public int getPriority() {
         return level;
-    };
-  }
+    }
+    }
 }

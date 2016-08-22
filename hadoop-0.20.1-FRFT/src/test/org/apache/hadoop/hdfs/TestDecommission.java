@@ -52,7 +52,7 @@ public class TestDecommission extends TestCase {
 
   ArrayList<String> decommissionedNodes = new ArrayList<String>(numDatanodes);
 
-  private enum NodeState {NORMAL, DECOMMISSION_INPROGRESS, DECOMMISSIONED; }
+  private enum NodeState {NORMAL, DECOMMISSION_INPROGRESS, DECOMMISSIONED}
 
   private void writeConfigFile(FileSystem fs, Path name, ArrayList<String> nodes) 
     throws IOException {
@@ -121,7 +121,7 @@ public class TestDecommission extends TestCase {
     assertTrue("Not HDFS:"+fileSys.getUri(), fileSys instanceof DistributedFileSystem);
         
     DFSClient.DFSDataInputStream dis = (DFSClient.DFSDataInputStream) 
-      ((DistributedFileSystem)fileSys).open(name);
+      fileSys.open(name);
     Collection<LocatedBlock> dinfo = dis.getAllBlocks();
 
     for (LocatedBlock blk : dinfo) { // for each block

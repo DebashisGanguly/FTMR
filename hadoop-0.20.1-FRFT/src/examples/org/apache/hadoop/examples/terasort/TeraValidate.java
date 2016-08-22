@@ -50,108 +50,115 @@ import org.apache.hadoop.util.ToolRunner;
  * will have the problem report.
  */
 public class TeraValidate extends Configured implements Tool {
-  private static final Text error = new Text("error");
+	private static final Text error = new Text("error");
 
-  static class ValidateMapper extends MapReduceBase 
-      implements Mapper<Text,Text,Text,Text> {
-    private Text lastKey;
-    private OutputCollector<Text,Text> output;
-    private String filename;
-    
-    /**
-     * Get the final part of the input name
-     * @param split the input split
-     * @return the "part-00000" for the input
-     */
-    private String getFilename(FileSplit split) {
-      return split.getPath().getName();
-    }
+	static class ValidateMapper extends MapReduceBase 
+	implements Mapper<Text,Text,Text,Text> {
+		private Text lastKey;
+		private OutputCollector<Text,Text> output;
+		private String filename;
 
-    public void map(Text key, Text value, OutputCollector<Text,Text> output,
-                    Reporter reporter) throws IOException {
-      if (lastKey == null) {
-        filename = getFilename((FileSplit) reporter.getInputSplit());
-        output.collect(new Text(filename + ":begin"), key);
-        lastKey = new Text();
-        this.output = output;
-      } else {
-        if (key.compareTo(lastKey) < 0) {
-          output.collect(error, new Text("misorder in " + filename + 
-                                         " last: '" + lastKey + 
-                                         "' current: '" + key + "'"));
-        }
-      }
-      lastKey.set(key);
-    }
-    
-    public void close() throws IOException {
-      if (lastKey != null) {
-        output.collect(new Text(filename + ":end"), lastKey);
-      }
-    }
-  }
+		/**
+		 * Get the final part of the input name
+		 * @param split the input split
+		 * @return the "part-00000" for the input
+		 */
+		private String getFilename(FileSplit split) {
+			return split.getPath().getName();
+		}
 
-  /**
-   * Check the boundaries between the output files by making sure that the
-   * boundary keys are always increasing.
-   * Also passes any error reports along intact.
-   */
-  static class ValidateReducer extends MapReduceBase 
-      implements Reducer<Text,Text,Text,Text> {
-    private boolean firstKey = true;
-    private Text lastKey = new Text();
-    private Text lastValue = new Text();
-    public void reduce(Text key, Iterator<Text> values,
-                       OutputCollector<Text, Text> output, 
-                       Reporter reporter) throws IOException {
-      if (error.equals(key)) {
-        while(values.hasNext()) {
-          output.collect(key, values.next());
-        }
-      } else {
-        Text value = values.next();
-        if (firstKey) {
-          firstKey = false;
-        } else {
-          if (value.compareTo(lastValue) < 0) {
-            output.collect(error, 
-                           new Text("misordered keys last: " + 
-                                    lastKey + " '" + lastValue +
-                                    "' current: " + key + " '" + value + "'"));
-          }
-        }
-        lastKey.set(key);
-        lastValue.set(value);
-      }
-    }
-    
-  }
+		public void map(Text key, Text value, OutputCollector<Text,Text> output,
+				Reporter reporter) throws IOException {
+			if (lastKey == null) {
+				filename = getFilename((FileSplit) reporter.getInputSplit());
+				output.collect(new Text(filename + ":begin"), key);
+				lastKey = new Text();
+				this.output = output;
+			} else {
+				if (key.compareTo(lastKey) < 0) {
+					output.collect(error, new Text("misorder in " + filename + 
+							" last: '" + lastKey + 
+							"' current: '" + key + "'"));
+				}
+			}
+			lastKey.set(key);
+		}
 
-  public int run(String[] args) throws Exception {
-    JobConf job = (JobConf) getConf();
-    TeraInputFormat.setInputPaths(job, new Path(args[0]));
-    FileOutputFormat.setOutputPath(job, new Path(args[1]));
-    job.setJobName("TeraValidate");
-    job.setJarByClass(TeraValidate.class);
-    job.setMapperClass(ValidateMapper.class);
-    job.setReducerClass(ValidateReducer.class);
-    job.setOutputKeyClass(Text.class);
-    job.setOutputValueClass(Text.class);
-    // force a single reducer
-    job.setNumReduceTasks(1);
-    // force a single split 
-    job.setLong("mapred.min.split.size", Long.MAX_VALUE);
-    job.setInputFormat(TeraInputFormat.class);
-    JobClient.runJob(job);
-    return 0;
-  }
+		public void close() throws IOException {
+			if (lastKey != null) {
+				output.collect(new Text(filename + ":end"), lastKey);
+			}
+		}
+	}
 
-  /**
-   * @param args
-   */
-  public static void main(String[] args) throws Exception {
-    int res = ToolRunner.run(new JobConf(), new TeraValidate(), args);
-    System.exit(res);
-  }
+	/**
+	 * Check the boundaries between the output files by making sure that the
+	 * boundary keys are always increasing.
+	 * Also passes any error reports along intact.
+	 */
+	static class ValidateReducer extends MapReduceBase 
+	implements Reducer<Text,Text,Text,Text> {
+		private boolean firstKey = true;
+		private Text lastKey = new Text();
+		private Text lastValue = new Text();
+		public void reduce(Text key, Iterator<Text> values,
+				OutputCollector<Text, Text> output, 
+				Reporter reporter) throws IOException {
+			if (error.equals(key)) {
+				while(values.hasNext()) {
+					output.collect(key, values.next());
+				}
+			} else {
+				Text value = values.next();
+				if (firstKey) {
+					firstKey = false;
+				} else {
+					if (value.compareTo(lastValue) < 0) {
+						output.collect(error, 
+								new Text("misordered keys last: " + 
+										lastKey + " '" + lastValue +
+										"' current: " + key + " '" + value + "'"));
+					}
+				}
+				lastKey.set(key);
+				lastValue.set(value);
+			}
+		}
+
+	}
+
+	public int run(String[] args) throws Exception {
+		JobConf job = (JobConf) getConf();
+		TeraInputFormat.setInputPaths(job, new Path(args[0]));
+		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+		job.setJobName("TeraValidate");
+		job.setJarByClass(TeraValidate.class);
+		job.setMapperClass(ValidateMapper.class);
+		job.setReducerClass(ValidateReducer.class);
+		job.setOutputKeyClass(Text.class);
+		job.setOutputValueClass(Text.class);
+		// force a single reducer
+		job.setNumReduceTasks(1);
+		// force a single split 
+		job.setLong("mapred.min.split.size", Long.MAX_VALUE);
+		job.setInputFormat(TeraInputFormat.class);
+		JobClient.runJob(job);
+
+	    long start = System.currentTimeMillis();
+	    JobClient.runJob(job);
+	    long end = System.currentTimeMillis();
+	    System.out.println("TeraValidate duration: " + ((end - start)/1000) + " sec");
+
+	    
+		return 0;
+	}
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) throws Exception {
+		int res = ToolRunner.run(new JobConf(), new TeraValidate(), args);
+		System.exit(res);
+	}
 
 }

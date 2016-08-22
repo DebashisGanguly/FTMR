@@ -42,7 +42,7 @@ public interface ClientProtocol extends VersionedProtocol {
    * The log of historical changes can be retrieved from the svn).
    * 41: saveNamespace introduced.
    */
-  public static final long versionID = 41L;
+  long versionID = 41L;
   
   ///////////////////////////////////////
   // File contents
@@ -66,9 +66,9 @@ public interface ClientProtocol extends VersionedProtocol {
    * @return file length and array of blocks with their locations
    * @throws IOException
    */
-  public LocatedBlocks  getBlockLocations(String src,
-                                          long offset,
-                                          long length) throws IOException;
+  LocatedBlocks  getBlockLocations(String src,
+                                   long offset,
+                                   long length) throws IOException;
 
   /**
    * Create a new file entry in the namespace.
@@ -100,13 +100,13 @@ public interface ClientProtocol extends VersionedProtocol {
    *                                any quota restriction
    * @throws IOException if other errors occur.
    */
-  public void create(String src, 
-                     FsPermission masked,
-                             String clientName, 
-                             boolean overwrite, 
-                             short replication,
-                             long blockSize
-                             ) throws IOException;
+  void create(String src,
+              FsPermission masked,
+              String clientName,
+              boolean overwrite,
+              short replication,
+              long blockSize
+  ) throws IOException;
 
   /**
    * Append to the end of the file. 
@@ -121,7 +121,7 @@ public interface ClientProtocol extends VersionedProtocol {
    * throws an IOException.
    * @throws IOException if other errors occur.
    */
-  public LocatedBlock append(String src, String clientName) throws IOException;
+  LocatedBlock append(String src, String clientName) throws IOException;
 
   /**
    * Set replication for an existing file.
@@ -137,15 +137,15 @@ public interface ClientProtocol extends VersionedProtocol {
    * @return true if successful;
    *         false if file does not exist or is a directory
    */
-  public boolean setReplication(String src, 
-                                short replication
-                                ) throws IOException;
+  boolean setReplication(String src,
+                         short replication
+  ) throws IOException;
 
   /**
    * Set permissions for an existing file/directory.
    */
-  public void setPermission(String src, FsPermission permission
-      ) throws IOException;
+  void setPermission(String src, FsPermission permission
+  ) throws IOException;
 
   /**
    * Set owner of a path (i.e. a file or a directory).
@@ -154,8 +154,8 @@ public interface ClientProtocol extends VersionedProtocol {
    * @param username If it is null, the original username remains unchanged.
    * @param groupname If it is null, the original groupname remains unchanged.
    */
-  public void setOwner(String src, String username, String groupname
-      ) throws IOException;
+  void setOwner(String src, String username, String groupname
+  ) throws IOException;
 
   /**
    * The client can give up on a blcok by calling abandonBlock().
@@ -163,8 +163,8 @@ public interface ClientProtocol extends VersionedProtocol {
    * either obtain a new block, or complete or abandon the file.
    * Any partial writes to the block will be discarded.
    */
-  public void abandonBlock(Block b, String src, String holder
-      ) throws IOException;
+  void abandonBlock(Block b, String src, String holder
+  ) throws IOException;
 
   /**
    * A client that wants to write an additional block to the 
@@ -176,7 +176,7 @@ public interface ClientProtocol extends VersionedProtocol {
    * 
    * @return LocatedBlock allocated block information.
    */
-  public LocatedBlock addBlock(String src, String clientName) throws IOException;
+  LocatedBlock addBlock(String src, String clientName) throws IOException;
 
   /**
    * The client is done writing data to the given filename, and would 
@@ -190,14 +190,14 @@ public interface ClientProtocol extends VersionedProtocol {
    * DataNode failures may cause a client to call complete() several
    * times before succeeding.
    */
-  public boolean complete(String src, String clientName) throws IOException;
+  boolean complete(String src, String clientName) throws IOException;
 
   /**
    * The client wants to report corrupted blocks (blocks with specified
    * locations on datanodes).
    * @param blocks Array of located blocks to report
    */
-  public void reportBadBlocks(LocatedBlock[] blocks) throws IOException;
+  void reportBadBlocks(LocatedBlock[] blocks) throws IOException;
 
   ///////////////////////////////////////
   // Namespace management
@@ -213,7 +213,7 @@ public interface ClientProtocol extends VersionedProtocol {
    * @throws QuotaExceededException if the rename would violate 
    *                                any quota restriction
    */
-  public boolean rename(String src, String dst) throws IOException;
+  boolean rename(String src, String dst) throws IOException;
 
   /**
    * Delete the given file or directory from the file system.
@@ -224,7 +224,7 @@ public interface ClientProtocol extends VersionedProtocol {
    * @return true only if the existing file or directory was actually removed 
    * from the file system. 
    */
-  public boolean delete(String src) throws IOException;
+  boolean delete(String src) throws IOException;
 
   /**
    * Delete the given file or directory from the file system.
@@ -237,7 +237,7 @@ public interface ClientProtocol extends VersionedProtocol {
    * @return true only if the existing file or directory was actually removed 
    * from the file system. 
    */
-  public boolean delete(String src, boolean recursive) throws IOException;
+  boolean delete(String src, boolean recursive) throws IOException;
   
   /**
    * Create a directory (or hierarchy of directories) with the given
@@ -252,12 +252,12 @@ public interface ClientProtocol extends VersionedProtocol {
    * @throws QuotaExceededException if the operation would violate 
    *                                any quota restriction.
    */
-  public boolean mkdirs(String src, FsPermission masked) throws IOException;
+  boolean mkdirs(String src, FsPermission masked) throws IOException;
 
   /**
    * Get a listing of the indicated directory
    */
-  public FileStatus[] getListing(String src) throws IOException;
+  FileStatus[] getListing(String src) throws IOException;
 
   ///////////////////////////////////////
   // System issues and management
@@ -279,14 +279,14 @@ public interface ClientProtocol extends VersionedProtocol {
    * the last call to renewLease(), the NameNode assumes the
    * client has died.
    */
-  public void renewLease(String clientName) throws IOException;
+  void renewLease(String clientName) throws IOException;
 
-  public int GET_STATS_CAPACITY_IDX = 0;
-  public int GET_STATS_USED_IDX = 1;
-  public int GET_STATS_REMAINING_IDX = 2;
-  public int GET_STATS_UNDER_REPLICATED_IDX = 3;
-  public int GET_STATS_CORRUPT_BLOCKS_IDX = 4;
-  public int GET_STATS_MISSING_BLOCKS_IDX = 5;
+  int GET_STATS_CAPACITY_IDX = 0;
+  int GET_STATS_USED_IDX = 1;
+  int GET_STATS_REMAINING_IDX = 2;
+  int GET_STATS_UNDER_REPLICATED_IDX = 3;
+  int GET_STATS_CORRUPT_BLOCKS_IDX = 4;
+  int GET_STATS_MISSING_BLOCKS_IDX = 5;
   
   /**
    * Get a set of statistics about the filesystem.
@@ -302,7 +302,7 @@ public interface ClientProtocol extends VersionedProtocol {
    * Use public constants like {@link #GET_STATS_CAPACITY_IDX} in place of 
    * actual numbers to index into the array.
    */
-  public long[] getStats() throws IOException;
+  long[] getStats() throws IOException;
 
   /**
    * Get a report on the system's current datanodes.
@@ -310,7 +310,7 @@ public interface ClientProtocol extends VersionedProtocol {
    * Return live datanodes if type is LIVE; dead datanodes if type is DEAD;
    * otherwise all datanodes if type is ALL.
    */
-  public DatanodeInfo[] getDatanodeReport(FSConstants.DatanodeReportType type)
+  DatanodeInfo[] getDatanodeReport(FSConstants.DatanodeReportType type)
   throws IOException;
 
   /**
@@ -319,7 +319,7 @@ public interface ClientProtocol extends VersionedProtocol {
    * @return The number of bytes in each block
    * @throws IOException
    */
-  public long getPreferredBlockSize(String filename) throws IOException;
+  long getPreferredBlockSize(String filename) throws IOException;
 
   /**
    * Enter, leave or get safe mode.
@@ -373,7 +373,7 @@ public interface ClientProtocol extends VersionedProtocol {
    *         <li>1 if the safe mode is ON.</li></ul>
    * @throws IOException
    */
-  public boolean setSafeMode(FSConstants.SafeModeAction action) throws IOException;
+  boolean setSafeMode(FSConstants.SafeModeAction action) throws IOException;
 
   /**
    * Save namespace image.
@@ -384,13 +384,13 @@ public interface ClientProtocol extends VersionedProtocol {
    * @throws AccessControlException if the superuser privilege is violated.
    * @throws IOException if image creation failed.
    */
-  public void saveNamespace() throws IOException;
+  void saveNamespace() throws IOException;
 
   /**
    * Tells the namenode to reread the hosts and exclude files. 
    * @throws IOException
    */
-  public void refreshNodes() throws IOException;
+  void refreshNodes() throws IOException;
 
   /**
    * Finalize previous upgrade.
@@ -399,7 +399,7 @@ public interface ClientProtocol extends VersionedProtocol {
    * 
    * @throws IOException
    */
-  public void finalizeUpgrade() throws IOException;
+  void finalizeUpgrade() throws IOException;
 
   /**
    * Report distributed upgrade progress or force current upgrade to proceed.
@@ -408,7 +408,7 @@ public interface ClientProtocol extends VersionedProtocol {
    * @return upgrade status information or null if no upgrades are in progress
    * @throws IOException
    */
-  public UpgradeStatusReport distributedUpgradeProgress(UpgradeAction action) 
+  UpgradeStatusReport distributedUpgradeProgress(UpgradeAction action)
   throws IOException;
 
   /**
@@ -416,7 +416,7 @@ public interface ClientProtocol extends VersionedProtocol {
    * already exists, then append.
    * @throws IOException
    */
-  public void metaSave(String filename) throws IOException;
+  void metaSave(String filename) throws IOException;
 
   /**
    * Get the file info for a specific file or directory.
@@ -425,13 +425,13 @@ public interface ClientProtocol extends VersionedProtocol {
    * @return object containing information regarding the file
    *         or null if file not found
    */
-  public FileStatus getFileInfo(String src) throws IOException;
+  FileStatus getFileInfo(String src) throws IOException;
 
   /**
    * Get {@link ContentSummary} rooted at the specified directory.
    * @param path The string representation of the path
    */
-  public ContentSummary getContentSummary(String path) throws IOException;
+  ContentSummary getContentSummary(String path) throws IOException;
 
   /**
    * Set the quota for a directory.
@@ -452,7 +452,7 @@ public interface ClientProtocol extends VersionedProtocol {
    * @throws QuotaExceededException if the directory size 
    *                                is greater than the given quota
    */
-  public void setQuota(String path, long namespaceQuota, long diskspaceQuota)
+  void setQuota(String path, long namespaceQuota, long diskspaceQuota)
                       throws IOException;
   
   /**
@@ -461,7 +461,7 @@ public interface ClientProtocol extends VersionedProtocol {
    * @param src The string representation of the path
    * @param client The string representation of the client
    */
-  public void fsync(String src, String client) throws IOException;
+  void fsync(String src, String client) throws IOException;
 
   /**
    * Sets the modification and access time of the file to the specified time.
@@ -473,5 +473,5 @@ public interface ClientProtocol extends VersionedProtocol {
    *              Setting atime to -1 means that access time should not be set
    *              by this call.
    */
-  public void setTimes(String src, long mtime, long atime) throws IOException;
+  void setTimes(String src, long mtime, long atime) throws IOException;
 }

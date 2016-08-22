@@ -27,31 +27,32 @@ import java.io.IOException;
  * Represents a directive from the {@link org.apache.hadoop.mapred.JobTracker} 
  * to the {@link org.apache.hadoop.mapred.TaskTracker} to kill a task.
  * 
+ * This is for the map side. It tells which tasks the tasktrackre must kill.
  */
 class KillTaskAction extends TaskTrackerAction {
-  final TaskAttemptID taskId;
-  
-  public KillTaskAction() {
-    super(ActionType.KILL_TASK);
-    taskId = new TaskAttemptID();
-  }
-  
-  public KillTaskAction(TaskAttemptID taskId) {
-    super(ActionType.KILL_TASK);
-    this.taskId = taskId;
-  }
+	final TaskAttemptID taskId;
 
-  public TaskAttemptID getTaskID() {
-    return taskId;
-  }
-  
-  @Override
-  public void write(DataOutput out) throws IOException {
-    taskId.write(out);
-  }
+	public KillTaskAction() {
+		super(ActionType.KILL_TASK);
+		taskId = new TaskAttemptID();
+	}
 
-  @Override
-  public void readFields(DataInput in) throws IOException {
-    taskId.readFields(in);
-  }
+	public KillTaskAction(TaskAttemptID taskId) {
+		super(ActionType.KILL_TASK);
+		this.taskId = taskId;
+	}
+
+	public TaskAttemptID getTaskID() {
+		return taskId;
+	}
+
+	@Override
+	public void write(DataOutput out) throws IOException {
+		taskId.write(out);
+	}
+
+	@Override
+	public void readFields(DataInput in) throws IOException {
+		taskId.readFields(in);
+	}
 }

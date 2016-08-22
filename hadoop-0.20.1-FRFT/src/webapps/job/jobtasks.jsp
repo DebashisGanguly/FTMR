@@ -27,7 +27,7 @@
   int next_page = pnum+1;
   int numperpage = 2000;
   JobID jobidObj = JobID.forName(jobid);
-  JobInProgress job = (JobInProgress) tracker.getJob(jobidObj);
+  JobInProgress job = tracker.getJob(jobidObj);
   JobProfile profile = (job != null) ? (job.getProfile()) : null;
   JobStatus status = (job != null) ? (job.getStatus()) : null;
   TaskReport[] reports = null;
@@ -43,6 +43,13 @@
   } else if ("setup".equals(type)) {
     reports = (job != null) ? tracker.getSetupTaskReports(jobidObj) : null;
   }
+
+  // String iout ="";
+  // String imapout ="";
+  // if(job != null) {
+  // 	iout = job.getInfoOutputs();
+  // 	imapout = job.getInfoMapOutputs();
+  // }
 %>
 
 <html>
@@ -85,7 +92,7 @@
     out.print("<center>");
     out.print("<table border=2 cellpadding=\"5\" cellspacing=\"2\">");
     out.print("<tr><td align=\"center\">Task</td><td>Complete</td><td>Status</td>" +
-              "<td>Start Time</td><td>Finish Time</td><td>Errors</td><td>Counters</td></tr>");
+              "<td>Start Time</td><td>Finish Time</td><td>Errors</td><td>Counters</td><td>TaskTracker</td></tr>");
     if (end_index > report_len){
         end_index = report_len;
     }
@@ -110,9 +117,23 @@
              "<a href=\"taskstats.jsp?jobid=" + jobid + 
              "&tipid=" + report.getTaskID() +
              "\">" + report.getCounters().size() +
-             "</a></td></tr>");
+             "</a></td><td>" + report.getTrackerName() + "</td></tr>");
     }
     out.print("</table>");
+    // out.print("<br>");
+    // out.print("<br>");
+    // out.print("<h2>Map Task Info:</h2>");
+    // out.print("<table border=\"1\">");
+    // out.print("<tr><td>Map</td><td>Spill number</td><td>MapOutputFileName</td><td>Hash</td></tr>");
+    // out.print(imapout); 
+    // out.print("</table>");
+    // out.print("<br>");
+    // out.print("<br>");
+    // out.print("<h2>Reduce Task Info:</h2>");
+    // out.print("<table border=\"1\">");
+    // out.print("<tr><td>Reduce</td><td>Map</td></tr>");
+    // out.print(iout); 
+    // out.print("</table>");
     out.print("</center>");
   }
   if (end_index < report_len) {
@@ -127,7 +148,6 @@
                 "&pagenum=" + (pnum -1) + "&state=" + state + "\">" + "Prev" + "</a></div>");
   }
 %>
-
 <hr>
 <a href="jobtracker.jsp">Go back to JobTracker</a><br>
 <%

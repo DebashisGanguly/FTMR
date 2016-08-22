@@ -46,7 +46,7 @@
     String chunkSizeToViewStr = req.getParameter("chunkSizeToView");
     if (chunkSizeToViewStr != null && Integer.parseInt(chunkSizeToViewStr) > 0)
       chunkSizeToView = Integer.parseInt(chunkSizeToViewStr);
-    else chunkSizeToView = jspHelper.defaultChunkSizeToView;
+    else chunkSizeToView = JspHelper.defaultChunkSizeToView;
 
     if (!noLink) {
       out.print("<h3>Tail of File: ");
@@ -70,8 +70,8 @@
                 referrer+ "\">");
 
     //fetch the block from the datanode that has the last block for this file
-    DFSClient dfs = new DFSClient(jspHelper.nameNodeAddr, 
-                                         jspHelper.conf);
+    DFSClient dfs = new DFSClient(JspHelper.nameNodeAddr,
+            JspHelper.conf);
     List<LocatedBlock> blocks = 
       dfs.namenode.getBlockLocations(filename, 0, Long.MAX_VALUE).getLocatedBlocks();
     if (blocks == null || blocks.size() == 0) {

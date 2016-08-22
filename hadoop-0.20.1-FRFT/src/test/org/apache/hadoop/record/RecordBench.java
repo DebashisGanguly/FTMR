@@ -39,8 +39,8 @@ public class RecordBench {
     long deserialize;
     long write;
     long readFields;
-  };
-  
+  }
+
   private static final long SEED = 0xDEADBEEFL;
   private static final Random rand = new Random();
   
@@ -90,7 +90,7 @@ public class RecordBench {
     try {
       init = RecordBench.class.getDeclaredMethod("init"+
                                                  toCamelCase(type) + "s",
-                                                 new Class[] {Record[].class});
+              Record[].class);
     } catch (NoSuchMethodException ex) {
       throw new RuntimeException(ex);
     }
@@ -280,7 +280,7 @@ public class RecordBench {
     try {
       bench = RecordBench.class.getDeclaredMethod("run"+
                                                   toCamelCase(format) + "Bench",
-                                                  new Class[] {String.class, Integer.TYPE, Times.class});
+              String.class, Integer.TYPE, Times.class);
     } catch (NoSuchMethodException ex) {
       ex.printStackTrace();
       exitOnError();
@@ -294,7 +294,7 @@ public class RecordBench {
     rand.setSeed(SEED);
     Times times = new Times();
     try {
-      bench.invoke(null, new Object[] {typeName, numRecords, times});
+      bench.invoke(null, typeName, numRecords, times);
     } catch (Exception ex) {
       ex.printStackTrace();
       System.exit(1);
@@ -303,7 +303,7 @@ public class RecordBench {
     // timed run
     rand.setSeed(SEED);
     try {
-      bench.invoke(null, new Object[] {typeName, numRecords, times});
+      bench.invoke(null, typeName, numRecords, times);
     } catch (Exception ex) {
       ex.printStackTrace();
       System.exit(1);

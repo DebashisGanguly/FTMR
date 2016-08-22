@@ -28,6 +28,7 @@
   <!-- to contribute (without having to type -D or edit this file -->
   <property file="${user.home}/${name}.build.properties" />
   <property file="${root}/build.properties" />
+  <property name="version" value="0.20.2-dev"/>
 
   <property name="hadoop.root" location="${root}/../../../"/>
   <property name="src.dir"  location="${root}/src/java"/>

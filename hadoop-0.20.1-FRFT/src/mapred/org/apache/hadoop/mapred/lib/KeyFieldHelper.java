@@ -284,6 +284,7 @@ class KeyFieldHelper {
     }
     return key;
   }
+  
   private void printKey(KeyDescription key) {
     System.out.println("key.beginFieldIdx: " + key.beginFieldIdx);
     System.out.println("key.beginChar: " + key.beginChar);

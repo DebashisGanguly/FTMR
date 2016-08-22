@@ -145,7 +145,7 @@ class ReplicationTargetChooser {
     int numOfResults = results.size();
     boolean newBlock = (numOfResults==0);
     if (writer == null && !newBlock) {
-      writer = (DatanodeDescriptor)results.get(0);
+      writer = results.get(0);
     }
       
     try {
@@ -316,7 +316,7 @@ class ReplicationTargetChooser {
         throw new NotEnoughReplicasException(
                                              "Not able to place enough replicas");
       }
-      result = (DatanodeDescriptor)(selectedNodes[0]);
+      result = selectedNodes[0];
     } while(!isGoodTarget(result, blocksize, maxNodesPerRack, results));
     results.add(result);
     return result;
@@ -374,7 +374,7 @@ class ReplicationTargetChooser {
         numOfReplicas--;
       }
     }
-    return (DatanodeDescriptor[])results.toArray(
+    return results.toArray(
                                                  new DatanodeDescriptor[results.size()]);    
   }
     

@@ -76,7 +76,7 @@ public class TestTotalOrderPartitioner extends TestCase {
     testStrings.add(new Check<Text>(new Text("z"), 9));
     testStrings.add(new Check<Text>(new Text("ddngo"), 5));
     testStrings.add(new Check<Text>(new Text("hi"), 6));
-  };
+  }
 
   private static <T extends WritableComparable> Path writePartitionFile(
       String testname, JobConf conf, T[] splits) throws IOException {
@@ -106,8 +106,8 @@ public class TestTotalOrderPartitioner extends TestCase {
     TotalOrderPartitioner<Text,NullWritable> partitioner =
       new TotalOrderPartitioner<Text,NullWritable>();
     JobConf job = new JobConf();
-    Path p = TestTotalOrderPartitioner.<Text>writePartitionFile(
-        "totalordermemcmp", job, splitStrings);
+    Path p = TestTotalOrderPartitioner.writePartitionFile(
+            "totalordermemcmp", job, splitStrings);
     job.setMapOutputKeyClass(Text.class);
     try {
       partitioner.configure(job);
@@ -125,8 +125,8 @@ public class TestTotalOrderPartitioner extends TestCase {
     TotalOrderPartitioner<Text,NullWritable> partitioner =
       new TotalOrderPartitioner<Text,NullWritable>();
     JobConf job = new JobConf();
-    Path p = TestTotalOrderPartitioner.<Text>writePartitionFile(
-        "totalorderbinarysearch", job, splitStrings);
+    Path p = TestTotalOrderPartitioner.writePartitionFile(
+            "totalorderbinarysearch", job, splitStrings);
     job.setBoolean("total.order.partitioner.natural.order", false);
     job.setMapOutputKeyClass(Text.class);
     try {
@@ -159,8 +159,8 @@ public class TestTotalOrderPartitioner extends TestCase {
     JobConf job = new JobConf();
     Text[] revSplitStrings = Arrays.copyOf(splitStrings, splitStrings.length);
     Arrays.sort(revSplitStrings, new ReverseStringComparator());
-    Path p = TestTotalOrderPartitioner.<Text>writePartitionFile(
-        "totalordercustomcomparator", job, revSplitStrings);
+    Path p = TestTotalOrderPartitioner.writePartitionFile(
+            "totalordercustomcomparator", job, revSplitStrings);
     job.setBoolean("total.order.partitioner.natural.order", false);
     job.setMapOutputKeyClass(Text.class);
     job.setOutputKeyComparatorClass(ReverseStringComparator.class);

@@ -19,7 +19,6 @@
 package org.apache.hadoop.mapred;
 
 import java.io.IOException;
-import java.io.DataInput;
 
 /**
  * <code>RecordReader</code> reads &lt;key, value&gt; pairs from an 
@@ -70,8 +69,8 @@ public interface RecordReader<K, V> {
    * Close this {@link InputSplit} to future operations.
    * 
    * @throws IOException
-   */ 
-  public void close() throws IOException;
+   */
+  void close() throws IOException;
 
   /**
    * How much of the input has the {@link RecordReader} consumed i.e.

@@ -115,7 +115,7 @@ public class SocketInputStream extends InputStream
     byte[] buf = new byte[1];
     int ret = read(buf, 0, 1);
     if (ret > 0) {
-      return (byte)buf[0];
+      return buf[0];
     }
     if (ret != -1) {
       // unexpected

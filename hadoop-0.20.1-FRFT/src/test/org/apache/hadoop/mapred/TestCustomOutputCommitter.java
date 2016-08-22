@@ -58,8 +58,8 @@ public class TestCustomOutputCommitter extends TestCase {
 
       assertTrue("not failed ", ret == 0);
     } finally {
-      if (dfs != null) {dfs.shutdown();};
-      if (mr != null) {mr.shutdown();};
+      if (dfs != null) {dfs.shutdown();}
+      if (mr != null) {mr.shutdown();}
     }
   }
 }

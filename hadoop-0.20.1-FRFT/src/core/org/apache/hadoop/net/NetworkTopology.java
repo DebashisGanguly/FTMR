@@ -82,11 +82,8 @@ public class NetworkTopology {
       }
             
       Node firstChild = children.get(0);
-      if (firstChild instanceof InnerNode) {
-        return false;
-      }
-            
-      return true;
+      return !(firstChild instanceof InnerNode);
+
     }
         
     /** Judge if this node is an ancestor of node <i>n</i>

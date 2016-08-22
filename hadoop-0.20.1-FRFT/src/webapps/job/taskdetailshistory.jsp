@@ -68,17 +68,6 @@
     out.print("<td>" + taskAttempt.get(Keys.TASK_ATTEMPT_ID) + "</td>");
     out.print("<td>" + StringUtils.getFormattedTimeWithDiff(dateFormat,
               taskAttempt.getLong(Keys.START_TIME), 0 ) + "</td>"); 
-    if (Values.REDUCE.name().equals(type)) {
-      JobHistory.ReduceAttempt reduceAttempt = 
-            (JobHistory.ReduceAttempt)taskAttempt; 
-      out.print("<td>" + 
-                StringUtils.getFormattedTimeWithDiff(dateFormat, 
-                reduceAttempt.getLong(Keys.SHUFFLE_FINISHED), 
-                reduceAttempt.getLong(Keys.START_TIME)) + "</td>"); 
-      out.print("<td>" + StringUtils.getFormattedTimeWithDiff(dateFormat, 
-                reduceAttempt.getLong(Keys.SORT_FINISHED), 
-                reduceAttempt.getLong(Keys.SHUFFLE_FINISHED)) + "</td>"); 
-    }
     out.print("<td>"+ StringUtils.getFormattedTimeWithDiff(dateFormat,
               taskAttempt.getLong(Keys.FINISH_TIME), 
               taskAttempt.getLong(Keys.START_TIME) ) + "</td>"); 

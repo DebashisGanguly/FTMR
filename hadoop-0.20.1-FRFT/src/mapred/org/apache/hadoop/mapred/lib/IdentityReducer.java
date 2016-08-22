@@ -32,15 +32,14 @@ import org.apache.hadoop.mapred.MapReduceBase;
  */
 @Deprecated
 public class IdentityReducer<K, V>
-    extends MapReduceBase implements Reducer<K, V, K, V> {
+extends MapReduceBase implements Reducer<K, V, K, V> {
 
-  /** Writes all keys and values directly to output. */
-  public void reduce(K key, Iterator<V> values,
-                     OutputCollector<K, V> output, Reporter reporter)
-    throws IOException {
-    while (values.hasNext()) {
-      output.collect(key, values.next());
-    }
-  }
-	
+	/** Writes all keys and values directly to output. */
+	public void reduce(K key, Iterator<V> values,
+			OutputCollector<K, V> output, Reporter reporter)
+	throws IOException {
+		while (values.hasNext()) {
+			output.collect(key, values.next());
+		}
+	}
 }

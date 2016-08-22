@@ -84,7 +84,7 @@ public class SequenceFileInputFilter<K, V>
      * @param key record key
      * @return true if a record is accepted; return false otherwise
      */
-    public abstract boolean accept(Object key);
+    boolean accept(Object key);
   }
     
   /**

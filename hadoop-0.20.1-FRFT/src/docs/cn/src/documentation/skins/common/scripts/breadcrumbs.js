@@ -28,7 +28,7 @@
  *
  * Implement it - courtesy to fritz.
  */
-var abc	= new Array();
+var abc	= [];
 if (!abc.push) {
   Array.prototype.push	= function(what){this[this.length]=what}
 }
@@ -43,7 +43,7 @@ if (!abc.push) {
  * to it. You'll need to modify this for every domain or subdomain where
  * you use this script (you can leave it as an empty array if you wish)
  */
-var PREPREND_CRUMBS = new Array();
+var PREPREND_CRUMBS = [];
 
 var link1 = "@skinconfig.trail.link1.name@";
 var link2 = "@skinconfig.trail.link2.name@";
@@ -54,13 +54,13 @@ var href2 = "@skinconfig.trail.link2.href@";
 var href3 = "@skinconfig.trail.link3.href@";
 
    if(!(link1=="")&&!link1.indexOf( "@" ) == 0){
-     PREPREND_CRUMBS.push( new Array( link1, href1 ) );
+     PREPREND_CRUMBS.push( [link1, href1] );
    }
    if(!(link2=="")&&!link2.indexOf( "@" ) == 0){
-     PREPREND_CRUMBS.push( new Array( link2, href2 ) );
+     PREPREND_CRUMBS.push( [link2, href2] );
    }
    if(!(link3=="")&&!link3.indexOf( "@" ) == 0){
-     PREPREND_CRUMBS.push( new Array( link3, href3 ) );
+     PREPREND_CRUMBS.push( [link3, href3] );
    }
 
 /**
@@ -96,7 +96,7 @@ var CSS_CLASS_SEPARATOR = "crumbSeparator";
  * determine what part of the url to ignore (if it contains one of the
  * string specified here, we ignore it).
  */
-var FILE_EXTENSIONS = new Array( ".html", ".htm", ".jsp", ".php", ".php3", ".php4" );
+var FILE_EXTENSIONS = [".html", ".htm", ".jsp", ".php", ".php3", ".php4"];
 
 /**
  * String that separates parts of the breadcrumb trail from each other.
@@ -153,14 +153,14 @@ function getBreadcrumbs( dirs )
 	var postfix = "/";
 
 	// the array we will return
-	var crumbs = new Array();
+	var crumbs = [];
 
 	if( dirs != null )
 	{
 		for( var i = 0; i < dirs.length; i++ )
 		{
 			prefix += dirs[i] + postfix;
-			crumbs.push( new Array( dirs[i], prefix ) );
+			crumbs.push( [dirs[i], prefix] );
 		}
 	}
 

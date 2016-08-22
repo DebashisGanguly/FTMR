@@ -50,7 +50,7 @@
     String chunkSizeToViewStr = req.getParameter("chunkSizeToView");
     if (chunkSizeToViewStr != null && Integer.parseInt(chunkSizeToViewStr) > 0)
       chunkSizeToView = Integer.parseInt(chunkSizeToViewStr);
-    else chunkSizeToView = jspHelper.defaultChunkSizeToView;
+    else chunkSizeToView = JspHelper.defaultChunkSizeToView;
 
     String startOffsetStr = req.getParameter("startOffset");
     if (startOffsetStr == null || Long.parseLong(startOffsetStr) < 0)
@@ -71,7 +71,7 @@
     } 
     blockSize = Long.parseLong(blockSizeStr);
 
-    DFSClient dfs = new DFSClient(jspHelper.nameNodeAddr, jspHelper.conf);
+    DFSClient dfs = new DFSClient(JspHelper.nameNodeAddr, JspHelper.conf);
     List<LocatedBlock> blocks = 
       dfs.namenode.getBlockLocations(filename, 0, Long.MAX_VALUE).getLocatedBlocks();
     //Add the various links for looking at the file contents
@@ -157,7 +157,7 @@
     }
     out.println("</table>");
     out.print("<hr>");
-    String namenodeHost = jspHelper.nameNodeAddr.getHostName();
+    String namenodeHost = JspHelper.nameNodeAddr.getHostName();
     out.print("<br><a href=\"http://" + 
               InetAddress.getByName(namenodeHost).getCanonicalHostName() + ":" +
               namenodeInfoPort + "/dfshealth.jsp\">Go back to DFS home</a>");
@@ -211,7 +211,7 @@
     String chunkSizeToViewStr = req.getParameter("chunkSizeToView");
     if (chunkSizeToViewStr != null && Integer.parseInt(chunkSizeToViewStr) > 0)
       chunkSizeToView = Integer.parseInt(chunkSizeToViewStr);
-    else chunkSizeToView = jspHelper.defaultChunkSizeToView;
+    else chunkSizeToView = JspHelper.defaultChunkSizeToView;
 
     String startOffsetStr = req.getParameter("startOffset");
     if (startOffsetStr == null || Long.parseLong(startOffsetStr) < 0)
@@ -240,7 +240,7 @@
     out.print("<hr>");
 
     //Determine the prev & next blocks
-    DFSClient dfs = new DFSClient(jspHelper.nameNodeAddr, jspHelper.conf);
+    DFSClient dfs = new DFSClient(JspHelper.nameNodeAddr, JspHelper.conf);
     long nextStartOffset = 0;
     long nextBlockSize = 0;
     String nextBlockIdStr = null;

@@ -25,7 +25,8 @@ import java.text.ParseException;
  * TestCounters checks the sanity and recoverability of {@code Counters}
  */
 public class TestCounters extends TestCase {
-  enum myCounters {TEST1, TEST2};
+  enum myCounters {TEST1, TEST2}
+
   private static final long MAX_VALUE = 10;
   
   // Generates enum based counters

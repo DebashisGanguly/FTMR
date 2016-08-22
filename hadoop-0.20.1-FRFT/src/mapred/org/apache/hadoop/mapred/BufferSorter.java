@@ -39,7 +39,7 @@ interface BufferSorter extends JobConfigurable {
   /** Pass the Progressable object so that sort can call progress while it is sorting
    * @param reporter the Progressable object reference
    */
-  public void setProgressable(Progressable reporter);
+  void setProgressable(Progressable reporter);
     
   /** When a key/value is added at a particular offset in the key/value buffer, 
    * this method is invoked by the user class so that the impl of this sort 
@@ -48,7 +48,7 @@ interface BufferSorter extends JobConfigurable {
    * @param keyLength the length of the key
    * @param valLength the length of the val in the buffer
    */
-  public void addKeyValue(int recordoffset, int keyLength, int valLength);
+  void addKeyValue(int recordoffset, int keyLength, int valLength);
   
   /** The user class invokes this method to set the buffer that the specific 
    * sort algorithm should "indirectly" sort (generally, sort algorithm impl 
@@ -56,19 +56,19 @@ interface BufferSorter extends JobConfigurable {
    * buffer).
    * @param buffer the map output buffer
    */
-  public void setInputBuffer(OutputBuffer buffer);
+  void setInputBuffer(OutputBuffer buffer);
   
   /** The framework invokes this method to get the memory consumed so far
    * by an implementation of this interface.
    * @return memoryUsed in bytes 
    */
-  public long getMemoryUtilized();
+  long getMemoryUtilized();
   
   /** Framework decides when to actually sort
    */
-  public RawKeyValueIterator sort();
+  RawKeyValueIterator sort();
   
   /** Framework invokes this to signal the sorter to cleanup
    */
-  public void close();
+  void close();
 }

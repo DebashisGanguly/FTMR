@@ -205,10 +205,7 @@ implements JobConfigurable {
     }
   }
   private boolean isdigit(byte b) {
-    if ('0' <= b && b <= '9') {
-      return true;
-    }
-    return false;
+    return '0' <= b && b <= '9';
   }
   private int decimalCompare(byte[] a, int i, int end1, 
                              byte[] b, int j, int end2) {

@@ -37,251 +37,251 @@ import org.apache.hadoop.util.StringUtils;
  * synchronization.)
  */
 public class Trash extends Configured {
-  private static final Log LOG =
-    LogFactory.getLog(Trash.class);
+	private static final Log LOG =
+		LogFactory.getLog(Trash.class);
 
-  private static final Path CURRENT = new Path("Current");
-  private static final Path TRASH = new Path(".Trash/");
-  private static final Path HOMES = new Path("/user/");
+	private static final Path CURRENT = new Path("Current");
+	private static final Path TRASH = new Path(".Trash/");
+	private static final Path HOMES = new Path("/user/");
 
-  private static final FsPermission PERMISSION =
-    new FsPermission(FsAction.ALL, FsAction.NONE, FsAction.NONE);
+	private static final FsPermission PERMISSION =
+		new FsPermission(FsAction.ALL, FsAction.NONE, FsAction.NONE);
 
-  private static final DateFormat CHECKPOINT = new SimpleDateFormat("yyMMddHHmm");
-  private static final int MSECS_PER_MINUTE = 60*1000;
+	private static final DateFormat CHECKPOINT = new SimpleDateFormat("yyMMddHHmm");
+	private static final int MSECS_PER_MINUTE = 60*1000;
 
-  private final FileSystem fs;
-  private final Path trash;
-  private final Path current;
-  private final long interval;
+	private final FileSystem fs;
+	private final Path trash;
+	private final Path current;
+	private final long interval;
 
-  /** Construct a trash can accessor.
-   * @param conf a Configuration
-   */
-  public Trash(Configuration conf) throws IOException {
-    this(FileSystem.get(conf), conf);
-  }
+	/** Construct a trash can accessor.
+	 * @param conf a Configuration
+	 */
+	public Trash(Configuration conf) throws IOException {
+		this(FileSystem.get(conf), conf);
+	}
 
-  /**
-   * Construct a trash can accessor for the FileSystem provided.
-   */
-  public Trash(FileSystem fs, Configuration conf) throws IOException {
-    super(conf);
-    this.fs = fs;
-    this.trash = new Path(fs.getHomeDirectory(), TRASH);
-    this.current = new Path(trash, CURRENT);
-    this.interval = conf.getLong("fs.trash.interval", 60) * MSECS_PER_MINUTE;
-  }
+	/**
+	 * Construct a trash can accessor for the FileSystem provided.
+	 */
+	public Trash(FileSystem fs, Configuration conf) throws IOException {
+		super(conf);
+		this.fs = fs;
+		this.trash = new Path(fs.getHomeDirectory(), TRASH);
+		this.current = new Path(trash, CURRENT);
+		this.interval = conf.getLong("fs.trash.interval", 60) * MSECS_PER_MINUTE;
+	}
 
-  private Trash(Path home, Configuration conf) throws IOException {
-    super(conf);
-    this.fs = home.getFileSystem(conf);
-    this.trash = new Path(home, TRASH);
-    this.current = new Path(trash, CURRENT);
-    this.interval = conf.getLong("fs.trash.interval", 60) * MSECS_PER_MINUTE;
-  }
-  
-  private Path makeTrashRelativePath(Path basePath, Path rmFilePath) {
-    return new Path(basePath + rmFilePath.toUri().getPath());
-  }
+	private Trash(Path home, Configuration conf) throws IOException {
+		super(conf);
+		this.fs = home.getFileSystem(conf);
+		this.trash = new Path(home, TRASH);
+		this.current = new Path(trash, CURRENT);
+		this.interval = conf.getLong("fs.trash.interval", 60) * MSECS_PER_MINUTE;
+	}
 
-  /** Move a file or directory to the current trash directory.
-   * @return false if the item is already in the trash or trash is disabled
-   */ 
-  public boolean moveToTrash(Path path) throws IOException {
-    if (interval == 0)
-      return false;
+	private Path makeTrashRelativePath(Path basePath, Path rmFilePath) {
+		return new Path(basePath + rmFilePath.toUri().getPath());
+	}
 
-    if (!path.isAbsolute())                       // make path absolute
-      path = new Path(fs.getWorkingDirectory(), path);
+	/** Move a file or directory to the current trash directory.
+	 * @return false if the item is already in the trash or trash is disabled
+	 */ 
+	public boolean moveToTrash(Path path) throws IOException {
+		if (interval == 0)
+			return false;
 
-    if (!fs.exists(path))                         // check that path exists
-      throw new FileNotFoundException(path.toString());
+		if (!path.isAbsolute())                       // make path absolute
+			path = new Path(fs.getWorkingDirectory(), path);
 
-    String qpath = path.makeQualified(fs).toString();
+		if (!fs.exists(path))                         // check that path exists
+			throw new FileNotFoundException(path.toString());
 
-    if (qpath.startsWith(trash.toString())) {
-      return false;                               // already in trash
-    }
+		String qpath = path.makeQualified(fs).toString();
 
-    if (trash.getParent().toString().startsWith(qpath)) {
-      throw new IOException("Cannot move \"" + path +
-                            "\" to the trash, as it contains the trash");
-    }
+		if (qpath.startsWith(trash.toString())) {
+			return false;                               // already in trash
+		}
 
-    Path trashPath = makeTrashRelativePath(current, path);
-    Path baseTrashPath = makeTrashRelativePath(current, path.getParent());
-    
-    IOException cause = null;
+		if (trash.getParent().toString().startsWith(qpath)) {
+			throw new IOException("Cannot move \"" + path +
+			"\" to the trash, as it contains the trash");
+		}
 
-    // try twice, in case checkpoint between the mkdirs() & rename()
-    for (int i = 0; i < 2; i++) {
-      try {
-        if (!fs.mkdirs(baseTrashPath, PERMISSION)) {      // create current
-          LOG.warn("Can't create trash directory: "+baseTrashPath);
-          return false;
-        }
-      } catch (IOException e) {
-        LOG.warn("Can't create trash directory: "+baseTrashPath);
-        return false;
-      }
-      try {
-        //
-        // if the target path in Trash already exists, then append with 
-        // a number. Start from 1.
-        //
-        String orig = trashPath.toString();
-        for (int j = 1; fs.exists(trashPath); j++) {
-          trashPath = new Path(orig + "." + j);
-        }
-        if (fs.rename(path, trashPath))           // move to current trash
-          return true;
-      } catch (IOException e) {
-        cause = e;
-      }
-    }
-    throw (IOException)
-      new IOException("Failed to move to trash: "+path).initCause(cause);
-  }
+		Path trashPath = makeTrashRelativePath(current, path);
+		Path baseTrashPath = makeTrashRelativePath(current, path.getParent());
 
-  /** Create a trash checkpoint. */
-  public void checkpoint() throws IOException {
-    if (!fs.exists(current))                      // no trash, no checkpoint
-      return;
+		IOException cause = null;
 
-    Path checkpoint;
-    synchronized (CHECKPOINT) {
-      checkpoint = new Path(trash, CHECKPOINT.format(new Date()));
-    }
+		// try twice, in case checkpoint between the mkdirs() & rename()
+		for (int i = 0; i < 2; i++) {
+			try {
+				if (!fs.mkdirs(baseTrashPath, PERMISSION)) {      // create current
+					LOG.warn("Can't create trash directory: "+baseTrashPath);
+					return false;
+				}
+			} catch (IOException e) {
+				LOG.warn("Can't create trash directory: "+baseTrashPath);
+				return false;
+			}
+			try {
+				//
+				// if the target path in Trash already exists, then append with 
+				// a number. Start from 1.
+				//
+				String orig = trashPath.toString();
+				for (int j = 1; fs.exists(trashPath); j++) {
+					trashPath = new Path(orig + "." + j);
+				}
+				if (fs.rename(path, trashPath))           // move to current trash
+					return true;
+			} catch (IOException e) {
+				cause = e;
+			}
+		}
+		throw (IOException)
+		new IOException("Failed to move to trash: "+path).initCause(cause);
+	}
 
-    if (fs.rename(current, checkpoint)) {
-      LOG.info("Created trash checkpoint: "+checkpoint.toUri().getPath());
-    } else {
-      throw new IOException("Failed to checkpoint trash: "+checkpoint);
-    }
-  }
+	/** Create a trash checkpoint. */
+	public void checkpoint() throws IOException {
+		if (!fs.exists(current))                      // no trash, no checkpoint
+			return;
 
-  /** Delete old checkpoints. */
-  public void expunge() throws IOException {
-    FileStatus[] dirs = fs.listStatus(trash);            // scan trash sub-directories
-    if( dirs == null){
-      return;
-    }
-    long now = System.currentTimeMillis();
-    for (int i = 0; i < dirs.length; i++) {
-      Path path = dirs[i].getPath();
-      String dir = path.toUri().getPath();
-      String name = path.getName();
-      if (name.equals(CURRENT.getName()))         // skip current
-        continue;
+		Path checkpoint;
+		synchronized (CHECKPOINT) {
+			checkpoint = new Path(trash, CHECKPOINT.format(new Date()));
+		}
 
-      long time;
-      try {
-        synchronized (CHECKPOINT) {
-          time = CHECKPOINT.parse(name).getTime();
-        }
-      } catch (ParseException e) {
-        LOG.warn("Unexpected item in trash: "+dir+". Ignoring.");
-        continue;
-      }
+		if (fs.rename(current, checkpoint)) {
+			LOG.info("Created trash checkpoint: "+checkpoint.toUri().getPath());
+		} else {
+			throw new IOException("Failed to checkpoint trash: "+checkpoint);
+		}
+	}
 
-      if ((now - interval) > time) {
-        if (fs.delete(path, true)) {
-          LOG.info("Deleted trash checkpoint: "+dir);
-        } else {
-          LOG.warn("Couldn't delete checkpoint: "+dir+" Ignoring.");
-        }
-      }
-    }
-  }
+	/** Delete old checkpoints. */
+	public void expunge() throws IOException {
+		FileStatus[] dirs = fs.listStatus(trash);            // scan trash sub-directories
+		if( dirs == null){
+			return;
+		}
+		long now = System.currentTimeMillis();
+		for (int i = 0; i < dirs.length; i++) {
+			Path path = dirs[i].getPath();
+			String dir = path.toUri().getPath();
+			String name = path.getName();
+			if (name.equals(CURRENT.getName()))         // skip current
+				continue;
 
-  //
-  // get the current working directory
-  //
-  Path getCurrentTrashDir() {
-    return current;
-  }
+			long time;
+			try {
+				synchronized (CHECKPOINT) {
+					time = CHECKPOINT.parse(name).getTime();
+				}
+			} catch (ParseException e) {
+				LOG.warn("Unexpected item in trash: "+dir+". Ignoring.");
+				continue;
+			}
 
-  /** Return a {@link Runnable} that periodically empties the trash of all
-   * users, intended to be run by the superuser.  Only one checkpoint is kept
-   * at a time.
-   */
-  public Runnable getEmptier() throws IOException {
-    return new Emptier(getConf());
-  }
+			if ((now - interval) > time) {
+				if (fs.delete(path, true)) {
+					LOG.info("Deleted trash checkpoint: "+dir);
+				} else {
+					LOG.warn("Couldn't delete checkpoint: "+dir+" Ignoring.");
+				}
+			}
+		}
+	}
 
-  private static class Emptier implements Runnable {
+	//
+	// get the current working directory
+	//
+	Path getCurrentTrashDir() {
+		return current;
+	}
 
-    private Configuration conf;
-    private FileSystem fs;
-    private long interval;
+	/** Return a {@link Runnable} that periodically empties the trash of all
+	 * users, intended to be run by the superuser.  Only one checkpoint is kept
+	 * at a time.
+	 */
+	public Runnable getEmptier() throws IOException {
+		return new Emptier(getConf());
+	}
 
-    public Emptier(Configuration conf) throws IOException {
-      this.conf = conf;
-      this.interval = conf.getLong("fs.trash.interval", 60) * MSECS_PER_MINUTE;
-      this.fs = FileSystem.get(conf);
-    }
+	private static class Emptier implements Runnable {
 
-    public void run() {
-      if (interval == 0)
-        return;                                   // trash disabled
+		private Configuration conf;
+		private FileSystem fs;
+		private long interval;
 
-      long now = System.currentTimeMillis();
-      long end;
-      while (true) {
-        end = ceiling(now, interval);
-        try {                                     // sleep for interval
-          Thread.sleep(end - now);
-        } catch (InterruptedException e) {
-          return;                                 // exit on interrupt
-        }
-          
-        try {
-          now = System.currentTimeMillis();
-          if (now >= end) {
+		public Emptier(Configuration conf) throws IOException {
+			this.conf = conf;
+			this.interval = conf.getLong("fs.trash.interval", 60) * MSECS_PER_MINUTE;
+			this.fs = FileSystem.get(conf);
+		}
 
-            FileStatus[] homes = null;
-            try {
-              homes = fs.listStatus(HOMES);         // list all home dirs
-            } catch (IOException e) {
-              LOG.warn("Trash can't list homes: "+e+" Sleeping.");
-              continue;
-            }
+		public void run() {
+			if (interval == 0)
+				return;                                   // trash disabled
 
-            if (homes == null)
-              continue;
+			long now = System.currentTimeMillis();
+			long end;
+			while (true) {
+				end = ceiling(now, interval);
+				try {                                     // sleep for interval
+					Thread.sleep(end - now);
+				} catch (InterruptedException e) {
+					return;                                 // exit on interrupt
+				}
 
-            for (FileStatus home : homes) {         // dump each trash
-              if (!home.isDir())
-                continue;
-              try {
-                Trash trash = new Trash(home.getPath(), conf);
-                trash.expunge();
-                trash.checkpoint();
-              } catch (IOException e) {
-                LOG.warn("Trash caught: "+e+". Skipping "+home.getPath()+".");
-              } 
-            }
-          }
-        } catch (Exception e) {
-          LOG.warn("RuntimeException during Trash.Emptier.run() " + 
-                   StringUtils.stringifyException(e));
-        }
-      }
-    }
+				try {
+					now = System.currentTimeMillis();
+					if (now >= end) {
 
-    private long ceiling(long time, long interval) {
-      return floor(time, interval) + interval;
-    }
-    private long floor(long time, long interval) {
-      return (time / interval) * interval;
-    }
+						FileStatus[] homes = null;
+						try {
+							homes = fs.listStatus(HOMES);         // list all home dirs
+						} catch (IOException e) {
+							LOG.warn("Trash can't list homes: "+e+" Sleeping.");
+							continue;
+						}
 
-  }
+						if (homes == null)
+							continue;
 
-  /** Run an emptier.*/
-  public static void main(String[] args) throws Exception {
-    new Trash(new Configuration()).getEmptier().run();
-  }
+						for (FileStatus home : homes) {         // dump each trash
+							if (!home.isDir())
+								continue;
+							try {
+								Trash trash = new Trash(home.getPath(), conf);
+								trash.expunge();
+								trash.checkpoint();
+							} catch (IOException e) {
+								LOG.warn("Trash caught: "+e+". Skipping "+home.getPath()+".");
+							} 
+						}
+					}
+				} catch (Exception e) {
+					LOG.warn("RuntimeException during Trash.Emptier.run() " + 
+							StringUtils.stringifyException(e));
+				}
+			}
+		}
+
+		private long ceiling(long time, long interval) {
+			return floor(time, interval) + interval;
+		}
+		private long floor(long time, long interval) {
+			return (time / interval) * interval;
+		}
+
+	}
+
+	/** Run an emptier.*/
+	public static void main(String[] args) throws Exception {
+		new Trash(new Configuration()).getEmptier().run();
+	}
 
 }

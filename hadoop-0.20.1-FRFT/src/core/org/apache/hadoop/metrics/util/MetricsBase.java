@@ -42,6 +42,6 @@ public abstract class MetricsBase {
   public abstract void pushMetric(final MetricsRecord mr);
   
   public String getName() { return name; }
-  public String getDescription() { return description; };
+  public String getDescription() { return description; }
 
 }

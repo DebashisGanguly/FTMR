@@ -17,15 +17,16 @@
  */
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.util.*;
-import java.io.*;
-import org.apache.hadoop.conf.*;
-import org.apache.commons.logging.*;
+import java.io.IOException;
+import java.util.Map;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.hadoop.conf.Configuration;
 
 /**
  * This class is used in Namesystem's jetty to do fsck on namenode.

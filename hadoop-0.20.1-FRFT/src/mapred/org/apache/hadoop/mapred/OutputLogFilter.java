@@ -23,7 +23,7 @@ import org.apache.hadoop.fs.PathFilter;
 
 /**
  * This class filters log files from directory given
- * It doesnt accept paths having _logs.
+ * It doesn't accept paths having _logs.
  * This can be used to list paths of output directory as follows:
  *   Path[] fileList = FileUtil.stat2Paths(fs.listStatus(outDir,
  *                                   new OutputLogFilter()));

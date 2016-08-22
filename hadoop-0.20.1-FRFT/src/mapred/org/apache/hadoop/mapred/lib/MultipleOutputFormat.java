@@ -100,7 +100,7 @@ extends FileOutputFormat<K, V> {
           this.recordWriters.put(finalPath, rw);
         }
         rw.write(actualKey, actualValue);
-      };
+      }
 
       public void close(Reporter reporter) throws IOException {
         Iterator<String> keys = this.recordWriters.keySet().iterator();
@@ -109,7 +109,7 @@ extends FileOutputFormat<K, V> {
           rw.close(reporter);
         }
         this.recordWriters.clear();
-      };
+      }
     };
   }
 

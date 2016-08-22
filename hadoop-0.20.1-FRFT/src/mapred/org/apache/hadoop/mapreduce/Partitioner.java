@@ -43,6 +43,5 @@ public abstract class Partitioner<KEY, VALUE> {
    * @param numPartitions the total number of partitions.
    * @return the partition number for the <code>key</code>.
    */
-  public abstract int getPartition(KEY key, VALUE value, int numPartitions);
-  
+  public abstract int getPartition(KEY key, VALUE value, int numPartitions); 
 }

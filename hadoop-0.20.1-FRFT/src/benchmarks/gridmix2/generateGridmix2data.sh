@@ -24,11 +24,14 @@ GRID_DIR=`cd "$GRID_DIR"; pwd`
 source $GRID_DIR/gridmix-env-2
 
 # Smaller data set is used by default.
-COMPRESSED_DATA_BYTES=2147483648
-UNCOMPRESSED_DATA_BYTES=536870912
+#COMPRESSED_DATA_BYTES=2147483648
+COMPRESSED_DATA_BYTES=2147483
+#UNCOMPRESSED_DATA_BYTES=536870912
+UNCOMPRESSED_DATA_BYTES=536870
 
 # Number of partitions for output data
-NUM_MAPS=100
+#NUM_MAPS=100
+NUM_MAPS=30
 
 # If the env var USE_REAL_DATASET is set, then use the params to generate the bigger (real) dataset.
 if [ ! -z ${USE_REAL_DATASET} ] ; then
@@ -44,26 +47,29 @@ fi
 export GRID_MIX_DATA=/gridmix/data
 # Variable length key, value compressed SequenceFile
 export VARCOMPSEQ=${GRID_MIX_DATA}/WebSimulationBlockCompressed
+
 # Fixed length key, value compressed SequenceFile
 export FIXCOMPSEQ=${GRID_MIX_DATA}/MonsterQueryBlockCompressed
+
 # Variable length key, value uncompressed Text File
 export VARINFLTEXT=${GRID_MIX_DATA}/SortUncompressed
+
 # Fixed length key, value compressed Text File
 export FIXCOMPTEXT=${GRID_MIX_DATA}/EntropySimulationCompressed
 
-${HADOOP_HOME}/bin/hadoop jar \
-  ${EXAMPLE_JAR} randomtextwriter \
-  -D test.randomtextwrite.total_bytes=${COMPRESSED_DATA_BYTES} \
-  -D test.randomtextwrite.bytes_per_map=$((${COMPRESSED_DATA_BYTES} / ${NUM_MAPS})) \
-  -D test.randomtextwrite.min_words_key=5 \
-  -D test.randomtextwrite.max_words_key=10 \
-  -D test.randomtextwrite.min_words_value=100 \
-  -D test.randomtextwrite.max_words_value=10000 \
-  -D mapred.output.compress=true \
-  -D mapred.map.output.compression.type=BLOCK \
-  -outFormat org.apache.hadoop.mapred.SequenceFileOutputFormat \
-  ${VARCOMPSEQ} &
-
+ ${HADOOP_HOME}/bin/hadoop jar \
+   ${EXAMPLE_JAR} randomtextwriter \
+   -D test.randomtextwrite.total_bytes=${COMPRESSED_DATA_BYTES} \
+   -D test.randomtextwrite.bytes_per_map=$((${COMPRESSED_DATA_BYTES} / ${NUM_MAPS})) \
+   -D test.randomtextwrite.min_words_key=5 \
+   -D test.randomtextwrite.max_words_key=10 \
+   -D test.randomtextwrite.min_words_value=100 \
+   -D test.randomtextwrite.max_words_value=10000 \
+   -D mapred.output.compress=false \
+   -D mapred.map.output.compression.type=BLOCK \
+   -D mapred.map.output.iter=1 \
+   -outFormat org.apache.hadoop.mapred.SequenceFileOutputFormat \
+   ${VARCOMPSEQ} &
 
 ${HADOOP_HOME}/bin/hadoop jar \
   ${EXAMPLE_JAR} randomtextwriter \
@@ -73,22 +79,22 @@ ${HADOOP_HOME}/bin/hadoop jar \
   -D test.randomtextwrite.max_words_key=5 \
   -D test.randomtextwrite.min_words_value=100 \
   -D test.randomtextwrite.max_words_value=100 \
-  -D mapred.output.compress=true \
-  -D mapred.map.output.compression.type=BLOCK \
-  -outFormat org.apache.hadoop.mapred.SequenceFileOutputFormat \
-  ${FIXCOMPSEQ} &
-
-
-${HADOOP_HOME}/bin/hadoop jar \
-  ${EXAMPLE_JAR} randomtextwriter \
-  -D test.randomtextwrite.total_bytes=${UNCOMPRESSED_DATA_BYTES} \
-  -D test.randomtextwrite.bytes_per_map=$((${UNCOMPRESSED_DATA_BYTES} / ${NUM_MAPS})) \
-  -D test.randomtextwrite.min_words_key=1 \
-  -D test.randomtextwrite.max_words_key=10 \
-  -D test.randomtextwrite.min_words_value=0 \
-  -D test.randomtextwrite.max_words_value=200 \
   -D mapred.output.compress=false \
-  -outFormat org.apache.hadoop.mapred.TextOutputFormat \
-  ${VARINFLTEXT} &
+  -D mapred.map.output.compression.type=BLOCK \
+  -D mapred.map.output.iter=1 \
+  -outFormat org.apache.hadoop.mapred.SequenceFileOutputFormat \
+  ${FIXCOMPSEQ}
 
+ ${HADOOP_HOME}/bin/hadoop jar \
+   ${EXAMPLE_JAR} randomtextwriter \
+   -D test.randomtextwrite.total_bytes=${UNCOMPRESSED_DATA_BYTES} \
+   -D test.randomtextwrite.bytes_per_map=$((${UNCOMPRESSED_DATA_BYTES} / ${NUM_MAPS})) \
+   -D test.randomtextwrite.min_words_key=1 \
+   -D test.randomtextwrite.max_words_key=10 \
+   -D test.randomtextwrite.min_words_value=0 \
+   -D test.randomtextwrite.max_words_value=200 \
+   -D mapred.output.compress=false \
+   -D mapred.map.output.iter=1 \
+   -outFormat org.apache.hadoop.mapred.TextOutputFormat \
+   ${VARINFLTEXT} &
 

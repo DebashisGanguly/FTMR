@@ -32,7 +32,7 @@ public interface RecordOutput {
    * @param tag Used by tagged serialization formats (such as XML)
    * @throws IOException Indicates error in serialization
    */
-  public void writeByte(byte b, String tag) throws IOException;
+  void writeByte(byte b, String tag) throws IOException;
   
   /**
    * Write a boolean to serialized record.
@@ -40,7 +40,7 @@ public interface RecordOutput {
    * @param tag Used by tagged serialization formats (such as XML)
    * @throws IOException Indicates error in serialization
    */
-  public void writeBool(boolean b, String tag) throws IOException;
+  void writeBool(boolean b, String tag) throws IOException;
   
   /**
    * Write an integer to serialized record.
@@ -48,7 +48,7 @@ public interface RecordOutput {
    * @param tag Used by tagged serialization formats (such as XML)
    * @throws IOException Indicates error in serialization
    */
-  public void writeInt(int i, String tag) throws IOException;
+  void writeInt(int i, String tag) throws IOException;
   
   /**
    * Write a long integer to serialized record.
@@ -56,7 +56,7 @@ public interface RecordOutput {
    * @param tag Used by tagged serialization formats (such as XML)
    * @throws IOException Indicates error in serialization
    */
-  public void writeLong(long l, String tag) throws IOException;
+  void writeLong(long l, String tag) throws IOException;
   
   /**
    * Write a single-precision float to serialized record.
@@ -64,7 +64,7 @@ public interface RecordOutput {
    * @param tag Used by tagged serialization formats (such as XML)
    * @throws IOException Indicates error in serialization
    */
-  public void writeFloat(float f, String tag) throws IOException;
+  void writeFloat(float f, String tag) throws IOException;
   
   /**
    * Write a double precision floating point number to serialized record.
@@ -72,7 +72,7 @@ public interface RecordOutput {
    * @param tag Used by tagged serialization formats (such as XML)
    * @throws IOException Indicates error in serialization
    */
-  public void writeDouble(double d, String tag) throws IOException;
+  void writeDouble(double d, String tag) throws IOException;
   
   /**
    * Write a unicode string to serialized record.
@@ -80,7 +80,7 @@ public interface RecordOutput {
    * @param tag Used by tagged serialization formats (such as XML)
    * @throws IOException Indicates error in serialization
    */
-  public void writeString(String s, String tag) throws IOException;
+  void writeString(String s, String tag) throws IOException;
   
   /**
    * Write a buffer to serialized record.
@@ -88,7 +88,7 @@ public interface RecordOutput {
    * @param tag Used by tagged serialization formats (such as XML)
    * @throws IOException Indicates error in serialization
    */
-  public void writeBuffer(Buffer buf, String tag)
+  void writeBuffer(Buffer buf, String tag)
     throws IOException;
   
   /**
@@ -97,7 +97,7 @@ public interface RecordOutput {
    * @param tag Used by tagged serialization formats (such as XML)
    * @throws IOException Indicates error in serialization
    */
-  public void startRecord(Record r, String tag) throws IOException;
+  void startRecord(Record r, String tag) throws IOException;
   
   /**
    * Mark the end of a serialized record.
@@ -105,7 +105,7 @@ public interface RecordOutput {
    * @param tag Used by tagged serialization formats (such as XML)
    * @throws IOException Indicates error in serialization
    */
-  public void endRecord(Record r, String tag) throws IOException;
+  void endRecord(Record r, String tag) throws IOException;
   
   /**
    * Mark the start of a vector to be serialized.
@@ -113,7 +113,7 @@ public interface RecordOutput {
    * @param tag Used by tagged serialization formats (such as XML)
    * @throws IOException Indicates error in serialization
    */
-  public void startVector(ArrayList v, String tag) throws IOException;
+  void startVector(ArrayList v, String tag) throws IOException;
   
   /**
    * Mark the end of a serialized vector.
@@ -121,7 +121,7 @@ public interface RecordOutput {
    * @param tag Used by tagged serialization formats (such as XML)
    * @throws IOException Indicates error in serialization
    */
-  public void endVector(ArrayList v, String tag) throws IOException;
+  void endVector(ArrayList v, String tag) throws IOException;
   
   /**
    * Mark the start of a map to be serialized.
@@ -129,7 +129,7 @@ public interface RecordOutput {
    * @param tag Used by tagged serialization formats (such as XML)
    * @throws IOException Indicates error in serialization
    */
-  public void startMap(TreeMap m, String tag) throws IOException;
+  void startMap(TreeMap m, String tag) throws IOException;
   
   /**
    * Mark the end of a serialized map.
@@ -137,5 +137,5 @@ public interface RecordOutput {
    * @param tag Used by tagged serialization formats (such as XML)
    * @throws IOException Indicates error in serialization
    */
-  public void endMap(TreeMap m, String tag) throws IOException;
+  void endMap(TreeMap m, String tag) throws IOException;
 }

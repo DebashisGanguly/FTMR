@@ -84,7 +84,7 @@ public class TestJobSysDirWithDFS extends TestCase {
     conf.setNumReduceTasks(numReduces);
     conf.set("mapred.system.dir", "/tmp/subru/mapred/system");
     JobClient jobClient = new JobClient(conf);
-    RunningJob job = jobClient.runJob(conf);
+    RunningJob job = JobClient.runJob(conf);
     // Checking that the Job Client system dir is not used
     assertFalse(FileSystem.get(conf).exists(new Path(conf.get("mapred.system.dir")))); 
     // Check if the Job Tracker system dir is propogated to client

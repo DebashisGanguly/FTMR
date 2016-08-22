@@ -80,8 +80,7 @@ public class StandardSocketFactory extends SocketFactory {
 
   /* @inheritDoc */
   @Override
-  public Socket createSocket(String host, int port) throws IOException,
-      UnknownHostException {
+  public Socket createSocket(String host, int port) throws IOException {
 
     Socket socket = createSocket();
     socket.connect(new InetSocketAddress(host, port));
@@ -91,8 +90,7 @@ public class StandardSocketFactory extends SocketFactory {
   /* @inheritDoc */
   @Override
   public Socket createSocket(String host, int port,
-      InetAddress localHostAddr, int localPort) throws IOException,
-      UnknownHostException {
+      InetAddress localHostAddr, int localPort) throws IOException {
 
     Socket socket = createSocket();
     socket.bind(new InetSocketAddress(localHostAddr, localPort));
@@ -107,9 +105,7 @@ public class StandardSocketFactory extends SocketFactory {
       return true;
     if (obj == null)
       return false;
-    if (!(obj instanceof StandardSocketFactory))
-      return false;
-    return true;
+    return obj instanceof StandardSocketFactory;
   }
 
   /* @inheritDoc */

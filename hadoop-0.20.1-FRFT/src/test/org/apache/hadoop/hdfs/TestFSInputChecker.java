@@ -51,7 +51,7 @@ public class TestFSInputChecker extends TestCase {
     // create and write a file that contains three blocks of data
     FSDataOutputStream stm = fileSys.create(name, new FsPermission((short)0777),
         true, fileSys.getConf().getInt("io.file.buffer.size", 4096),
-        (short)NUM_OF_DATANODES, BLOCK_SIZE, null);
+            NUM_OF_DATANODES, BLOCK_SIZE, null);
     stm.write(expected);
     stm.close();
   }
@@ -325,7 +325,7 @@ public class TestFSInputChecker extends TestCase {
 
   private void checkSeekAndRead() throws IOException {
     int position = 1;
-    int len = 2 * BYTES_PER_SUM - (int) position;
+    int len = 2 * BYTES_PER_SUM - position;
     readAndCompare(stm, position, len);
 
     position = BYTES_PER_SUM;

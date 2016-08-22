@@ -34,7 +34,7 @@ public interface Stringifier<T> extends java.io.Closeable {
    * @return the string representation of the object
    * @throws IOException if the object cannot be converted
    */
-  public String toString(T obj)  throws IOException;
+  String toString(T obj)  throws IOException;
   
   /**
    * Restores the object from its string representation.
@@ -42,13 +42,13 @@ public interface Stringifier<T> extends java.io.Closeable {
    * @return restored object
    * @throws IOException if the object cannot be restored
    */
-  public T fromString(String str) throws IOException;
+  T fromString(String str) throws IOException;
   
   
   /** 
    * Closes this object. 
    * @throws IOException if an I/O error occurs 
    * */
-  public void close() throws IOException;
+  void close() throws IOException;
   
 }

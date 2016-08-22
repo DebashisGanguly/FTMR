@@ -87,8 +87,7 @@ public class TestSubmitJob extends TestCase {
 
   private void runJobAndVerifyFailure(JobConf jobConf, long memForMapTasks,
       long memForReduceTasks, String expectedMsg)
-      throws Exception,
-      IOException {
+      throws Exception {
     String[] args = { "-m", "0", "-r", "0", "-mt", "0", "-rt", "0" };
     boolean throwsException = false;
     String msg = null;

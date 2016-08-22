@@ -74,14 +74,14 @@ public class DistCh extends DistTool {
   private static final int MAX_MAPS_PER_NODE = 20;
   private static final int SYNC_FILE_MAX = 10;
 
-  static enum Counter { SUCCEED, FAIL }
+  enum Counter { SUCCEED, FAIL }
 
-  static enum Option {
+  enum Option {
     IGNORE_FAILURES("-i", NAME + ".ignore.failures");
 
     final String cmd, propertyname;
 
-    private Option(String cmd, String propertyname) {
+    Option(String cmd, String propertyname) {
       this.cmd = cmd;
       this.propertyname = propertyname;
     }

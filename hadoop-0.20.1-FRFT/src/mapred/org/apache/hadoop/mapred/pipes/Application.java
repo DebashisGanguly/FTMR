@@ -101,10 +101,8 @@ class Application<K1 extends WritableComparable, V1 extends Writable,
     process = runClient(cmd, env);
     clientSocket = serverSocket.accept();
     handler = new OutputHandler<K2, V2>(output, reporter, recordReader);
-    K2 outputKey = (K2)
-      ReflectionUtils.newInstance(outputKeyClass, conf);
-    V2 outputValue = (V2) 
-      ReflectionUtils.newInstance(outputValueClass, conf);
+    K2 outputKey = ReflectionUtils.newInstance(outputKeyClass, conf);
+    V2 outputValue = ReflectionUtils.newInstance(outputValueClass, conf);
     downlink = new BinaryProtocol<K1, V1, K2, V2>(clientSocket, handler, 
                                   outputKey, outputValue, conf);
     downlink.start();

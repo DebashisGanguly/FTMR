@@ -34,7 +34,7 @@
     if (namenodeInfoPortStr != null)
       namenodeInfoPort = Integer.parseInt(namenodeInfoPortStr);
     
-    DFSClient dfs = new DFSClient(jspHelper.nameNodeAddr, jspHelper.conf);
+    DFSClient dfs = new DFSClient(JspHelper.nameNodeAddr, JspHelper.conf);
     String target = dir;
     if (!dfs.exists(target)) {
       out.print("<h3>File or directory : " + target + " does not exist</h3>");
@@ -130,7 +130,7 @@
         jspHelper.addTableFooter(out);
       }
     } 
-    String namenodeHost = jspHelper.nameNodeAddr.getHostName();
+    String namenodeHost = JspHelper.nameNodeAddr.getHostName();
     out.print("<br><a href=\"http://" + 
               InetAddress.getByName(namenodeHost).getCanonicalHostName() + ":" +
               namenodeInfoPort + "/dfshealth.jsp\">Go back to DFS home</a>");

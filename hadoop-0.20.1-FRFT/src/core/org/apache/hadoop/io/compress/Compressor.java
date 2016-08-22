@@ -36,7 +36,7 @@ public interface Compressor {
    * @param off Start offset
    * @param len Length
    */
-  public void setInput(byte[] b, int off, int len);
+  void setInput(byte[] b, int off, int len);
   
   /**
    * Returns true if the input data buffer is empty and 
@@ -45,7 +45,7 @@ public interface Compressor {
    * @return <code>true</code> if the input data buffer is empty and 
    * #setInput() should be called in order to provide more input.
    */
-  public boolean needsInput();
+  boolean needsInput();
   
   /**
    * Sets preset dictionary for compression. A preset dictionary 
@@ -55,23 +55,23 @@ public interface Compressor {
    * @param off Start offset
    * @param len Length
    */
-  public void setDictionary(byte[] b, int off, int len);
+  void setDictionary(byte[] b, int off, int len);
 
   /**
    * Return number of uncompressed bytes input so far.
    */
-  public long getBytesRead();
+  long getBytesRead();
 
   /**
    * Return number of compressed bytes output so far.
    */
-  public long getBytesWritten();
+  long getBytesWritten();
 
   /**
    * When called, indicates that compression should end
    * with the current contents of the input buffer.
    */
-  public void finish();
+  void finish();
   
   /**
    * Returns true if the end of the compressed 
@@ -79,7 +79,7 @@ public interface Compressor {
    * @return <code>true</code> if the end of the compressed
    * data output stream has been reached.
    */
-  public boolean finished();
+  boolean finished();
   
   /**
    * Fills specified buffer with compressed data. Returns actual number
@@ -92,15 +92,15 @@ public interface Compressor {
    * @param len Size of the buffer
    * @return The actual number of bytes of compressed data.
    */
-  public int compress(byte[] b, int off, int len) throws IOException;
+  int compress(byte[] b, int off, int len) throws IOException;
   
   /**
    * Resets compressor so that a new set of input data can be processed.
    */
-  public void reset();
+  void reset();
   
   /**
    * Closes the compressor and discards any unprocessed input.
    */
-  public void end(); 
+  void end();
 }

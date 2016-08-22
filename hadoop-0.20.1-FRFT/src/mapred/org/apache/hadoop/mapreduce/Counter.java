@@ -38,94 +38,103 @@ import org.apache.hadoop.io.WritableUtils;
  */
 public class Counter implements Writable {
 
-  private String name;
-  private String displayName;
-  private long value = 0;
-    
-  protected Counter() { 
-  }
+	private String name;
+	private String displayName;
+	private long value = 0;
 
-  protected Counter(String name, String displayName) {
-    this.name = name;
-    this.displayName = displayName;
-  }
-  
-  @Deprecated
-  protected synchronized void setDisplayName(String displayName) {
-    this.displayName = displayName;
-  }
-    
-  /**
-   * Read the binary representation of the counter
-   */
-  @Override
-  public synchronized void readFields(DataInput in) throws IOException {
-    name = Text.readString(in);
-    if (in.readBoolean()) {
-      displayName = Text.readString(in);
-    } else {
-      displayName = name;
-    }
-    value = WritableUtils.readVLong(in);
-  }
-    
-  /**
-   * Write the binary representation of the counter
-   */
-  @Override
-  public synchronized void write(DataOutput out) throws IOException {
-    Text.writeString(out, name);
-    boolean distinctDisplayName = ! name.equals(displayName);
-    out.writeBoolean(distinctDisplayName);
-    if (distinctDisplayName) {
-      Text.writeString(out, displayName);
-    }
-    WritableUtils.writeVLong(out, value);
-  }
+	protected Counter() { 
+	}
 
-  public synchronized String getName() {
-    return name;
-  }
+	protected Counter(String name, String displayName) {
+		this.name = name;
+		this.displayName = displayName;
+	}
 
-  /**
-   * Get the name of the counter.
-   * @return the user facing name of the counter
-   */
-  public synchronized String getDisplayName() {
-    return displayName;
-  }
-    
-  /**
-   * What is the current value of this counter?
-   * @return the current value
-   */
-  public synchronized long getValue() {
-    return value;
-  }
-    
-  /**
-   * Increment this counter by the given value
-   * @param incr the value to increase this counter by
-   */
-  public synchronized void increment(long incr) {
-    value += incr;
-  }
+	@Deprecated
+	protected synchronized void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
 
-  @Override
-  public synchronized boolean equals(Object genericRight) {
-    if (genericRight instanceof Counter) {
-      synchronized (genericRight) {
-        Counter right = (Counter) genericRight;
-        return name.equals(right.name) && 
-               displayName.equals(right.displayName) &&
-               value == right.value;
-      }
-    }
-    return false;
-  }
-  
-  @Override
-  public synchronized int hashCode() {
-    return name.hashCode() + displayName.hashCode();
-  }
+	/**
+	 * Read the binary representation of the counter
+	 */
+	@Override
+	public synchronized void readFields(DataInput in) throws IOException {
+		name = Text.readString(in);
+		if (in.readBoolean()) {
+			displayName = Text.readString(in);
+		} else {
+			displayName = name;
+		}
+		value = WritableUtils.readVLong(in);
+	}
+
+	/**
+	 * Write the binary representation of the counter
+	 */
+	@Override
+	public synchronized void write(DataOutput out)
+	throws IOException 
+	{
+		Text.writeString(out, name);
+		boolean distinctDisplayName = ! name.equals(displayName);
+		out.writeBoolean(distinctDisplayName);
+		if (distinctDisplayName) {
+			Text.writeString(out, displayName);
+		}
+		WritableUtils.writeVLong(out, value);
+	}
+
+	public synchronized String getName() {
+		return name;
+	}
+
+	/**
+	 * Get the name of the counter.
+	 * @return the user facing name of the counter
+	 */
+	public synchronized String getDisplayName() {
+		return displayName;
+	}
+
+	/**
+	 * What is the current value of this counter?
+	 * @return the current value
+	 */
+	public synchronized long getValue() {
+		return value;
+	}
+
+	/**
+	 * Increment this counter by the given value
+	 * @param incr the value to increase this counter by
+	 */
+	public synchronized void increment(long incr) {
+		value += incr;
+	}
+
+	/**
+	 * Set this counter with the given value
+	 * @param incr
+	 */
+	public synchronized void set(long incr) {
+		value = incr;
+	}
+	@Override
+	public synchronized boolean equals(Object genericRight) {
+		if (genericRight instanceof Counter) {
+			synchronized (genericRight) {
+				Counter right = (Counter) genericRight;
+				return name.equals(right.name) && 
+				displayName.equals(right.displayName) &&
+				value == right.value;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public synchronized int hashCode() {
+		return name.hashCode() + displayName.hashCode();
+	}
 }

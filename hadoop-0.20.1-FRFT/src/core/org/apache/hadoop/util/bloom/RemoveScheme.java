@@ -62,7 +62,7 @@ public interface RemoveScheme {
    * <p>
    * The idea is to randomly select a bit to reset.
    */
-  public final static short RANDOM = 0;
+  short RANDOM = 0;
 
   /**
    * MinimumFN Selection.
@@ -70,7 +70,7 @@ public interface RemoveScheme {
    * The idea is to select the bit to reset that will generate the minimum
    * number of false negative.
    */
-  public final static short MINIMUM_FN = 1;
+  short MINIMUM_FN = 1;
 
   /**
    * MaximumFP Selection.
@@ -78,7 +78,7 @@ public interface RemoveScheme {
    * The idea is to select the bit to reset that will remove the maximum number
    * of false positive.
    */
-  public final static short MAXIMUM_FP = 2;
+  short MAXIMUM_FP = 2;
 
   /**
    * Ratio Selection.
@@ -87,5 +87,5 @@ public interface RemoveScheme {
    * the maximum number of false positve while minimizing the amount of false
    * negative generated.
    */
-  public final static short RATIO = 3;
+  short RATIO = 3;
 }

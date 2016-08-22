@@ -369,7 +369,7 @@ public class DistributedFileSystem extends FileSystem {
    * 
    * @see org.apache.hadoop.hdfs.protocol.ClientProtocol#saveNamespace()
    */
-  public void saveNamespace() throws AccessControlException, IOException {
+  public void saveNamespace() throws IOException {
     dfs.saveNamespace();
   }
 

@@ -154,7 +154,7 @@ public class CompositeContext extends AbstractMetricsContext {
     private static final Method m_getRecordName = initMethod();
     private static Method initMethod() {
       try {
-        return MetricsRecord.class.getMethod("getRecordName", new Class[0]);
+        return MetricsRecord.class.getMethod("getRecordName");
       } catch (Exception e) {
         throw new RuntimeException("Internal error", e);
       }

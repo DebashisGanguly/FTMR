@@ -115,24 +115,24 @@ public class TestTFileSeqFileComparison extends TestCase {
   }
 
   private interface KVAppendable {
-    public void append(BytesWritable key, BytesWritable value)
+    void append(BytesWritable key, BytesWritable value)
         throws IOException;
 
-    public void close() throws IOException;
+    void close() throws IOException;
   }
 
   private interface KVReadable {
-    public byte[] getKey();
+    byte[] getKey();
 
-    public byte[] getValue();
+    byte[] getValue();
 
-    public int getKeyLength();
+    int getKeyLength();
 
-    public int getValueLength();
+    int getValueLength();
 
-    public boolean next() throws IOException;
+    boolean next() throws IOException;
 
-    public void close() throws IOException;
+    void close() throws IOException;
   }
 
   static class TFileAppendable implements KVAppendable {

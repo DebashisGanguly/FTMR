@@ -200,7 +200,7 @@ abstract class SocketIOWithTimeout {
         // we might have to call finishConnect() more than once
         // for some channels (with user level protocols)
         
-        int ret = selector.select((SelectableChannel)channel, 
+        int ret = selector.select(channel,
                                   SelectionKey.OP_CONNECT, timeoutLeft);
         
         if (ret > 0 && channel.finishConnect()) {

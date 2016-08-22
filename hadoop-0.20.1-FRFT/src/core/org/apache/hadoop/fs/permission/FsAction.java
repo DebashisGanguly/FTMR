@@ -37,7 +37,7 @@ public enum FsAction {
   /** Symbolic representation */
   public final String SYMBOL;
 
-  private FsAction(String s) {
+  FsAction(String s) {
     SYMBOL = s;
   }
 

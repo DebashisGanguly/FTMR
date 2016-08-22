@@ -22,11 +22,11 @@ import org.apache.hadoop.ipc.RemoteException;
 
 public interface UnreliableInterface {
   
-  public static class UnreliableException extends Exception {
+  class UnreliableException extends Exception {
     // no body
   }
   
-  public static class FatalException extends UnreliableException {
+  class FatalException extends UnreliableException {
     // no body
   }
   

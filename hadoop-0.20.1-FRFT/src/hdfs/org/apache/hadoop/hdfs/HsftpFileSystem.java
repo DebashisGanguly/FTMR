@@ -74,7 +74,7 @@ public class HsftpFileSystem extends HftpFileSystem {
       HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
       // bypass hostname verification
       conn.setHostnameVerifier(new DummyHostnameVerifier());
-      return (HttpURLConnection)conn;
+      return conn;
     } catch (URISyntaxException e) {
       throw (IOException)new IOException().initCause(e);
     }

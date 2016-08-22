@@ -616,11 +616,10 @@ public abstract class Server {
           }
           if (!call.response.hasRemaining()) {
             call.connection.decRpcCount();
-            if (numElements == 1) {    // last call fully processes.
-              done = true;             // no more data for this channel.
-            } else {
-              done = false;            // more calls pending to be sent.
-            }
+            // last call fully processes.
+// no more data for this channel.
+// more calls pending to be sent.
+            done = numElements == 1;
             if (LOG.isDebugEnabled()) {
               LOG.debug(getName() + ": responding to #" + call.id + " from " +
                         call.connection + " Wrote " + numBytes + " bytes.");
@@ -784,9 +783,7 @@ public abstract class Server {
     }
     
     private boolean timedOut(long currentTime) {
-      if (isIdle() && currentTime -  lastContact > maxIdleTime)
-        return true;
-      return false;
+      return isIdle() && currentTime - lastContact > maxIdleTime;
     }
 
     public int readAndProcess() throws IOException, InterruptedException {

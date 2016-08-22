@@ -303,7 +303,7 @@ public class TestDFSPermission extends TestCase {
 
   private enum OpType {CREATE, MKDIRS, OPEN, SET_REPLICATION,
     GET_FILEINFO, IS_DIR, EXISTS, GET_CONTENT_LENGTH, LIST, RENAME, DELETE
-  };
+  }
 
   /* Check if namenode performs permission checking correctly for
    * superuser, file owner, group owner, and other users */
@@ -750,7 +750,7 @@ public class TestDFSPermission extends TestCase {
 
   private enum InodeType {
     FILE, DIR
-  };
+  }
 
   /* A class that verifies the permission checking is correct for list */
   private class ListPermissionVerifier extends PermissionVerifier {
