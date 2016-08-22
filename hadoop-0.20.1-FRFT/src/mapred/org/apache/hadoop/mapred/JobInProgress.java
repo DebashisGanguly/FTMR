@@ -1500,10 +1500,11 @@ class JobInProgress {
      * @return
      */
     public synchronized boolean scheduleReduces() {
-        if(conf.getDeferredExecution())
+        /*if(conf.getDeferredExecution())
             return !summapTaskcounter.hasAnyLowerLimit(MajorityVoting.getThreshold(replicatedNumMapTasks)/numMapTasks);
 
-        return  !summapTaskcounter.hasAnyLowerLimit(1);
+        return  !summapTaskcounter.hasAnyLowerLimit(1);*/
+        return pendingMaps() == 0;
     }
 
     /**
@@ -1962,12 +1963,13 @@ class JobInProgress {
                         int count = taskcounter.getCount(tip.getTIPId().getId());
 
                         // launch two thirds of tasks
-                        boolean threshold = count < voting.getThreshold();
+                        // remove this to launch all replicas in parallel
+                        /*boolean threshold = count < voting.getThreshold();
 
                         if(threshold) {
                             taskcounter.addtask(tip.getTIPId().getId());
                             sumtaskcounter.addtask(tip.getTIPId().getId());
-                        } else continue;
+                        } else continue;*/
 
                         launcher.addToRun(tip);
                     }
@@ -2010,8 +2012,8 @@ class JobInProgress {
                 if(tip.isJobCleanupTask() || tip.isJobSetupTask()) {
                 } else {
                     int count = redTaskcounter.getCount(tip.getTIPId().getId());
-                    LOG.debug(tip.getTIPId().toStringWithoutReplica() + "(" + tip.getTIPId().toString() + ")  launched: " 
-                            + count + "(threshold: " + voting.getThreshold() + ")");
+                    /*LOG.debug(tip.getTIPId().toStringWithoutReplica() + "(" + tip.getTIPId().toString() + ")  launched: "
+                            + count + "(threshold: " + voting.getThreshold() + ")");*/
 
                     // launch two thirds of tasks
                     redTaskcounter.addtask(tip.getTIPId().getId());
