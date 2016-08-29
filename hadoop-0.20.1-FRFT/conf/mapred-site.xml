@@ -33,11 +33,13 @@
 <property>
 	<name>tasktracker.tasks.fault.tolerance</name>
 	<value>1</value>
+    <!-- set this to 1 always to determine number of replica and number of faults that can be tolerated -->
 </property>
 
 <property>
 	<name>mapred.map.tasks.deferred.execution</name>
 	<value>false</value>
+    <!-- set this to false always to run all tasks in parallel -->
 </property>
 
 <property>
@@ -95,6 +97,7 @@
 <property>
   <name>mapred.reduce.tasks</name>
   <value>1</value>
+  <!-- for experiment set this to 1 always -->
 </property>
 
 <property>
@@ -123,13 +126,33 @@
 </property>
 
 <property>
-  <name>mapred.map.tasks.majority.execution</name>
-  <value>true</value>
+  <name>mapred.tasks.tampering.percent</name>
+  <value>0</value>
+  <!-- give it to a float value like 0.1 to inject fault -->
+</property>
+
+<property>
+    <name>mapred.reduce.tasks.tampering.digests.execution</name>
+    <value>false</value>
+    <!-- make this to true to inject fault in map digest; never inject fault in reduce -->
+</property>
+
+<property>
+    <name>mapred.map.tasks.tampering.digests.execution</name>
+    <value>false</value>
+    <!-- make this to true to inject fault in map digest -->
+</property>
+
+<property>
+    <name>mapred.map.tasks.tampering.file.execution</name>
+    <value>false</value>
+    <!-- make this to true to inject fault in map file; never used but for safer side -->
 </property>
 
 <property>
   <name>mapred.map.tasks.tentative.execution</name>
   <value>true</value>
+  <!-- set this to true always to run all tasks in parallel -->
 </property>
 
 <property>
