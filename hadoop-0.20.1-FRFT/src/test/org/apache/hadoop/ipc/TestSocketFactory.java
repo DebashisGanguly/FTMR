@@ -183,7 +183,9 @@ class DummySocketFactory extends StandardSocketFactory {
       return true;
     if (obj == null)
       return false;
-    return obj instanceof DummySocketFactory;
+    if (!(obj instanceof DummySocketFactory))
+      return false;
+    return true;
   }
 
   /* @inheritDoc */

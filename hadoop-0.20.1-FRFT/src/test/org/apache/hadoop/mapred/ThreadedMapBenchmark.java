@@ -64,7 +64,7 @@ public class ThreadedMapBenchmark extends Configured implements Tool {
                                             // (FACTOR * data_size) should 
                                             // result in only 1 spill
 
-  enum Counters { RECORDS_WRITTEN, BYTES_WRITTEN }
+  static enum Counters { RECORDS_WRITTEN, BYTES_WRITTEN }
   
   /**
    * Generates random input data of given size with keys and values of given 

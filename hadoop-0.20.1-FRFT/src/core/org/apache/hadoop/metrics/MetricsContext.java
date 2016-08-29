@@ -30,27 +30,27 @@ public interface MetricsContext {
   /**
    * Default period in seconds at which data is sent to the metrics system.
    */
-  int DEFAULT_PERIOD = 5;
+  public static final int DEFAULT_PERIOD = 5;
 
   /**
    * Initialize this context.
    * @param contextName The given name for this context
    * @param factory The creator of this context
    */
-  void init(String contextName, ContextFactory factory);
+  public void init(String contextName, ContextFactory factory);
 
   /**
    * Returns the context name.
    *
    * @return the context name
    */
-  String getContextName();
+  public abstract String getContextName();
     
   /**
    * Starts or restarts monitoring, the emitting of metrics records as they are 
    * updated. 
    */
-  void startMonitoring()
+  public abstract void startMonitoring()
     throws IOException;
 
   /**
@@ -60,18 +60,18 @@ public interface MetricsContext {
    * this.
    * @see #close()
    */
-  void stopMonitoring();
+  public abstract void stopMonitoring();
     
   /**
    * Returns true if monitoring is currently in progress.
    */
-  boolean isMonitoring();
+  public abstract boolean isMonitoring();
     
   /**
    * Stops monitoring and also frees any buffered data, returning this 
    * object to its initial state.  
    */
-  void close();
+  public abstract void close();
     
   /**
    * Creates a new MetricsRecord instance with the given <code>recordName</code>.
@@ -81,7 +81,7 @@ public interface MetricsContext {
    * @param recordName the name of the record
    * @throws MetricsException if recordName conflicts with configuration data
    */
-  MetricsRecord createRecord(String recordName);
+  public abstract MetricsRecord createRecord(String recordName);
     
   /**
    * Registers a callback to be called at regular time intervals, as 
@@ -90,18 +90,18 @@ public interface MetricsContext {
    * @param updater object to be run periodically; it should updated
    * some metrics records and then return
    */
-  void registerUpdater(Updater updater);
+  public abstract void registerUpdater(Updater updater);
 
   /**
    * Removes a callback, if it exists.
    * 
    * @param updater object to be removed from the callback list
    */
-  void unregisterUpdater(Updater updater);
+  public abstract void unregisterUpdater(Updater updater);
   
   /**
    * Returns the timer period.
    */
-  int getPeriod();
+  public abstract int getPeriod();
     
 }

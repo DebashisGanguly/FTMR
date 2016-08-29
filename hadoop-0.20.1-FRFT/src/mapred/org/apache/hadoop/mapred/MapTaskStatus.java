@@ -38,6 +38,6 @@ class MapTaskStatus extends TaskStatus {
     }
 
     public Object clone() {
-        return super.clone();
+        return (MapTaskStatus)super.clone();
     }
 }

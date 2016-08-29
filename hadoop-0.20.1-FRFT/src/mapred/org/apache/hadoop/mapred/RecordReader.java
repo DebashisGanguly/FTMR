@@ -69,8 +69,8 @@ public interface RecordReader<K, V> {
    * Close this {@link InputSplit} to future operations.
    * 
    * @throws IOException
-   */
-  void close() throws IOException;
+   */ 
+  public void close() throws IOException;
 
   /**
    * How much of the input has the {@link RecordReader} consumed i.e.

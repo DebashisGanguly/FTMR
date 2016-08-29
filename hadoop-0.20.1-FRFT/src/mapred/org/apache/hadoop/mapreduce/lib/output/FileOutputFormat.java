@@ -18,16 +18,23 @@
 
 package org.apache.hadoop.mapreduce.lib.output;
 
+import java.io.IOException;
+import java.text.NumberFormat;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.mapred.FileAlreadyExistsException;
 import org.apache.hadoop.mapred.InvalidJobConfException;
-import org.apache.hadoop.mapreduce.*;
-
-import java.io.IOException;
-import java.text.NumberFormat;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.JobContext;
+import org.apache.hadoop.mapreduce.OutputCommitter;
+import org.apache.hadoop.mapreduce.OutputFormat;
+import org.apache.hadoop.mapreduce.RecordWriter;
+import org.apache.hadoop.mapreduce.TaskAttemptContext;
+import org.apache.hadoop.mapreduce.TaskID;
+import org.apache.hadoop.mapreduce.TaskInputOutputContext;
 
 /** A base class for {@link OutputFormat}s that read from {@link FileSystem}s.*/
 public abstract class FileOutputFormat<K, V> extends OutputFormat<K, V> {
@@ -106,7 +113,7 @@ public abstract class FileOutputFormat<K, V> extends OutputFormat<K, V> {
 	) throws IOException, InterruptedException;
 
 	public void checkOutputSpecs(JobContext job
-	) throws IOException{
+	) throws FileAlreadyExistsException, IOException{
 		// Ensure that the output directory is set and not already there
 		Path outDir = getOutputPath(job);
 		if (outDir == null) {
@@ -234,7 +241,7 @@ public abstract class FileOutputFormat<K, V> extends OutputFormat<K, V> {
 		result.append(taskId.isMap() ? 'm' : 'r');
 		result.append('-');
 		result.append(NUMBER_FORMAT.format(id));
-		result.append("_").append(replica);
+		result.append("_" + replica);
 
 		result.append(extension);
 		return result.toString();

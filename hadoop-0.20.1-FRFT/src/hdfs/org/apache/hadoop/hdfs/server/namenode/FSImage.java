@@ -80,20 +80,19 @@ public class FSImage extends Storage {
     EDITS_NEW ("edits.new");
     
     private String fileName = null;
-    NameNodeFile(String name) {this.fileName = name;}
+    private NameNodeFile(String name) {this.fileName = name;}
     String getName() {return fileName;}
   }
 
   // checkpoint states
-  enum CheckpointStates{START, ROLLED_EDITS, UPLOAD_START, UPLOAD_DONE
-  }
+  enum CheckpointStates{START, ROLLED_EDITS, UPLOAD_START, UPLOAD_DONE; }
   /**
    * Implementation of StorageDirType specific to namenode storage
    * A Storage directory could be of type IMAGE which stores only fsimage,
    * or of type EDITS which stores edits or of type IMAGE_AND_EDITS which 
    * stores both fsimage and edits.
    */
-  enum NameNodeDirType implements StorageDirType {
+  static enum NameNodeDirType implements StorageDirType {
     UNDEFINED,
     IMAGE,
     EDITS,

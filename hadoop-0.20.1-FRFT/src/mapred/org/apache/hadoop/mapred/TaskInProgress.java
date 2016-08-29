@@ -788,8 +788,11 @@ class TaskInProgress {
      * Get whether to start skipping mode. 
      */
     private boolean startSkipping() {
-        return maxSkipRecords > 0 &&
-                numTaskFailures >= SkipBadRecords.getAttemptsToStartSkipping(conf);
+        if(maxSkipRecords>0 && 
+                numTaskFailures>=SkipBadRecords.getAttemptsToStartSkipping(conf)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -991,10 +994,13 @@ class TaskInProgress {
         // in more depth eventually...
         //
 
-        return !skipping && activeTasks.size() <= MAX_TASK_EXECS &&
+        if (!skipping && activeTasks.size() <= MAX_TASK_EXECS &&
                 (averageProgress - progress >= SPECULATIVE_GAP) &&
-                (currentTime - startTime >= SPECULATIVE_LAG)
-                && completes == 0 && !isOnlyCommitPending();
+                (currentTime - startTime >= SPECULATIVE_LAG) 
+                && completes == 0 && !isOnlyCommitPending()) {
+            return true;
+        }
+        return false;
     }
 
     /**

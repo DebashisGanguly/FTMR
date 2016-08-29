@@ -250,8 +250,11 @@ public class LeaseManager {
         return false;
       }
       Lease obj = (Lease) o;
-      return lastUpdate == obj.lastUpdate &&
-              holder.equals(obj.holder);
+      if (lastUpdate == obj.lastUpdate &&
+          holder.equals(obj.holder)) {
+        return true;
+      }
+      return false;
     }
   
     /** {@inheritDoc} */

@@ -230,7 +230,7 @@ public class TFile {
       IN_VALUE, // In value insertion.
       // ERROR, // Error encountered, cannot continue.
       CLOSED, // TFile already closed.
-    }
+    };
 
     // current state of Writer.
     State state = State.READY;
@@ -586,7 +586,7 @@ public class TFile {
      *           the Meta Block with the same name already exists.
      */
     public DataOutputStream prepareMetaBlock(String name, String compressName)
-        throws IOException {
+        throws IOException, MetaBlockAlreadyExists {
       if (state != State.READY) {
         throw new IllegalStateException(
             "Incorrect state to start a Meta Block: " + state.name());
@@ -613,7 +613,8 @@ public class TFile {
      * @throws MetaBlockAlreadyExists
      *           the Meta Block with the same name already exists.
      */
-    public DataOutputStream prepareMetaBlock(String name) throws IOException {
+    public DataOutputStream prepareMetaBlock(String name) throws IOException,
+        MetaBlockAlreadyExists {
       if (state != State.READY) {
         throw new IllegalStateException(
             "Incorrect state to start a Meta Block: " + state.name());
@@ -773,7 +774,8 @@ public class TFile {
         if (getClass() != obj.getClass()) return false;
         Location other = (Location) obj;
         if (blockIndex != other.blockIndex) return false;
-        return recordIndex == other.recordIndex;
+        if (recordIndex != other.recordIndex) return false;
+        return true;
       }
     }
 
@@ -953,7 +955,8 @@ public class TFile {
      * @throws MetaBlockDoesNotExist
      *           If the meta block with the name does not exist.
      */
-    public DataInputStream getMetaBlock(String name) throws IOException {
+    public DataInputStream getMetaBlock(String name) throws IOException,
+        MetaBlockDoesNotExist {
       return readerBCF.getMetaBlock(name);
     }
 

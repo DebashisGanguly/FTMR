@@ -29,19 +29,19 @@ package org.apache.hadoop.net;
 
 public interface Node {
   /** Return the string representation of this node's network location */
-  String getNetworkLocation();
+  public String getNetworkLocation();
   /** Set the node's network location */
-  void setNetworkLocation(String location);
+  public void setNetworkLocation(String location);
   /** Return this node's name */
-  String getName();
+  public String getName();
   /** Return this node's parent */
-  Node getParent();
+  public Node getParent();
   /** Set this node's parent */
-  void setParent(Node parent);
+  public void setParent(Node parent);
   /** Return this node's level in the tree.
    * E.g. the root of a tree returns 0 and its children return 1
    */
-  int getLevel();
+  public int getLevel();
   /** Set this node's level in the tree.*/
-  void setLevel(int i);
+  public void setLevel(int i);
 }

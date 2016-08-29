@@ -96,7 +96,7 @@ class DataBlockScanner implements Runnable {
   
   BlockTransferThrottler throttler = null;
   
-  private enum ScanType {
+  private static enum ScanType {
     REMOTE_READ,           // Verified when a block read by a client etc
     VERIFICATION_SCAN,     // scanned as part of periodic verfication
     NONE,

@@ -18,6 +18,11 @@
 package org.apache.hadoop.mapred;
 
 
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.Enumeration;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
@@ -25,16 +30,19 @@ import org.apache.hadoop.filecache.DistributedCache;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.*;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.RawComparator;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.WritableComparable;
+import org.apache.hadoop.io.WritableComparator;
 import org.apache.hadoop.io.compress.CompressionCodec;
-import org.apache.hadoop.mapred.lib.*;
+import org.apache.hadoop.mapred.lib.HashPartitioner;
+import org.apache.hadoop.mapred.lib.IdentityMapper;
+import org.apache.hadoop.mapred.lib.IdentityReducer;
+import org.apache.hadoop.mapred.lib.KeyFieldBasedComparator;
+import org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.apache.hadoop.util.Tool;
-
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.Enumeration;
 
 /** 
  * A map/reduce job configuration.
@@ -445,7 +453,7 @@ public class JobConf extends Configuration {
      * @return the {@link OutputCommitter} implementation for the map-reduce job.
      */
     public OutputCommitter getOutputCommitter() {
-        return ReflectionUtils.newInstance(
+        return (OutputCommitter)ReflectionUtils.newInstance(
                 getClass("mapred.output.committer.class", FileOutputCommitter.class,
                         OutputCommitter.class), this);
     }
@@ -961,11 +969,7 @@ public class JobConf extends Configuration {
     public boolean getMapTasksOrdered() { 
         return getBoolean("mapred.map.tasks.test.ordered.set", true);
     }
-
-    /**
-     * Tells if tho mappers should be tampered
-     * @return
-     */
+    
     public boolean getMapTamperingExecution() { 
         return getBoolean("mapred.map.tasks.tampering.digests.execution", false);
     }
@@ -979,10 +983,6 @@ public class JobConf extends Configuration {
     }
 
 
-    /**
-     * Tells the percentage of tasks that should be tampered
-     * @return
-     */
     public Float getTamperingPercentage() { 
         return getFloat("mapred.tasks.tampering.percent", 0f);
     }
@@ -1059,11 +1059,7 @@ public class JobConf extends Configuration {
         }
         return 2*faults+1;
     }
-
-    /**
-     * Set the number of faults that bft tolerates
-     * @return
-     */
+    
     public int getFaultToleranceLimit() {
         return getInt("tasktracker.tasks.fault.tolerance", 1);
     }

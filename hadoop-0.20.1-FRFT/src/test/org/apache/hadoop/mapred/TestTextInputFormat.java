@@ -244,7 +244,7 @@ public class TestTextInputFormat extends TestCase {
     Text value = reader.createValue();
     while (reader.next(key, value)) {
       result.add(value);
-      value = reader.createValue();
+      value = (Text) reader.createValue();
     }
     reader.close();
     return result;

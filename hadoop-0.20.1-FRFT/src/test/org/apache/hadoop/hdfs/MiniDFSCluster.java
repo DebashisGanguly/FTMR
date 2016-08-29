@@ -684,7 +684,10 @@ public class MiniDFSCluster {
    * Returns true if there is at least one DataNode running.
    */
   public boolean isDataNodeUp() {
-      return !(dataNodes == null || dataNodes.size() == 0);
+    if (dataNodes == null || dataNodes.size() == 0) {
+      return false;
+    }
+    return true;
   }
   
   /**

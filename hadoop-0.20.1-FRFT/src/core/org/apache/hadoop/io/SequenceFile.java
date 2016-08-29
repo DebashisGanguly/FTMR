@@ -229,7 +229,7 @@ public class SequenceFile {
      * 
      * @see SequenceFile.Writer
      */
-    public enum CompressionType {
+    public static enum CompressionType {
         /** Do not compress records. */
         NONE, 
         /** Compress values only, each separately. */
@@ -589,26 +589,26 @@ public class SequenceFile {
 
 
     /** The interface to 'raw' values of SequenceFiles. */
-    public interface ValueBytes {
+    public static interface ValueBytes {
 
         /** Writes the uncompressed bytes to the outStream.
          * @param outStream : Stream to write uncompressed bytes into.
          * @throws IOException
          */
-        void writeUncompressedBytes(DataOutputStream outStream)
+        public void writeUncompressedBytes(DataOutputStream outStream)
                 throws IOException;
 
         /** Write compressed bytes to outStream. 
          * Note: that it will NOT compress the bytes if they are not compressed.
          * @param outStream : Stream to write compressed bytes into.
          */
-        void writeCompressedBytes(DataOutputStream outStream)
+        public void writeCompressedBytes(DataOutputStream outStream) 
                 throws IllegalArgumentException, IOException;
 
         /**
          * Size of stored data.
          */
-        int getSize();
+        public int getSize();
     }
 
     private static class UncompressedBytes implements ValueBytes {
@@ -771,7 +771,10 @@ public class SequenceFile {
                     return false;
                 }
             }
-            return !(iter1.hasNext() || iter2.hasNext());
+            if (iter1.hasNext() || iter2.hasNext()) {
+                return false;
+            }
+            return true;
         }
 
         public int hashCode() {
@@ -992,7 +995,7 @@ public class SequenceFile {
         /** Append a key/value pair. */
         public synchronized void append(Writable key, Writable val)
                 throws IOException {
-            append(key, val);
+            append((Object) key, (Object) val);
         }
 
         /** Append a key/value pair. */
@@ -2548,7 +2551,7 @@ public class SequenceFile {
         } // SequenceFile.Sorter.SortPass
 
         /** The interface to iterate over raw keys/values of SequenceFiles. */
-        public interface RawKeyValueIterator {
+        public static interface RawKeyValueIterator {
             /** Gets the current raw key
              * @return DataOutputBuffer
              * @throws IOException
@@ -3064,10 +3067,13 @@ public class SequenceFile {
                     return false;
                 }
                 SegmentDescriptor that = (SegmentDescriptor)o;
-                return this.segmentLength == that.segmentLength &&
+                if (this.segmentLength == that.segmentLength &&
                         this.segmentOffset == that.segmentOffset &&
                         this.segmentPathName.toString().equals(
-                                that.segmentPathName.toString());
+                                that.segmentPathName.toString())) {
+                    return true;
+                }
+                return false;
             }
 
             public int hashCode() {

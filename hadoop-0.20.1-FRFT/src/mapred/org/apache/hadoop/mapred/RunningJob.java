@@ -37,34 +37,34 @@ public interface RunningJob {
 	 * 
 	 * @return the job identifier.
 	 */
-	JobID getID();
+	public JobID getID();
 
 	/** @deprecated This method is deprecated and will be removed. Applications should 
 	 * rather use {@link #getID()}.
 	 */
 	@Deprecated
-	String getJobID();
+	public String getJobID();
 
 	/**
 	 * Get the name of the job.
 	 * 
 	 * @return the name of the job.
 	 */
-	String getJobName();
+	public String getJobName();
 
 	/**
 	 * Get the path of the submitted job configuration.
 	 * 
 	 * @return the path of the submitted job configuration.
 	 */
-	String getJobFile();
+	public String getJobFile();
 
 	/**
 	 * Get the URL where some job progress information will be displayed.
 	 * 
 	 * @return the URL where some job progress information will be displayed.
 	 */
-	String getTrackingURL();
+	public String getTrackingURL();
 
 	/**
 	 * Get the <i>progress</i> of the job's map-tasks, as a float between 0.0 
@@ -73,7 +73,7 @@ public interface RunningJob {
 	 * @return the progress of the job's map-tasks.
 	 * @throws IOException
 	 */
-	float mapProgress() throws IOException;
+	public float mapProgress() throws IOException;
 
 	/**
 	 * Get the <i>progress</i> of the job's reduce-tasks, as a float between 0.0 
@@ -82,7 +82,7 @@ public interface RunningJob {
 	 * @return the progress of the job's reduce-tasks.
 	 * @throws IOException
 	 */
-	float reduceProgress() throws IOException;
+	public float reduceProgress() throws IOException;
 
 	/**
 	 * Get the <i>progress</i> of the job's cleanup-tasks, as a float between 0.0 
@@ -91,7 +91,7 @@ public interface RunningJob {
 	 * @return the progress of the job's cleanup-tasks.
 	 * @throws IOException
 	 */
-	float cleanupProgress() throws IOException;
+	public float cleanupProgress() throws IOException;
 
 	/**
 	 * Get the <i>progress</i> of the job's setup-tasks, as a float between 0.0 
@@ -100,7 +100,7 @@ public interface RunningJob {
 	 * @return the progress of the job's setup-tasks.
 	 * @throws IOException
 	 */
-	float setupProgress() throws IOException;
+	public float setupProgress() throws IOException;
 
 	/**
 	 * Check if the job is finished or not. 
@@ -109,7 +109,7 @@ public interface RunningJob {
 	 * @return <code>true</code> if the job is complete, else <code>false</code>.
 	 * @throws IOException
 	 */
-	boolean isComplete() throws IOException;
+	public boolean isComplete() throws IOException;
 
 	/**
 	 * Check if the job completed successfully. 
@@ -117,14 +117,14 @@ public interface RunningJob {
 	 * @return <code>true</code> if the job succeeded, else <code>false</code>.
 	 * @throws IOException
 	 */
-	boolean isSuccessful() throws IOException;
+	public boolean isSuccessful() throws IOException;
 
 	/**
 	 * Blocks until the job is complete.
 	 * 
 	 * @throws IOException
 	 */
-	void waitForCompletion() throws IOException;
+	public void waitForCompletion() throws IOException;
 
 	/**
 	 * Returns the current state of the Job.
@@ -132,7 +132,7 @@ public interface RunningJob {
 	 * 
 	 * @throws IOException
 	 */
-	int getJobState() throws IOException;
+	public int getJobState() throws IOException;
 
 	/**
 	 * Kill the running job.  Blocks until all job tasks have been
@@ -140,14 +140,14 @@ public interface RunningJob {
 	 * 
 	 * @throws IOException
 	 */
-	void killJob() throws IOException;
+	public void killJob() throws IOException;
 
 	/**
 	 * Set the priority of a running job.
 	 * @param priority the new priority for the job.
 	 * @throws IOException
 	 */
-	void setJobPriority(String priority) throws IOException;
+	public void setJobPriority(String priority) throws IOException;
 
 	/**
 	 * Get events indicating completion (success/failure) of component tasks.
@@ -156,7 +156,7 @@ public interface RunningJob {
 	 * @return an array of {@link TaskCompletionEvent}s
 	 * @throws IOException
 	 */
-	TaskCompletionEvent[] getTaskCompletionEvents(int startFrom)
+	public TaskCompletionEvent[] getTaskCompletionEvents(int startFrom) 
 	throws IOException;
 
 	/**
@@ -168,11 +168,11 @@ public interface RunningJob {
 	 *                   job failure status.  
 	 * @throws IOException
 	 */
-	void killTask(TaskAttemptID taskId, boolean shouldFail) throws IOException;
+	public void killTask(TaskAttemptID taskId, boolean shouldFail) throws IOException;
 
 	/** @deprecated Applications should rather use {@link #killTask(TaskAttemptID, boolean)}*/
 	@Deprecated
-	void killTask(String taskId, boolean shouldFail) throws IOException;
+	public void killTask(String taskId, boolean shouldFail) throws IOException;
 
 	/**
 	 * Gets the counters for this job.
@@ -180,7 +180,7 @@ public interface RunningJob {
 	 * @return the counters for this job.
 	 * @throws IOException
 	 */
-	Counters getCounters() throws IOException;
+	public Counters getCounters() throws IOException;
 
 	/**
 	 * Gets the diagnostic messages for a given task attempt.
@@ -188,19 +188,19 @@ public interface RunningJob {
 	 * @return the list of diagnostic messages for the task
 	 * @throws IOException
 	 */
-	String[] getTaskDiagnostics(TaskAttemptID taskid) throws IOException;
+	public String[] getTaskDiagnostics(TaskAttemptID taskid) throws IOException;
 
 	/**
 	 * Get start time
 	 * @return
 	 * @throws IOException
 	 */
-	long getStarttime() throws IOException;
+	public long getStarttime() throws IOException;
 
 	/**
 	 * Get end time
 	 * @return
 	 * @throws IOException
 	 */
-	long getEndtime() throws IOException;
+	public long getEndtime() throws IOException;
 }

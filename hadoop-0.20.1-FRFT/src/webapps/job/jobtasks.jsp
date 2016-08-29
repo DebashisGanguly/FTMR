@@ -27,7 +27,7 @@
   int next_page = pnum+1;
   int numperpage = 2000;
   JobID jobidObj = JobID.forName(jobid);
-  JobInProgress job = tracker.getJob(jobidObj);
+  JobInProgress job = (JobInProgress) tracker.getJob(jobidObj);
   JobProfile profile = (job != null) ? (job.getProfile()) : null;
   JobStatus status = (job != null) ? (job.getStatus()) : null;
   TaskReport[] reports = null;

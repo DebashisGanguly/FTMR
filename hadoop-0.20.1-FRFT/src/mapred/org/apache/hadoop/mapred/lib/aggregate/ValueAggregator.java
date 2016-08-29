@@ -31,23 +31,23 @@ public interface ValueAggregator {
    * 
    * @param val the value to be added
    */
-  void addNextValue(Object val);
+  public void addNextValue(Object val);
 
   /**
    * reset the aggregator
    *
    */
-  void reset();
+  public void reset();
 
   /**
    * @return the string representation of the agregator
    */
-  String getReport();
+  public String getReport();
 
   /**
    * 
    * @return an array of values as the outputs of the combiner.
    */
-  ArrayList getCombinerOutput();
+  public ArrayList getCombinerOutput();
 
 }

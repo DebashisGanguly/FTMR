@@ -19,9 +19,11 @@
 package org.apache.hadoop.mapred.lib;
 
 import java.io.*;
+import java.util.*;
 import java.lang.reflect.*;
 
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 
 import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.conf.Configuration;
@@ -139,7 +141,8 @@ public class CombineFileRecordReader<K, V> implements RecordReader<K, V> {
 
     // get a record reader for the idx-th chunk
     try {
-      curReader =  rrConstructor.newInstance(split, jc, reporter, Integer.valueOf(idx));
+      curReader =  rrConstructor.newInstance(new Object [] 
+                            {split, jc, reporter, Integer.valueOf(idx)});
 
       // setup some helper config variables.
       jc.set("map.input.file", split.getPath(idx).toString());

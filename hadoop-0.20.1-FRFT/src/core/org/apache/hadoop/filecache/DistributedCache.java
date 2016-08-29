@@ -787,7 +787,10 @@ public class DistributedCache {
    */
   public static boolean getSymlink(Configuration conf){
     String result = conf.get("mapred.create.symlink");
-    return "yes".equals(result);
+    if ("yes".equals(result)){
+      return true;
+    }
+    return false;
   }
 
   /**

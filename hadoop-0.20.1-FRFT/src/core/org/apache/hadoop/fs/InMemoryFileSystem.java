@@ -368,7 +368,10 @@ public class InMemoryFileSystem extends ChecksumFileSystem {
      * in-memory then its file-size is less than Integer.MAX_VALUE.
      */ 
     private boolean canFitInMemory(long size) {
-      return (size <= Integer.MAX_VALUE) && ((size + totalUsed) < fsSize);
+      if ((size <= Integer.MAX_VALUE) && ((size + totalUsed) < fsSize)) {
+        return true;
+      }
+      return false;
     }
   
     private String getPath(Path f) {

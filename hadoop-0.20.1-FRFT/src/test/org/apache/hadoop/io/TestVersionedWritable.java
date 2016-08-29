@@ -121,9 +121,10 @@ public class TestVersionedWritable extends TestCase {
           return false;
         }
       }
-
-      return containedObject.equals(((AdvancedVersionedWritable) o).containedObject);
-
+			
+      if (!containedObject.equals(((AdvancedVersionedWritable)o).containedObject)) { return false;}
+			
+      return true;
     }
 		
 

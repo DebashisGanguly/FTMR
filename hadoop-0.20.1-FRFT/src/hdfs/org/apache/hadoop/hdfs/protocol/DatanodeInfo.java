@@ -51,8 +51,7 @@ public class DatanodeInfo extends DatanodeID implements Node {
   protected String hostName = null;
   
   // administrative states of a datanode
-  public enum AdminStates {NORMAL, DECOMMISSION_INPROGRESS, DECOMMISSIONED
-  }
+  public enum AdminStates {NORMAL, DECOMMISSION_INPROGRESS, DECOMMISSIONED; }
   protected AdminStates adminState;
 
 
@@ -241,14 +240,20 @@ public class DatanodeInfo extends DatanodeID implements Node {
    * Returns true if the node is in the process of being decommissioned
    */
   public boolean isDecommissionInProgress() {
-    return adminState == AdminStates.DECOMMISSION_INPROGRESS;
+    if (adminState == AdminStates.DECOMMISSION_INPROGRESS) {
+      return true;
+    }
+    return false;
   }
 
   /**
    * Returns true if the node has been decommissioned.
    */
   public boolean isDecommissioned() {
-    return adminState == AdminStates.DECOMMISSIONED;
+    if (adminState == AdminStates.DECOMMISSIONED) {
+      return true;
+    }
+    return false;
   }
 
   /**

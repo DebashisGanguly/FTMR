@@ -23,8 +23,11 @@ public class SubstringComparator extends ComparatorBase {
   @Override
   public boolean compare(String actual, String expected) {
     int compareOutput = actual.indexOf(expected);
-    return compareOutput != -1;
+    if (compareOutput == -1) {
+      return false;
+    }
 
+    return true;
   }
 
 }

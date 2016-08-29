@@ -37,7 +37,7 @@ abstract class TaskTrackerAction implements Writable {
 	 * directs the {@link TaskTracker} to perform periodically.
 	 * 
 	 */
-	public enum ActionType {
+	public static enum ActionType {
 		/** Launch a new task. */
 		LAUNCH_TASK,
 
@@ -57,7 +57,7 @@ abstract class TaskTrackerAction implements Writable {
 		NOTIFICATION_TASK,
 
 		FORCE_KILL_TASK
-	}
+	};
 
 	/**
 	 * A factory-method to create objects of given {@link ActionType}. 

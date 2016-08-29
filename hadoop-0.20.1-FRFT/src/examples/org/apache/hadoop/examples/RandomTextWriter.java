@@ -92,7 +92,7 @@ public class RandomTextWriter extends Configured implements Tool {
 	/**
 	 * User counters
 	 */
-	enum Counters { RECORDS_WRITTEN, BYTES_WRITTEN }
+	static enum Counters { RECORDS_WRITTEN, BYTES_WRITTEN }
 
 	static class Map extends MapReduceBase 
 	implements Mapper<Text, Text, Text, Text> {

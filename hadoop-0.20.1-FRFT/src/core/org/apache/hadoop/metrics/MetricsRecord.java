@@ -72,7 +72,7 @@ public interface MetricsRecord {
    *
    * @return the record name
    */
-  String getRecordName();
+  public abstract String getRecordName();
     
   /**
    * Sets the named tag to the specified value.  The tagValue may be null, 
@@ -82,7 +82,7 @@ public interface MetricsRecord {
    * @param tagValue new value of the tag
    * @throws MetricsException if the tagName conflicts with the configuration
    */
-  void setTag(String tagName, String tagValue);
+  public abstract void setTag(String tagName, String tagValue);
     
   /**
    * Sets the named tag to the specified value.
@@ -91,7 +91,7 @@ public interface MetricsRecord {
    * @param tagValue new value of the tag
    * @throws MetricsException if the tagName conflicts with the configuration
    */
-  void setTag(String tagName, int tagValue);
+  public abstract void setTag(String tagName, int tagValue);
     
   /**
    * Sets the named tag to the specified value.
@@ -100,7 +100,7 @@ public interface MetricsRecord {
    * @param tagValue new value of the tag
    * @throws MetricsException if the tagName conflicts with the configuration
    */
-  void setTag(String tagName, long tagValue);
+  public abstract void setTag(String tagName, long tagValue);
     
   /**
    * Sets the named tag to the specified value.
@@ -109,7 +109,7 @@ public interface MetricsRecord {
    * @param tagValue new value of the tag
    * @throws MetricsException if the tagName conflicts with the configuration
    */
-  void setTag(String tagName, short tagValue);
+  public abstract void setTag(String tagName, short tagValue);
     
   /**
    * Sets the named tag to the specified value.
@@ -118,14 +118,14 @@ public interface MetricsRecord {
    * @param tagValue new value of the tag
    * @throws MetricsException if the tagName conflicts with the configuration
    */
-  void setTag(String tagName, byte tagValue);
+  public abstract void setTag(String tagName, byte tagValue);
     
   /**
    * Removes any tag of the specified name.
    *
    * @param tagName name of a tag
    */
-  void removeTag(String tagName);
+  public abstract void removeTag(String tagName);
   
   /**
    * Sets the named metric to the specified value.
@@ -135,7 +135,7 @@ public interface MetricsRecord {
    * @throws MetricsException if the metricName or the type of the metricValue 
    * conflicts with the configuration
    */
-  void setMetric(String metricName, int metricValue);
+  public abstract void setMetric(String metricName, int metricValue);
     
   /**
    * Sets the named metric to the specified value.
@@ -145,7 +145,7 @@ public interface MetricsRecord {
    * @throws MetricsException if the metricName or the type of the metricValue 
    * conflicts with the configuration
    */
-  void setMetric(String metricName, long metricValue);
+  public abstract void setMetric(String metricName, long metricValue);
     
   /**
    * Sets the named metric to the specified value.
@@ -155,7 +155,7 @@ public interface MetricsRecord {
    * @throws MetricsException if the metricName or the type of the metricValue 
    * conflicts with the configuration
    */
-  void setMetric(String metricName, short metricValue);
+  public abstract void setMetric(String metricName, short metricValue);
     
   /**
    * Sets the named metric to the specified value.
@@ -165,7 +165,7 @@ public interface MetricsRecord {
    * @throws MetricsException if the metricName or the type of the metricValue 
    * conflicts with the configuration
    */
-  void setMetric(String metricName, byte metricValue);
+  public abstract void setMetric(String metricName, byte metricValue);
     
   /**
    * Sets the named metric to the specified value.
@@ -175,7 +175,7 @@ public interface MetricsRecord {
    * @throws MetricsException if the metricName or the type of the metricValue 
    * conflicts with the configuration
    */
-  void setMetric(String metricName, float metricValue);
+  public abstract void setMetric(String metricName, float metricValue);
     
   /**
    * Increments the named metric by the specified value.
@@ -185,7 +185,7 @@ public interface MetricsRecord {
    * @throws MetricsException if the metricName or the type of the metricValue 
    * conflicts with the configuration
    */
-  void incrMetric(String metricName, int metricValue);
+  public abstract void incrMetric(String metricName, int metricValue);
     
   /**
    * Increments the named metric by the specified value.
@@ -195,7 +195,7 @@ public interface MetricsRecord {
    * @throws MetricsException if the metricName or the type of the metricValue 
    * conflicts with the configuration
    */
-  void incrMetric(String metricName, long metricValue);
+  public abstract void incrMetric(String metricName, long metricValue);
     
   /**
    * Increments the named metric by the specified value.
@@ -205,7 +205,7 @@ public interface MetricsRecord {
    * @throws MetricsException if the metricName or the type of the metricValue 
    * conflicts with the configuration
    */
-  void incrMetric(String metricName, short metricValue);
+  public abstract void incrMetric(String metricName, short metricValue);
     
   /**
    * Increments the named metric by the specified value.
@@ -215,7 +215,7 @@ public interface MetricsRecord {
    * @throws MetricsException if the metricName or the type of the metricValue 
    * conflicts with the configuration
    */
-  void incrMetric(String metricName, byte metricValue);
+  public abstract void incrMetric(String metricName, byte metricValue);
     
   /**
    * Increments the named metric by the specified value.
@@ -225,14 +225,14 @@ public interface MetricsRecord {
    * @throws MetricsException if the metricName or the type of the metricValue 
    * conflicts with the configuration
    */
-  void incrMetric(String metricName, float metricValue);
+  public abstract void incrMetric(String metricName, float metricValue);
     
   /**
    * Updates the table of buffered data which is to be sent periodically.
    * If the tag values match an existing row, that row is updated; 
    * otherwise, a new row is added.
    */
-  void update();
+  public abstract void update();
     
   /**
    * Removes, from the buffered data table, all rows having tags 
@@ -241,6 +241,6 @@ public interface MetricsRecord {
    * would be removed.  Or, if there is a single tag on this record, then
    * just rows containing a tag with the same name and value would be removed.
    */
-  void remove();
+  public abstract void remove();
     
 }

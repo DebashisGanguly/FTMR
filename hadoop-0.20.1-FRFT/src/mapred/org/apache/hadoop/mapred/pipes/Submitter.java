@@ -403,17 +403,17 @@ public class Submitter extends Configured implements Tool {
       JobConf job = new JobConf(getConf());
       
       if (results.hasOption("input")) {
-        FileInputFormat.setInputPaths(job,
-                results.getOptionValue("input"));
+        FileInputFormat.setInputPaths(job, 
+                          (String) results.getOptionValue("input"));
       }
       if (results.hasOption("output")) {
         FileOutputFormat.setOutputPath(job, 
-          new Path(results.getOptionValue("output")));
+          new Path((String) results.getOptionValue("output")));
         FileOutputFormat.setOutputDigestsPath(job, 
-                new Path(results.getOptionValue("output")));
+                new Path((String) results.getOptionValue("output")));
       }
       if (results.hasOption("jar")) {
-        job.setJar(results.getOptionValue("jar"));
+        job.setJar((String) results.getOptionValue("jar"));
       }
       if (results.hasOption("inputformat")) {
         setIsJavaRecordReader(job, true);
@@ -436,7 +436,8 @@ public class Submitter extends Configured implements Tool {
         job.setReducerClass(getClass(results, "reduce", job, Reducer.class));
       }
       if (results.hasOption("reduces")) {
-        job.setNumReduceTasks(Integer.parseInt(results.getOptionValue("reduces")));
+        job.setNumReduceTasks(Integer.parseInt((String) 
+                                            results.getOptionValue("reduces")));
       }
       if (results.hasOption("writer")) {
         setIsJavaRecordWriter(job, true);
@@ -444,11 +445,11 @@ public class Submitter extends Configured implements Tool {
                                       OutputFormat.class));
       }
       if (results.hasOption("program")) {
-        setExecutable(job, results.getOptionValue("program"));
+        setExecutable(job, (String) results.getOptionValue("program"));
       }
       if (results.hasOption("jobconf")) {
         LOG.warn("-jobconf option is deprecated, please use -D instead.");
-        String options = results.getOptionValue("jobconf");
+        String options = (String)results.getOptionValue("jobconf");
         StringTokenizer tokenizer = new StringTokenizer(options, ",");
         while (tokenizer.hasMoreTokens()) {
           String keyVal = tokenizer.nextToken().trim();

@@ -88,7 +88,7 @@ public class TestWritable extends TestCase {
     DataInputBuffer dib = new DataInputBuffer();
     dib.reset(dob.getData(), dob.getLength());
     
-    Writable after = ReflectionUtils.newInstance(
+    Writable after = (Writable)ReflectionUtils.newInstance(
     		before.getClass(), conf);
     after.readFields(dib);
 

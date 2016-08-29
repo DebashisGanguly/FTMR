@@ -540,7 +540,10 @@ public class Balancer implements Tool {
     
     /* Check if the node can schedule more blocks to move */
     synchronized private boolean isPendingQNotFull() {
-      return pendingBlocks.size() < MAX_NUM_CONCURRENT_MOVES;
+      if ( pendingBlocks.size() < MAX_NUM_CONCURRENT_MOVES ) {
+        return true;
+      }
+      return false;
     }
     
     /* Check if all the dispatched moves are done */
@@ -618,8 +621,8 @@ public class Balancer implements Tool {
      * Return the total size of the received blocks in the number of bytes.
      */
     private long getBlockList() throws IOException {
-      BlockWithLocations[] newBlocks = namenode.getBlocks(datanode,
-              Math.min(MAX_BLOCKS_SIZE_TO_FETCH, blocksToReceive)).getBlocks();
+      BlockWithLocations[] newBlocks = namenode.getBlocks(datanode, 
+        (long)Math.min(MAX_BLOCKS_SIZE_TO_FETCH, blocksToReceive)).getBlocks();
       long bytesReceived = 0;
       for (BlockWithLocations blk : newBlocks) {
         bytesReceived += blk.getBlock().getNumBytes();
@@ -1174,8 +1177,7 @@ public class Balancer implements Tool {
   }
 
   private static class BytesMoved {
-    private long bytesMoved = 0L;
-
+    private long bytesMoved = 0L;;
     private synchronized void inc( long bytes ) {
       bytesMoved += bytes;
     }
@@ -1183,8 +1185,7 @@ public class Balancer implements Tool {
     private long get() {
       return bytesMoved;
     }
-  }
-
+  };
   private BytesMoved bytesMoved = new BytesMoved();
   private int notChangedIterations = 0;
   

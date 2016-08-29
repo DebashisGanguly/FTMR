@@ -63,13 +63,13 @@ public interface DBWritable {
    * @param statement the statement that the fields are put into.
    * @throws SQLException
    */
-  void write(PreparedStatement statement) throws SQLException;
+	public void write(PreparedStatement statement) throws SQLException;
 	
 	/**
 	 * Reads the fields of the object from the {@link ResultSet}. 
 	 * @param resultSet the {@link ResultSet} to get the fields from.
 	 * @throws SQLException
 	 */
-	void readFields(ResultSet resultSet) throws SQLException ;
+	public void readFields(ResultSet resultSet) throws SQLException ; 
 	
 }

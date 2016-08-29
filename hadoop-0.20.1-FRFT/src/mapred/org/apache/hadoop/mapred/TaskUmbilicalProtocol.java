@@ -55,7 +55,7 @@ interface TaskUmbilicalProtocol extends VersionedProtocol {
      * Version 16 Added fatalError for child to communicate fatal errors to TT
      * */
 
-    long versionID = 16L;
+    public static final long versionID = 16L;
 
     /**
      * Called when a child task process starts, to get its task.
@@ -106,9 +106,9 @@ interface TaskUmbilicalProtocol extends VersionedProtocol {
     void requestMap(TaskAttemptID taskid) throws IOException;
 
     /**
-     * Send digest to the TT
+     * Send an hash to the TT
      * @param taskid
-     * @param hash
+     * @param hashOutput
      * @throws IOException
      * @throws Exception 
      */

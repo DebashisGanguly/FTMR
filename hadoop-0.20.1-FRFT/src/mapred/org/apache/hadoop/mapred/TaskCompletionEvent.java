@@ -18,16 +18,17 @@
 
 package org.apache.hadoop.mapred;
 
-import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.io.WritableUtils;
-import org.apache.log4j.Logger;
+import static org.apache.hadoop.mapred.Util.getId;
+import static org.apache.hadoop.mapred.Util.getReplicaNumber;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Arrays;
 
-import static org.apache.hadoop.mapred.Util.getId;
-import static org.apache.hadoop.mapred.Util.getReplicaNumber;
+import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.io.WritableUtils;
+import org.apache.log4j.Logger;
 
 /**
  * This is used to track task completion events on job tracker. 
@@ -36,7 +37,7 @@ public class TaskCompletionEvent
 implements Writable {
 	Logger log = Logger.getLogger(TaskCompletionEvent.class);
 
-	public enum Status {FAILED, KILLED, SUCCEEDED, OBSOLETE, TIPFAILED}
+	static public enum Status {FAILED, KILLED, SUCCEEDED, OBSOLETE, TIPFAILED};
 
 	private int eventId; 
 	private String taskTrackerHttp;

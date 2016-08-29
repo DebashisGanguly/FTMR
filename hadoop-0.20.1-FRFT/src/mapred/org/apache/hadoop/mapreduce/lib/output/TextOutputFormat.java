@@ -119,7 +119,7 @@ public class TextOutputFormat<K, V> extends FileOutputFormat<K, V> {
         if (isCompressed) {
             Class<? extends CompressionCodec> codecClass = 
                     getOutputCompressorClass(job, GzipCodec.class);
-            codec = ReflectionUtils.newInstance(codecClass, conf);
+            codec = (CompressionCodec) ReflectionUtils.newInstance(codecClass, conf);
             extension = codec.getDefaultExtension();
         }
         Path file = getDefaultWorkFile(job, extension);

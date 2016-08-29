@@ -428,9 +428,11 @@ class BlocksMap {
     BlockInfo info = map.get(block);
     if (info == null)
       return false;
-
-    return -1 != info.findDatanode(datanode);
-
+    
+    if (-1 == info.findDatanode(datanode))
+      return false;
+    
+    return true;
   }
   
   /** Get the capacity of the HashMap that stores blocks */

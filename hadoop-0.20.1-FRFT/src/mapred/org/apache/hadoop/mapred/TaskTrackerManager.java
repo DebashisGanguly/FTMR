@@ -31,31 +31,31 @@ interface TaskTrackerManager {
    * @return A collection of the {@link TaskTrackerStatus} for the tasktrackers
    * being managed.
    */
-  Collection<TaskTrackerStatus> taskTrackers();
+  public Collection<TaskTrackerStatus> taskTrackers();
   
   /**
    * @return The number of unique hosts running tasktrackers.
    */
-  int getNumberOfUniqueHosts();
+  public int getNumberOfUniqueHosts();
   
   /**
    * @return a summary of the cluster's status.
    */
-  ClusterStatus getClusterStatus();
+  public ClusterStatus getClusterStatus();
 
   /**
    * Registers a {@link JobInProgressListener} for updates from this
    * {@link TaskTrackerManager}.
    * @param jobInProgressListener the {@link JobInProgressListener} to add
    */
-  void addJobInProgressListener(JobInProgressListener listener);
+  public void addJobInProgressListener(JobInProgressListener listener);
 
   /**
    * Unregisters a {@link JobInProgressListener} from this
    * {@link TaskTrackerManager}.
    * @param jobInProgressListener the {@link JobInProgressListener} to remove
    */
-  void removeJobInProgressListener(JobInProgressListener listener);
+  public void removeJobInProgressListener(JobInProgressListener listener);
 
   /**
    * Return the {@link QueueManager} which manages the queues in this
@@ -63,14 +63,14 @@ interface TaskTrackerManager {
    *
    * @return the {@link QueueManager}
    */
-  QueueManager getQueueManager();
+  public QueueManager getQueueManager();
   
   /**
    * Return the current heartbeat interval that's used by {@link TaskTracker}s.
    *
    * @return the heartbeat interval used by {@link TaskTracker}s
    */
-  int getNextHeartbeatInterval();
+  public int getNextHeartbeatInterval();
 
   /**
    * Kill the job identified by jobid
@@ -78,7 +78,7 @@ interface TaskTrackerManager {
    * @param jobid
    * @throws IOException
    */
-  void killJob(JobID jobid)
+  public void killJob(JobID jobid)
       throws IOException;
 
   /**
@@ -87,19 +87,19 @@ interface TaskTrackerManager {
    * @param jobid
    * @return jobInProgress object
    */
-  JobInProgress getJob(JobID jobid);
+  public JobInProgress getJob(JobID jobid);
   
   /**
    * Initialize the Job
    * 
    * @param job JobInProgress object
    */
-  void initJob(JobInProgress job);
+  public void initJob(JobInProgress job);
   
   /**
    * Fail a job.
    * 
    * @param job JobInProgress object
    */
-  void failJob(JobInProgress job);
+  public void failJob(JobInProgress job);
 }

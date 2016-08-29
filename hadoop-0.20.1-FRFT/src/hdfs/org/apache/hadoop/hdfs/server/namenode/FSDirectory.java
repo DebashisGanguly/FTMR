@@ -789,9 +789,13 @@ class FSDirectory implements FSConstants, Closeable {
   boolean isValidToCreate(String src) {
     String srcs = normalizePath(src);
     synchronized (rootDir) {
-      return srcs.startsWith("/") &&
-              !srcs.endsWith("/") &&
-              rootDir.getNode(srcs) == null;
+      if (srcs.startsWith("/") && 
+          !srcs.endsWith("/") && 
+          rootDir.getNode(srcs) == null) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 

@@ -38,5 +38,5 @@ public interface DNSToSwitchMapping {
    * @param names
    * @return list of resolved network paths
    */
-  List<String> resolve(List<String> names);
+  public List<String> resolve(List<String> names);
 }

@@ -18,17 +18,29 @@
 
 package org.apache.hadoop.mapred;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.fs.*;
+import org.apache.hadoop.fs.BlockLocation;
+import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.PathFilter;
 import org.apache.hadoop.net.NetworkTopology;
 import org.apache.hadoop.net.Node;
 import org.apache.hadoop.net.NodeBase;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.apache.hadoop.util.StringUtils;
-
-import java.io.IOException;
-import java.util.*;
 
 /** 
  * A base class for file-based {@link InputFormat}.
@@ -164,7 +176,10 @@ public abstract class FileInputFormat<K, V> implements InputFormat<K, V> {
             } else {
                 for (FileStatus globStat: matches) {
                     if (globStat.isDir()) {
-                        Collections.addAll(result, fs.listStatus(globStat.getPath(), inputFilter));
+                        for(FileStatus stat: fs.listStatus(globStat.getPath(),
+                                inputFilter)) {
+                            result.add(stat);
+                        }          
                     } else {
                         result.add(globStat);
                     }

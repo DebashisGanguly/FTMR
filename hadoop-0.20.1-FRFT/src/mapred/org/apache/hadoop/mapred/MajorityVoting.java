@@ -1,9 +1,16 @@
 package org.apache.hadoop.mapred;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.util.*;
 
 public class MajorityVoting implements VotingSystem {
     private static final Log LOG = LogFactory.getLog(MajorityVoting.class);
@@ -96,20 +103,13 @@ public class MajorityVoting implements VotingSystem {
 
         addTask(tid);	
 
-        if(!list.containsKey(id)) {
-            List<String> ldigests = new ArrayList<String>();
-
-            for (String digest : values) {
-                ldigests.add(ShaAbstractHash.convertHashToString(digest.getBytes()));
-            }
-            list.put(id, ldigests);
-        } else {// concat
-            List<String> ldigests = list.get(id);
-            for (String digest : values) {
-                ldigests.add(ShaAbstractHash.convertHashToString(digest.getBytes()));
-            }
-
-            list.put(id, ldigests);
+        if(!list.containsKey(id))
+            list.put(id, Arrays.asList(values));
+        else {// concat
+            List<String> temp = new ArrayList<String>(Arrays.asList(values));
+            List<String> v = list.get(id);
+            temp.addAll(v);
+            list.put(id, temp);
         }
     }
 
@@ -180,6 +180,7 @@ public class MajorityVoting implements VotingSystem {
     /**
      * Add a <task without replica, List<task>> for map
      * Is to help to count the map digests 
+     * @param id
      * @param task
      */
     private void addTask(TaskID task) {
@@ -240,7 +241,9 @@ public class MajorityVoting implements VotingSystem {
 
     /**
      * 
-     * @param tid Id of the reduce task
+     * @param id Id of the reduce task
+     * @param threshold
+     * @param tasksNumber
      * @return
      */
     public int hasMajorityOfDigests(TaskID tid) {
@@ -363,6 +366,34 @@ public class MajorityVoting implements VotingSystem {
 
         return NO_MAJORITY;
     }
+
+
+    /**
+     * Get the digest that has more occurrences
+     * @param digests
+     * @return the digest
+     */
+    private String getDigests(List<String> digests) {
+        if(digests == null)
+            return null;
+
+        for(int i=0; i<digests.size(); i++) {
+            String key = digests.get(i);
+            int count = 1;
+
+            for(int j=i+1; j<digests.size(); j++) {
+                if(key.equals(digests.get(j))) {
+                    count++;
+
+                    if(count >= getThreshold())
+                        return key;
+                }
+            }
+        }
+
+        return null;
+    }
+
 
 
     private int hasMajorityOfDigests(String ref, List<String> digests) {

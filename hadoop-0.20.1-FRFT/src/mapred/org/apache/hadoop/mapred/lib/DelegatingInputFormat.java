@@ -66,7 +66,7 @@ public class DelegatingInputFormat<K, V> implements InputFormat<K, V> {
     for (Entry<Class<? extends InputFormat>, List<Path>> formatEntry : 
         formatPaths.entrySet()) {
       Class<? extends InputFormat> formatClass = formatEntry.getKey();
-      InputFormat format = ReflectionUtils.newInstance(
+      InputFormat format = (InputFormat) ReflectionUtils.newInstance(
          formatClass, conf);
       List<Path> paths = formatEntry.getValue();
 

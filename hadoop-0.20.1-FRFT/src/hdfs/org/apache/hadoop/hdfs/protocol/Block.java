@@ -45,8 +45,12 @@ public class Block implements Writable, Comparable<Block> {
    */
   public static boolean isBlockFilename(File f) {
     String name = f.getName();
-    return name.startsWith("blk_") &&
-            name.indexOf('.') < 0;
+    if ( name.startsWith( "blk_" ) && 
+        name.indexOf( '.' ) < 0 ) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   static long filename2id(String name) {

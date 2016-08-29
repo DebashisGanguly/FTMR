@@ -62,10 +62,10 @@ interface InterTrackerProtocol extends VersionedProtocol {
 	 * Version 24: Changed format of Task and TaskStatus for HADOOP-4759 
 	 * Version 25: JobIDs are passed in response to JobTracker restart 
 	 */
-	long versionID = 25L;
+	public static final long versionID = 25L;
 
-	int TRACKERS_OK = 0;
-	int UNKNOWN_TASKTRACKER = 1;
+	public final static int TRACKERS_OK = 0;
+	public final static int UNKNOWN_TASKTRACKER = 1;
 
 	/**
 	 * Called regularly by the {@link TaskTracker} to update the status of its 
@@ -101,7 +101,7 @@ interface InterTrackerProtocol extends VersionedProtocol {
 	 * The task tracker calls this once, to discern where it can find
 	 * files referred to by the JobTracker
 	 */
-	String getFilesystemName() throws IOException;
+	public String getFilesystemName() throws IOException;
 
 	//  /**
 	//   * Report a reduce task terminated
@@ -119,9 +119,9 @@ interface InterTrackerProtocol extends VersionedProtocol {
 	 * @throws IOException if there was a problem in communication or on the
 	 *                     remote side
 	 */
-	void reportTaskTrackerError(String taskTracker,
-								String errorClass,
-								String errorMessage) throws IOException;
+	public void reportTaskTrackerError(String taskTracker,
+			String errorClass,
+			String errorMessage) throws IOException;
 	/**
 	 * Get task completion events for the jobid, starting from fromEventId. 
 	 * Returns empty aray if no events are available. 
@@ -154,13 +154,13 @@ interface InterTrackerProtocol extends VersionedProtocol {
 	 * 
 	 * @return the system directory where job-specific files are to be placed.
 	 */
-	String getSystemDir();
+	public String getSystemDir();
 
 
 	/**
 	 * Returns the buildVersion of the JobTracker 
 	 */
-	String getBuildVersion() throws IOException;
+	public String getBuildVersion() throws IOException;
 
 	/**
 	 * Notice the JT of what's map tasks are launched
@@ -168,7 +168,7 @@ interface InterTrackerProtocol extends VersionedProtocol {
 	 * @param tid
 	 * @throws IOException
 	 */
-	void notifyLaunchTasks(JobID jobid, TaskAttemptID tid)  throws IOException;
+	public void notifyLaunchTasks(JobID jobid, TaskAttemptID tid)  throws IOException;
 	
 	/**
 	 * Questions JT  if should tamper map or reduce task
@@ -176,7 +176,7 @@ interface InterTrackerProtocol extends VersionedProtocol {
 	 * @return
 	 * @throws IOException
 	 */
-	boolean shouldTamperMapDigest(TaskAttemptID taskid)  throws IOException;
-	boolean shouldTamperMapFile(TaskAttemptID taskid)  throws IOException;
-	boolean shouldTamperReduceDigest(TaskAttemptID taskid)  throws IOException;
+	public boolean shouldTamperMapDigest(TaskAttemptID taskid)  throws IOException;
+	public boolean shouldTamperMapFile(TaskAttemptID taskid)  throws IOException;
+	public boolean shouldTamperReduceDigest(TaskAttemptID taskid)  throws IOException;
 }

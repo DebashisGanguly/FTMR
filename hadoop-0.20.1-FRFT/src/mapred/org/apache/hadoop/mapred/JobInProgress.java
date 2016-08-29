@@ -17,6 +17,31 @@
  */
 package org.apache.hadoop.mapred;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.Vector;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.FileSystem;
@@ -31,13 +56,6 @@ import org.apache.hadoop.net.NetworkTopology;
 import org.apache.hadoop.net.Node;
 import org.apache.hadoop.util.StringUtils;
 
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 /*************************************************************
  * JobInProgress maintains all the info for keeping
  * a Job on the straight and narrow.  It keeps its JobProfile
@@ -46,122 +64,166 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * ***********************************************************
  */
 class JobInProgress {
+    /**
+     * Used when the a kill is issued to a job which is initializing.
+     */
+    static class KillInterruptedException extends InterruptedException {
+        private static final long serialVersionUID = 1L;
+        public KillInterruptedException(String msg) {
+            super(msg);
+        }
+    }
+
     static final Log LOG = LogFactory.getLog(JobInProgress.class);
     private static final int NOTUSED = 0;
-    /**
-     * A special value indicating that
-     * {@link #findNewMapTask(TaskTrackerStatus, int, int, int, double)} should
-     * schedule any only off-switch and speculative map tasks for this job.
-     */
-    private static final int NON_LOCAL_CACHE_LEVEL = -1;
-    // The maximum percentage of trackers in cluster added to the 'blacklist'.
-    private static final double CLUSTER_BLACKLIST_PERCENT = 0.25;
-    // The maximum percentage of fetch failures allowed for a map
-    private static final double MAX_ALLOWED_FETCH_FAILURES_PERCENT = 0.5;
-    // Maximum no. of fetch-failure notifications after which
-    // the map task is killed
-    private static final int MAX_FETCH_FAILURES_NOTIFICATIONS = 3;
-    final JobTracker jobtracker;
-    private final int maxLevel;
-    /**
-     * A special value indicating that
-     * {@link #findNewMapTask(TaskTrackerStatus, int, int, int, double)} should
-     * schedule any available map tasks for this job, including speculative tasks.
-     */
-    private final int anyCacheLevel;
-    // Indicates how many times the job got restarted
-    private final int restartCount;
+
     JobProfile profile;
     JobStatus status;
     Path jobFile = null;
     Path localJobFile = null;
     Path localJarFile = null;
+
     TaskInProgress maps[] 		= new TaskInProgress[0];
     TaskInProgress reduces[] 	= new TaskInProgress[0];
+
     TaskInProgress cleanup[] 	= new TaskInProgress[0];
     TaskInProgress setup[] 		= new TaskInProgress[0];
-    Map<String, Integer> mapCount =  new HashMap<String, Integer>();
-    Map<String, Integer> redCount =  new HashMap<String, Integer>();
-    List<TaskTrackerLocation> mapTrackerLocation = new ArrayList<TaskTrackerLocation>();
-    List<TaskTrackerLocation> redTrackerLocation = new ArrayList<TaskTrackerLocation>();
-    MapLauncherController launcher;
-    // runningMapTasks include speculative tasks, so we need to capture
-    // speculative tasks separately
-    int speculativeMapTasks 	= 0;
-    int speculativeReduceTasks 	= 0;
-    int mapFailuresPercent 		= 0;
-    int reduceFailuresPercent 	= 0;
-    JobPriority priority = JobPriority.NORMAL;
-    long startTime;
-    long launchTime;
-    long finishTime;
-    AtomicBoolean tasksInited = new AtomicBoolean(false);
 
-    //    private static final float DEFAULT_COMPLETED_MAPS_PERCENT_FOR_REDUCE_SLOWSTART = 0.05f;
-    //    int completedMapsForReduceSlowstart = 0;
     //task -> replica number
     private VotingSystem voting;
+    Map<String, Integer> mapCount =  new HashMap<String, Integer>();
+    Map<String, Integer> redCount =  new HashMap<String, Integer>();
+
     private int tamperedMap = 0;
     private int tamperedReduce = 0;
+
     private boolean[] map_voters;// array of values of the majority voting results.
     private boolean[] reduce_voters;// array of values of the majority voting results.
+
+    List<TaskTrackerLocation> mapTrackerLocation = new ArrayList<TaskTrackerLocation>();
+    List<TaskTrackerLocation> redTrackerLocation = new ArrayList<TaskTrackerLocation>();
+
+    MapLauncherController launcher;
+
     private int numMapTasks 			= 0;
     private int replicatedNumMapTasks 	= 0;
     private int numReduceTasks 			= 0;
     private int replicatedNumReduceTasks = 0;
     private int numReplicas;
+
     // Counters to track currently running/finished/failed Map/Reduce task-attempts
     private int runningMapTasks 	= 0;
     private int runningReduceTasks 	= 0;
     private int finishedMapTasks 	= 0;
     private int finishedReduceTasks = 0;
-    private int failedMapTasks 		= 0;
+    private int failedMapTasks 		= 0; 
     private int failedReduceTasks 	= 0;
+
+    //    private static final float DEFAULT_COMPLETED_MAPS_PERCENT_FOR_REDUCE_SLOWSTART = 0.05f;
+    //    int completedMapsForReduceSlowstart = 0;
+
+    // runningMapTasks include speculative tasks, so we need to capture 
+    // speculative tasks separately 
+    int speculativeMapTasks 	= 0;
+    int speculativeReduceTasks 	= 0;
+
+    int mapFailuresPercent 		= 0;
+    int reduceFailuresPercent 	= 0;
     private int failedMapTIPs 	= 0;
     private int failedReduceTIPs = 0;
+
     private volatile boolean launchedCleanup 	= false;
     private volatile boolean launchedSetup 		= false;
     private volatile boolean jobKilled 			= false;
     private volatile boolean jobFailed 			= false;
+
+    JobPriority priority = JobPriority.NORMAL;
+    final JobTracker jobtracker;
+
     // NetworkTopology Node to the set of TIPs
     private Map<Node, List<TaskInProgress>> nonRunningMapCache;
+
     // Map of NetworkTopology Node to set of running TIPs
     private Map<Node, Set<TaskInProgress>> runningMapCache;
+
     // A list of non-local non-running maps
     private List<TaskInProgress> nonLocalMaps;
+
     // A set of non-local running maps
     private Set<TaskInProgress> nonLocalRunningMaps;
+
     // A list of non-running reduce TIPs
     private List<TaskInProgress> nonRunningReduces;
+
     private List<TaskID> urgentMapsToRun;
     // A set of running reduce TIPs
     private Set<TaskInProgress> runningReduces;
+
     // A set of back running reduce TIPs
     private Set<TaskInProgress> backuprunningReduces;
+
     // A list of cleanup tasks for the map task attempts, to be launched
     private List<TaskAttemptID> mapCleanupTasks = new LinkedList<TaskAttemptID>();
+
     // A list of cleanup tasks for the reduce task attempts, to be launched
     private List<TaskAttemptID> reduceCleanupTasks = new LinkedList<TaskAttemptID>();
+
+    private final int maxLevel;
+
     // count the number of tasks launched
     private TaskCounter mapTaskcounter;
     private TaskCounter redTaskcounter;
     private TaskCounter summapTaskcounter;
     private TaskCounter sumredTaskcounter;
+
+    /**
+     * A special value indicating that 
+     * {@link #findNewMapTask(TaskTrackerStatus, int, int, int, double)} should
+     * schedule any available map tasks for this job, including speculative tasks.
+     */
+    private final int anyCacheLevel;
+
+    /**
+     * A special value indicating that 
+     * {@link #findNewMapTask(TaskTrackerStatus, int, int, int, double)} should
+     * schedule any only off-switch and speculative map tasks for this job.
+     */
+    private static final int NON_LOCAL_CACHE_LEVEL = -1;
+
     private int taskCompletionEventTracker;
+
     // count number of maptasks that ended
     // used for tentative execution
-    private int[] mapTaskCompletionEventTracker;
+    private int[] mapTaskCompletionEventTracker; 
     private List<TaskCompletionEvent> taskCompletionEvents;
+
+    // The maximum percentage of trackers in cluster added to the 'blacklist'.
+    private static final double CLUSTER_BLACKLIST_PERCENT = 0.25;
+
+    // The maximum percentage of fetch failures allowed for a map 
+    private static final double MAX_ALLOWED_FETCH_FAILURES_PERCENT = 0.5;
+
     // No. of tasktrackers in the cluster
     private volatile int clusterSize = 0;
+
     // The no. of tasktrackers where >= conf.getMaxTaskFailuresPerTracker()
     // tasks have failed
     private volatile int flakyTaskTrackers = 0;
     // Map of trackerHostName -> no. of task failures
     private Map<String, Integer> trackerToFailuresMap = new TreeMap<String, Integer>();
+
     //Confine estimation algorithms to an "oracle" class that JIP queries.
-    private ResourceEstimator resourceEstimator;
+    private ResourceEstimator resourceEstimator; 
+
+    long startTime;
+    long launchTime;
+    long finishTime;
+
+    // Indicates how many times the job got restarted
+    private final int restartCount;
+
     private JobConf conf;
+    AtomicBoolean tasksInited = new AtomicBoolean(false);
     private JobInitKillStatus jobInitKillStatus = new JobInitKillStatus();
 
     private LocalFileSystem localFs;
@@ -171,19 +233,31 @@ class JobInProgress {
     private long 	inputLength = 0;
 
     private JobEndProcess endProcess;
+
+    // Per-job counters
+    public static enum Counter {
+        NUMBER_REPLICAS,
+        TOTAL_MAPS,
+        NUM_FAILED_MAPS, 
+        NUM_FAILED_REDUCES,
+        TOTAL_LAUNCHED_MAPS,
+        TOTAL_LAUNCHED_REDUCES,
+        OTHER_LOCAL_MAPS,
+        DATA_LOCAL_MAPS,
+        RACK_LOCAL_MAPS,
+    }
     private Counters jobCounters = new Counters();
+
     private MetricsRecord jobMetrics;
+
+    // Maximum no. of fetch-failure notifications after which
+    // the map task is killed
+    private static final int MAX_FETCH_FAILURES_NOTIFICATIONS = 3;
+
     // Map of mapTaskId -> no. of fetch failures
     private Map<TaskAttemptID, Integer> mapTaskIdToFetchFailuresMap = new TreeMap<TaskAttemptID, Integer>();
+
     private Object schedulingInfo;
-    /**
-     * A taskid assigned to this JobInProgress has reported in successfully.
-     */
-    private int majority_count = 0;
-    /**
-     * Thread that is constantly checking when the job ended successfully or with errors.
-     */
-    private boolean more_tasks = false;
 
     /**
      * Create an almost empty JobInProgress, which can be used only for tests
@@ -223,17 +297,21 @@ class JobInProgress {
         this(jobid, jobtracker, default_conf, 0);
     }
 
+    public VotingSystem getVoting() {
+        return voting;
+    }
+
     /**
      * Initialize JobInProgress variables
-     *
+     * 
      * @param jobid
      * @param jobtracker
      * @param default_conf
      * @param rCount
-     *
+     * 
      * @throws IOException
      */
-    public JobInProgress(JobID jobid, JobTracker jobtracker, JobConf default_conf, int rCount)
+    public JobInProgress(JobID jobid, JobTracker jobtracker, JobConf default_conf, int rCount) 
             throws IOException {
         this.restartCount = rCount;
         this.jobId = jobid;
@@ -261,7 +339,7 @@ class JobInProgress {
 
         this.priority = conf.getJobPriority();
         this.status.setJobPriority(this.priority);
-        this.profile = new JobProfile(conf.getUser(), jobid,
+        this.profile = new JobProfile(conf.getUser(), jobid, 
                 jobFile.toString(), url, conf.getJobName(),
                 conf.getQueueName());
 
@@ -321,20 +399,6 @@ class JobInProgress {
         endProcess = new JobEndProcess();
     }
 
-    static String convertTrackerNameToHostName(String trackerName) {
-        // Ugly!
-        // Convert the trackerName to it's host name
-        int indexOfColon = trackerName.indexOf(":");
-        String trackerHostName = (indexOfColon == -1) ?
-                trackerName :
-                    trackerName.substring(0, indexOfColon);
-        return trackerHostName.substring("tracker_".length());
-    }
-
-    public VotingSystem getVoting() {
-        return voting;
-    }
-
     /**
      * Notify the JT to run another task
      * @param taskid
@@ -379,7 +443,7 @@ class JobInProgress {
     }
 
     /**
-     * Get TIP that are in the same node as the splits
+     * Get TIP that are in the same node as the splits 
      * @param splits
      * @param maxLevel
      * @return
@@ -419,7 +483,7 @@ class JobInProgress {
             }
 
             /*
-             Re-Sort the split locations such that each map replica will run in different hosts
+             Re-Sort the split locations such that each map replica will run in different hosts  
              */
             String [] sp = new String[splitLocations.length];
             int x = i;
@@ -465,11 +529,11 @@ class JobInProgress {
             while(iter.hasNext()) {
                 Node n = iter.next();
                 List<TaskInProgress> hostMaps = cache.get(n);
-                Collections.sort (hostMaps, new Comparator<TaskInProgress>() {
-                    public int compare(TaskInProgress p1, TaskInProgress p2) {
-                        return p1.getTIPId().getReplicaNumber() < p2.getTIPId().getReplicaNumber() ? -1 :
-                            (p1.getTIPId().getReplicaNumber() > p2.getTIPId().getReplicaNumber() ? 1 : 0);
-                    }
+                Collections.sort (hostMaps, new Comparator<TaskInProgress>() {  
+                    public int compare(TaskInProgress p1, TaskInProgress p2) {  
+                        return p1.getTIPId().getReplicaNumber() < p2.getTIPId().getReplicaNumber() ? -1 : 
+                            (p1.getTIPId().getReplicaNumber() > p2.getTIPId().getReplicaNumber() ? 1 : 0);  
+                    }  
                 });
             }
         }
@@ -498,7 +562,7 @@ class JobInProgress {
 
     /**
      * Check if the job has been initialized.
-     * @return <code>true</code> if the job has been initialized,
+     * @return <code>true</code> if the job has been initialized, 
      *         <code>false</code> otherwise
      */
     public boolean inited() {
@@ -513,7 +577,7 @@ class JobInProgress {
      * Construct the splits, etc.  This is invoked from an async
      * thread so that split-computation doesn't block anyone.
      */
-    public synchronized void initTasks()
+    public synchronized void initTasks() 
             throws IOException, KillInterruptedException {
         if (tasksInited.get() || isComplete()) {
             return;
@@ -559,13 +623,13 @@ class JobInProgress {
         // then fail the job.
         int maxTasks = jobtracker.getMaxTasksPerJob();
         if (maxTasks > 0 && numMapTasks + numReduceTasks > maxTasks) {
-            throw new IOException("The number of tasks for this job " +
+            throw new IOException("The number of tasks for this job " + 
                     (numMapTasks + numReduceTasks) +
                     " exceeds the configured limit " + maxTasks);
         }
 
         jobtracker.getInstrumentation().addWaiting(getJobID(), numMapTasks + numReduceTasks);
-
+        
         maps = new TaskInProgress[replicatedNumMapTasks];
 
         if(conf.getDeferredExecution()) {
@@ -576,8 +640,8 @@ class JobInProgress {
 
                 for(int j=0; j<numReplicas; j++) {
                     int idx = (i*numReplicas) + j;
-                    //task_201007081056_0001_m_000002_2_m
-                    //task_201007081056_0001_m_idx_replica_m
+                    //task_201007081056_0001_m_000002_2_m 
+                    //task_201007081056_0001_m_idx_replica_m 
                     maps[idx] = new TaskInProgress(jobId, jobFile, splits[i], jobtracker, conf, this, i, j);
 
                     // set count
@@ -591,8 +655,8 @@ class JobInProgress {
                 for(int i=0; i < splits.length; ++i) {
                     inputLength += splits[i].getDataLength();
 
-                    //task_201007081056_0001_m_000002_2_m
-                    //task_201007081056_0001_m_idx_replica_m
+                    //task_201007081056_0001_m_000002_2_m 
+                    //task_201007081056_0001_m_idx_replica_m 
                     maps[count] = new TaskInProgress(jobId, jobFile, splits[i], jobtracker, conf, this, i, numReplica);
 
                     // set count
@@ -604,7 +668,7 @@ class JobInProgress {
 
         LOG.info("Input size for job " + jobId + " = " + inputLength + ". Number of splits = " + splits.length);
 
-        if (numMapTasks > 0) {
+        if (numMapTasks > 0) { 
             nonRunningMapCache = createCache(splits, maxLevel);
         }
 
@@ -632,11 +696,11 @@ class JobInProgress {
             }
         }
 
-        // Calculate the minimum number of maps to be complete before
+        // Calculate the minimum number of maps to be complete before 
         // we should start scheduling reduces
-        //        completedMapsForReduceSlowstart =
-        //                (int)Math.ceil((conf.getFloat("mapred.reduce.slowstart.completed.maps",
-        //                        DEFAULT_COMPLETED_MAPS_PERCENT_FOR_REDUCE_SLOWSTART) *
+        //        completedMapsForReduceSlowstart = 
+        //                (int)Math.ceil((conf.getFloat("mapred.reduce.slowstart.completed.maps", 
+        //                        DEFAULT_COMPLETED_MAPS_PERCENT_FOR_REDUCE_SLOWSTART) * 
         //                        MajorityVoting.getThreshold(replicatedNumMapTasks)));
 
         // create cleanup two cleanup tips, one map and one reduce.
@@ -679,11 +743,11 @@ class JobInProgress {
     private void printMapCache() {
         /*
           Map cache
-    /default-rack - task_201203071111_0001_m_000000_0, task_201203071111_0001_m_000000_1, task_201203071111_0001_m_000000_2, task_201203071111_0001_m_000001_0, task_201203071111_0001_m_000001_1, task_201203071111_0001_m_000001_2, task_201203071111_0001_m_000002_0, task_201203071111_0001_m_000002_1, task_201203071111_0001_m_000002_2, task_201203071111_0001_m_000003_0, task_201203071111_0001_m_000003_1, task_201203071111_0001_m_000003_2, task_201203071111_0001_m_000004_0, task_201203071111_0001_m_000004_1, task_201203071111_0001_m_000004_2, task_201203071111_0001_m_000005_0, task_201203071111_0001_m_000005_1, task_201203071111_0001_m_000005_2, task_201203071111_0001_m_000006_0, task_201203071111_0001_m_000006_1, task_201203071111_0001_m_000006_2, task_201203071111_0001_m_000007_0, task_201203071111_0001_m_000007_1, task_201203071111_0001_m_000007_2, task_201203071111_0001_m_000008_0, task_201203071111_0001_m_000008_1, task_201203071111_0001_m_000008_2, task_201203071111_0001_m_000009_0, task_201203071111_0001_m_000009_1, task_201203071111_0001_m_000009_2,
-    /default-rack/ubuntu-linux1 - task_201203071111_0001_m_000000_0, task_201203071111_0001_m_000002_0, task_201203071111_0001_m_000005_0,
-    /default-rack/ubuntu-linux2 - task_201203071111_0001_m_000000_2, task_201203071111_0001_m_000001_2, task_201203071111_0001_m_000002_1, task_201203071111_0001_m_000003_0, task_201203071111_0001_m_000004_2, task_201203071111_0001_m_000006_1, task_201203071111_0001_m_000007_1, task_201203071111_0001_m_000008_1, task_201203071111_0001_m_000009_1,
-    /default-rack/ubuntu-linux4 - task_201203071111_0001_m_000001_1, task_201203071111_0001_m_000002_2, task_201203071111_0001_m_000003_1, task_201203071111_0001_m_000004_1, task_201203071111_0001_m_000005_2, task_201203071111_0001_m_000006_2, task_201203071111_0001_m_000007_2, task_201203071111_0001_m_000008_0, task_201203071111_0001_m_000009_0,
-    /default-rack/ubuntu-linux3 - task_201203071111_0001_m_000000_1, task_201203071111_0001_m_000001_0, task_201203071111_0001_m_000003_2, task_201203071111_0001_m_000004_0, task_201203071111_0001_m_000005_1, task_201203071111_0001_m_000006_0, task_201203071111_0001_m_000007_0, task_201203071111_0001_m_000008_2, task_201203071111_0001_m_000009_2,
+    /default-rack - task_201203071111_0001_m_000000_0, task_201203071111_0001_m_000000_1, task_201203071111_0001_m_000000_2, task_201203071111_0001_m_000001_0, task_201203071111_0001_m_000001_1, task_201203071111_0001_m_000001_2, task_201203071111_0001_m_000002_0, task_201203071111_0001_m_000002_1, task_201203071111_0001_m_000002_2, task_201203071111_0001_m_000003_0, task_201203071111_0001_m_000003_1, task_201203071111_0001_m_000003_2, task_201203071111_0001_m_000004_0, task_201203071111_0001_m_000004_1, task_201203071111_0001_m_000004_2, task_201203071111_0001_m_000005_0, task_201203071111_0001_m_000005_1, task_201203071111_0001_m_000005_2, task_201203071111_0001_m_000006_0, task_201203071111_0001_m_000006_1, task_201203071111_0001_m_000006_2, task_201203071111_0001_m_000007_0, task_201203071111_0001_m_000007_1, task_201203071111_0001_m_000007_2, task_201203071111_0001_m_000008_0, task_201203071111_0001_m_000008_1, task_201203071111_0001_m_000008_2, task_201203071111_0001_m_000009_0, task_201203071111_0001_m_000009_1, task_201203071111_0001_m_000009_2, 
+    /default-rack/ubuntu-linux1 - task_201203071111_0001_m_000000_0, task_201203071111_0001_m_000002_0, task_201203071111_0001_m_000005_0, 
+    /default-rack/ubuntu-linux2 - task_201203071111_0001_m_000000_2, task_201203071111_0001_m_000001_2, task_201203071111_0001_m_000002_1, task_201203071111_0001_m_000003_0, task_201203071111_0001_m_000004_2, task_201203071111_0001_m_000006_1, task_201203071111_0001_m_000007_1, task_201203071111_0001_m_000008_1, task_201203071111_0001_m_000009_1, 
+    /default-rack/ubuntu-linux4 - task_201203071111_0001_m_000001_1, task_201203071111_0001_m_000002_2, task_201203071111_0001_m_000003_1, task_201203071111_0001_m_000004_1, task_201203071111_0001_m_000005_2, task_201203071111_0001_m_000006_2, task_201203071111_0001_m_000007_2, task_201203071111_0001_m_000008_0, task_201203071111_0001_m_000009_0, 
+    /default-rack/ubuntu-linux3 - task_201203071111_0001_m_000000_1, task_201203071111_0001_m_000001_0, task_201203071111_0001_m_000003_2, task_201203071111_0001_m_000004_0, task_201203071111_0001_m_000005_1, task_201203071111_0001_m_000006_0, task_201203071111_0001_m_000007_0, task_201203071111_0001_m_000008_2, task_201203071111_0001_m_000009_2, 
          */
         Iterator<Node> iter = nonRunningMapCache.keySet().iterator();
         StringBuffer buf = new StringBuffer("Map cache\n");
@@ -707,43 +771,33 @@ class JobInProgress {
     public JobProfile getProfile() {
         return profile;
     }
-
     public JobStatus getStatus() {
         return status;
     }
-
     public synchronized long getLaunchTime() {
         return launchTime;
     }
-
     public long getStartTime() {
         return startTime;
     }
-
     public long getFinishTime() {
         return finishTime;
     }
-
     public int desiredMaps() {
         return replicatedNumMapTasks;
     }
-
     public synchronized int finishedMaps() {
         return finishedMapTasks;
     }
-
     public int desiredReduces() {
         return replicatedNumReduceTasks;
     }
-
     public synchronized int runningMaps() {
         return runningMapTasks;
     }
-
     public synchronized int runningReduces() {
         return runningReduceTasks;
     }
-
     public synchronized int finishedReduces() {
         return finishedReduceTasks;
     }
@@ -920,10 +974,6 @@ class JobInProgress {
         return results;
     }
 
-    ////////////////////////////////////////////////////
-    // Status update methods
-    ////////////////////////////////////////////////////
-
     public String getInfoOutputs() {
         InputStream in = null;
         BufferedReader reader = null;
@@ -964,6 +1014,10 @@ class JobInProgress {
         return sb.toString();
     }
 
+    ////////////////////////////////////////////////////
+    // Status update methods
+    ////////////////////////////////////////////////////
+
     /**
      * Assuming {@link JobTracker} is locked on entry.
      */
@@ -974,21 +1028,21 @@ class JobInProgress {
         boolean wasPending 		= tip.isOnlyCommitPending();
         TaskAttemptID taskid 	= status.getTaskID();
 
-        // If the TIP is already completed and the task reports as SUCCEEDED then
+        // If the TIP is already completed and the task reports as SUCCEEDED then 
         // mark the task as KILLED.
-        // In case of task with no promotion the task tracker will mark the task
+        // In case of task with no promotion the task tracker will mark the task 
         // as SUCCEEDED.
-        // User has requested to kill the task, but TT reported SUCCEEDED,
+        // User has requested to kill the task, but TT reported SUCCEEDED, 
         // mark the task KILLED.
-        if ((wasComplete || tip.wasKilled(taskid)) &&
+        if ((wasComplete || tip.wasKilled(taskid)) && 
                 (status.getRunState() == TaskStatus.State.SUCCEEDED)) {
             status.setRunState(TaskStatus.State.KILLED);
         }
 
-        // If the job is complete and a task has just reported its
-        // state as FAILED_UNCLEAN/KILLED_UNCLEAN,
+        // If the job is complete and a task has just reported its 
+        // state as FAILED_UNCLEAN/KILLED_UNCLEAN, 
         // make the task's state FAILED/KILLED without launching cleanup attempt.
-        // Note that if task is already a cleanup attempt,
+        // Note that if task is already a cleanup attempt, 
         // we don't change the state to make sure the task gets a killTaskAction
         if ((this.isComplete() || jobFailed || jobKilled) && !tip.isCleanupAttempt(taskid)) {
             if (status.getRunState() == TaskStatus.State.FAILED_UNCLEAN) {
@@ -1002,9 +1056,9 @@ class JobInProgress {
         if (change) {
             TaskStatus.State state = status.getRunState();
 
-            // get the TaskTrackerStatus where the task ran
+            // get the TaskTrackerStatus where the task ran 
             TaskTrackerStatus ttStatus = this.jobtracker.getTaskTracker(tip.machineWhereTaskRan(taskid));
-            String httpTaskLogLocation = null;
+            String httpTaskLogLocation = null; 
 
             if (null != ttStatus){
                 String host;
@@ -1014,7 +1068,7 @@ class JobInProgress {
                     host = ttStatus.getHost();
                 }
 
-                httpTaskLogLocation = "http://" + host + ":" + ttStatus.getHttpPort();
+                httpTaskLogLocation = "http://" + host + ":" + ttStatus.getHttpPort(); 
             }
 
             TaskCompletionEvent taskEvent = null;
@@ -1031,7 +1085,7 @@ class JobInProgress {
                 }
 
                 return;
-            }
+            } 
             else if (state == TaskStatus.State.FAILED_UNCLEAN || state == TaskStatus.State.KILLED_UNCLEAN) {
                 tip.incompleteSubTask(taskid, this.status);
 
@@ -1048,12 +1102,12 @@ class JobInProgress {
                 jobtracker.removeTaskEntry(taskid);
                 launcher.removeToRun(tip);
             }
-            //For a failed task update the JT datastructures.
+            //For a failed task update the JT datastructures. 
             else if (state == TaskStatus.State.FAILED || state == TaskStatus.State.KILLED) {
                 taskEvent = setStatusFailed(tip, status, wasRunning,
                         wasComplete, taskid, state, ttStatus,
                         httpTaskLogLocation);
-            }
+            } 
 
             // inform all JTs
             if(state == TaskStatus.State.SUCCEEDED ||
@@ -1081,7 +1135,7 @@ class JobInProgress {
         if (!tip.isJobCleanupTask() && !tip.isJobSetupTask()) {
             double progressDelta = tip.getProgress() - oldProgress;
 
-            if (tip.isMapTask())
+            if (tip.isMapTask()) 
                 this.status.setMapProgress((float) (this.status.mapProgress() + (progressDelta / maps.length)));
             else
                 this.status.setReduceProgress((float) (this.status.reduceProgress() + (progressDelta / reduces.length)));
@@ -1127,20 +1181,20 @@ class JobInProgress {
         failedTask(tip, taskid, status, ttStatus, wasRunning, wasComplete);
 
         // Did the task failure lead to tip failure?
-        TaskCompletionEvent.Status taskCompletionStatus =
+        TaskCompletionEvent.Status taskCompletionStatus = 
                 (state == TaskStatus.State.FAILED ) ? TaskCompletionEvent.Status.FAILED : TaskCompletionEvent.Status.KILLED;
 
         if (tip.isFailed())
             taskCompletionStatus = TaskCompletionEvent.Status.TIPFAILED;
 
         taskEvent = new TaskCompletionEvent(
-                taskCompletionEventTracker,
+                taskCompletionEventTracker, 
                 taskid,
                 status.getIsMap() &&
                 !tip.isJobCleanupTask() &&
                 !tip.isJobSetupTask(),
-                taskCompletionStatus,
-                httpTaskLogLocation,
+                taskCompletionStatus, 
+                httpTaskLogLocation, 
                 numReplicas);
 
         jobtracker.removeTaskEntry(taskid);
@@ -1164,7 +1218,7 @@ class JobInProgress {
         // this taskcompletion event contains all the digests
         // generated by the map task
         taskEvent = new TaskCompletionEvent(
-                taskCompletionEventTracker,
+                taskCompletionEventTracker, 
                 taskid,
                 status.getIsMap() &&
                 !tip.isJobCleanupTask() &&
@@ -1176,7 +1230,7 @@ class JobInProgress {
 
         taskEvent.setTaskRunTime((int)(status.getFinishTime() - status.getStartTime()));
         tip.setSuccessEventNumber(taskCompletionEventTracker);
-
+        
         if(!taskid.getTaskID().isSetupOrCleanup())
             voting.addTaskCompletionEvent(taskid.getTaskID(), taskEvent);
         return taskEvent;
@@ -1184,7 +1238,7 @@ class JobInProgress {
 
     /**
      * Returns the job-level counters.
-     *
+     * 
      * @return the job-level counters.
      */
     public synchronized Counters getJobCounters() {
@@ -1206,7 +1260,7 @@ class JobInProgress {
     }
 
     /**
-     *  Returns the total job counters, by adding together the job,
+     *  Returns the total job counters, by adding together the job, 
      *  the map and the reduce counters.
      */
     public synchronized Counters getCounters() {
@@ -1217,9 +1271,6 @@ class JobInProgress {
     }
 
 
-    /////////////////////////////////////////////////////
-    // Create/manage tasks
-    /////////////////////////////////////////////////////
 
     /**
      * Increments the counters with the counters from each task.
@@ -1235,11 +1286,15 @@ class JobInProgress {
         return counters;
     }
 
+
+    /////////////////////////////////////////////////////
+    // Create/manage tasks
+    /////////////////////////////////////////////////////
     /**
      * Return a MapTask, if appropriate, to run on the given tasktracker
      */
-    public synchronized Task obtainNewMapTask(TaskTrackerStatus tts,
-            int clusterSize,
+    public synchronized Task obtainNewMapTask(TaskTrackerStatus tts, 
+            int clusterSize, 
             int numUniqueHosts
             ) throws IOException {
         if (status.getRunState() != JobStatus.RUNNING) {
@@ -1261,7 +1316,7 @@ class JobInProgress {
         }
 
         return result;
-    }
+    }    
 
     /*
      * Return task cleanup attempt if any, to run on a given tracker
@@ -1318,7 +1373,7 @@ class JobInProgress {
     }
 
     public synchronized Task obtainNewLocalMapTask(TaskTrackerStatus tts,
-            int clusterSize,
+            int clusterSize, 
             int numUniqueHosts)
                     throws IOException {
         if (!tasksInited.get()) {
@@ -1345,7 +1400,7 @@ class JobInProgress {
     }
 
     public synchronized Task obtainNewNonLocalMapTask(TaskTrackerStatus tts,
-            int clusterSize,
+            int clusterSize, 
             int numUniqueHosts)
                     throws IOException {
         if (!tasksInited.get()) {
@@ -1372,8 +1427,8 @@ class JobInProgress {
     /**
      * Return a CleanupTask, if appropriate, to run on the given tasktracker
      */
-    public Task obtainJobCleanupTask(TaskTrackerStatus tts,
-            int clusterSize,
+    public Task obtainJobCleanupTask(TaskTrackerStatus tts, 
+            int clusterSize, 
             int numUniqueHosts,
             boolean isMapSlot
             ) throws IOException {
@@ -1396,7 +1451,7 @@ class JobInProgress {
             }
 
             List<TaskInProgress> cleanupTaskList = new ArrayList<TaskInProgress>();
-            if (isMapSlot)
+            if (isMapSlot) 
                 cleanupTaskList.add(cleanup[0]);
             else
                 cleanupTaskList.add(cleanup[1]);
@@ -1417,7 +1472,7 @@ class JobInProgress {
 
     /**
      * Check whether cleanup task can be launched for the job.
-     *
+     * 
      * Cleanup task can be launched if it is not already launched
      * or job is Killed
      * or all maps and reduces are complete
@@ -1426,7 +1481,7 @@ class JobInProgress {
     private synchronized boolean canLaunchJobCleanupTask() {
         // check if the job is running
         if (status.getRunState() != JobStatus.RUNNING &&
-                status.getRunState() != JobStatus.PREP)
+                status.getRunState() != JobStatus.PREP) 
         {
             return false;
         }
@@ -1445,7 +1500,7 @@ class JobInProgress {
 
         // Check if all maps and reducers have finished.
         boolean launchCleanupTask = ((finishedMapTasks + failedMapTIPs) == (replicatedNumMapTasks));
-        if (launchCleanupTask)
+        if (launchCleanupTask) 
             launchCleanupTask = ((finishedReduceTasks + failedReduceTIPs) == replicatedNumReduceTasks);
 
         return launchCleanupTask;
@@ -1455,7 +1510,7 @@ class JobInProgress {
      * Return a SetupTask, if appropriate, to run on the given tasktracker
      */
     public Task obtainJobSetupTask(TaskTrackerStatus tts,
-            int clusterSize,
+            int clusterSize, 
             int numUniqueHosts,
             boolean isMapSlot
             ) throws IOException {
@@ -1509,7 +1564,7 @@ class JobInProgress {
 
     /**
      * Check whether setup task can be launched for the job.
-     *
+     * 
      * Setup task can be launched after the tasks are inited
      * and Job is in PREP state
      * and if it is not already launched
@@ -1517,18 +1572,19 @@ class JobInProgress {
      * @return true/false
      */
     private synchronized boolean canLaunchSetupTask() {
-        return (tasksInited.get() && status.getRunState() == JobStatus.PREP &&
+        return (tasksInited.get() && status.getRunState() == JobStatus.PREP && 
                 !launchedSetup && !jobKilled && !jobFailed);
     }
+
 
     /**
      * Return a ReduceTask, if appropriate, to run on the given tasktracker.
      * We don't have cache-sensitivity for reduce tasks, as they
-     *  work on temporary MapRed files.
+     *  work on temporary MapRed files.  
      */
     public synchronized Task obtainNewReduceTask(TaskTrackerStatus tts,
             int clusterSize,
-            int numUniqueHosts)
+            int numUniqueHosts) 
                     throws IOException {
         if (status.getRunState() != JobStatus.RUNNING) {
             LOG.info("Cannot create task split for " + profile.getJobID());
@@ -1578,17 +1634,17 @@ class JobInProgress {
 
     /**
      * Populate the data structures as a task is scheduled.
-     *
+     * 
      * Assuming {@link JobTracker} is locked on entry.
-     *
+     * 
      * @param tip The tip for which the task is added
      * @param id The attempt-id for the task
      * @param tts task-tracker status
-     * @param isScheduled Whether this task is scheduled from the JT or has
+     * @param isScheduled Whether this task is scheduled from the JT or has 
      *        joined back upon restart
      */
-    synchronized void addRunningTaskToTIP(TaskInProgress tip, TaskAttemptID id,
-            TaskTrackerStatus tts,
+    synchronized void addRunningTaskToTIP(TaskInProgress tip, TaskAttemptID id, 
+            TaskTrackerStatus tts, 
             boolean isScheduled) {
         // Make an entry in the tip if the attempt is not scheduled i.e externally
         // added
@@ -1606,11 +1662,11 @@ class JobInProgress {
         if (tip.isJobSetupTask()) {
             launchedSetup = true;
             name = Values.SETUP.name();
-        }
+        } 
         else if (tip.isJobCleanupTask()) {
             launchedCleanup = true;
             name = Values.CLEANUP.name();
-        }
+        } 
         else if (tip.isMapTask()) {
             ++runningMapTasks;
             name = Values.MAP.name();
@@ -1629,7 +1685,7 @@ class JobInProgress {
             metrics.launchReduce(id);
         }
 
-        // Note that the logs are for the scheduled tasks only. Tasks that join on
+        // Note that the logs are for the scheduled tasks only. Tasks that join on 
         // restart has already their logs in place.
         if (tip.isFirstAttempt(id)) {
             JobHistory.Task.logStarted(tip.getTIPId(), name, tip.getExecStartTime(), splits);
@@ -1645,12 +1701,12 @@ class JobInProgress {
         // The jobtracker updates the counter only when the task that is scheduled
         // if from a non-running tip and is local (data, rack ...). But upon restart
         // as the reports come from the task tracker, there is no good way to infer
-        // when exactly to increment the locality counters. The only solution is to
-        // increment the counters for all the tasks irrespective of
+        // when exactly to increment the locality counters. The only solution is to 
+        // increment the counters for all the tasks irrespective of 
         //    - whether the tip is running or not
         //    - whether its a speculative task or not
         //
-        // So to simplify, increment the data locality counter whenever there is
+        // So to simplify, increment the data locality counter whenever there is 
         // data locality.
         if (tip.isMapTask() && !tip.isJobSetupTask() && !tip.isJobCleanupTask()) {
             // increment the data locality counter for maps
@@ -1661,7 +1717,7 @@ class JobInProgress {
             for (String local : maps[getIndex(tip, numReplicas)].getSplitLocations()) {
                 Node datanode = jobtracker.getNode(local);
                 int newLevel = this.maxLevel;
-                if (tracker != null && datanode != null)
+                if (tracker != null && datanode != null) 
                     newLevel = getMatchingLevelForNodes(tracker, datanode);
 
                 if (newLevel < level){
@@ -1699,6 +1755,16 @@ class JobInProgress {
             return (tip.getIdWithinJob() * num_replicas) + tip.getTIPId().getReplicaNumber();
 
         return tip.getTIPId().getReplicaNumber() * numMapTasks + tip.getIdWithinJob();
+    }
+
+    static String convertTrackerNameToHostName(String trackerName) {
+        // Ugly!
+        // Convert the trackerName to it's host name
+        int indexOfColon = trackerName.indexOf(":");
+        String trackerHostName = (indexOfColon == -1) ? 
+                trackerName : 
+                    trackerName.substring(0, indexOfColon);
+        return trackerHostName.substring("tracker_".length());
     }
 
     /**
@@ -1930,6 +1996,7 @@ class JobInProgress {
      * @param ttStatus the status of tracker that has requested a task to run
      * @param numUniqueHosts number of unique hosts that run trask trackers
      * @param removeFailedTip whether to remove the failed tips
+     * @param extra when there is the need to an extra task
      */
     private synchronized TaskInProgress findTaskFromList(
             Collection<TaskInProgress> tips, 
@@ -1957,6 +2024,7 @@ class JobInProgress {
                         tip.getNumberOfFailedMachines() >= numUniqueHosts) {
 
                     if(tip.isJobCleanupTask() || tip.isJobSetupTask()) {
+                        ;
                     } else {
                         TaskCounter taskcounter     = tip.isMapTask() ? mapTaskcounter : redTaskcounter;
                         TaskCounter sumtaskcounter  = tip.isMapTask() ? summapTaskcounter : sumredTaskcounter;
@@ -2010,6 +2078,7 @@ class JobInProgress {
             if (!tip.hasFailedOnMachine(ttStatus.getHost()) || tip.getNumberOfFailedMachines() >= numUniqueHosts) {
 
                 if(tip.isJobCleanupTask() || tip.isJobSetupTask()) {
+                    ;
                 } else {
                     int count = redTaskcounter.getCount(tip.getTIPId().getId());
                     /*LOG.debug(tip.getTIPId().toStringWithoutReplica() + "(" + tip.getTIPId().toString() + ")  launched: "
@@ -2040,6 +2109,7 @@ class JobInProgress {
     /**
      * Find a speculative task
      * @param list a list of tips
+     * @param taskTracker the tracker that has requested a tip
      * @param avgProgress the average progress for speculation
      * @param currentTime current time in milliseconds
      * @param shouldRemove whether to remove the tips
@@ -2298,7 +2368,7 @@ class JobInProgress {
                 LOG.debug("Scheduled speculative: " + tip.getTIPId().toString());
                 LOG.info("Choosing a non-local task " + tip.getTIPId() + " for speculation");
                 LOG.debug("7: " + tip.printInfo());
-
+                //				return tip.getIdWithinJob();
                 int idx = getIndex(tip, numReplicas);
                 return idx;	
             }
@@ -2439,6 +2509,10 @@ class JobInProgress {
         return true;
     }
 
+    /**
+     * A taskid assigned to this JobInProgress has reported in successfully.
+     */
+    private int majority_count = 0;
     public synchronized boolean completedTask(TaskInProgress tip, TaskStatus status) {
         TaskAttemptID taskid = status.getTaskID();
         int oldNumAttempts = tip.getActiveTasks().size();
@@ -2446,11 +2520,11 @@ class JobInProgress {
 
         LOG.debug("Tip " + tip.getTIPId().toString() + " is complete? " + tip.isComplete());
 
-        // Sanity check: is the TIP already complete?
+        // Sanity check: is the TIP already complete? 
         // It _is_ safe to not decrement running{Map|Reduce}Tasks and
         // finished{Map|Reduce}Tasks variables here because one and only
         // one task-attempt of a TIP gets to completedTask. This is because
-        // the TaskCommitThread in the JobTracker marks other, completed,
+        // the TaskCommitThread in the JobTracker marks other, completed, 
         // speculative tasks as _complete_.
         if (tip.isComplete()) {
             // Mark this task as KILLED
@@ -2462,7 +2536,7 @@ class JobInProgress {
             }
 
             return false;
-        }
+        } 
 
         // Mark the TIP as complete
         LOG.debug(taskid.toString() + " completed");
@@ -2470,39 +2544,39 @@ class JobInProgress {
 
         resourceEstimator.updateWithCompletedTask(status, tip);
 
-        // Update jobhistory
+        // Update jobhistory 
         TaskTrackerStatus ttStatus = this.jobtracker.getTaskTracker(status.getTaskTracker());
         String trackerHostname = jobtracker.getNode(ttStatus.getHost()).toString();
         String taskType = getTaskType(tip);
 
         if (status.getIsMap()){ // MAP side
 
-            JobHistory.MapAttempt.logStarted(status.getTaskID(), status.getStartTime(),
-                    status.getTaskTracker(),
-                    ttStatus.getHttpPort(),
-                    taskType);
-            JobHistory.MapAttempt.logFinished(status.getTaskID(), status.getFinishTime(),
+            JobHistory.MapAttempt.logStarted(status.getTaskID(), status.getStartTime(), 
+                    status.getTaskTracker(), 
+                    ttStatus.getHttpPort(), 
+                    taskType); 
+            JobHistory.MapAttempt.logFinished(status.getTaskID(), status.getFinishTime(), 
                     trackerHostname, taskType,
-                    status.getStateString(),
-                    status.getCounters());
+                    status.getStateString(), 
+                    status.getCounters()); 
         }
-        else { // REDUCE side
-            JobHistory.ReduceAttempt.logStarted( status.getTaskID(), status.getStartTime(),
+        else { // REDUCE side 
+            JobHistory.ReduceAttempt.logStarted( status.getTaskID(), status.getStartTime(), 
                     status.getTaskTracker(),
-                    ttStatus.getHttpPort(),
-                    taskType);
+                    ttStatus.getHttpPort(), 
+                    taskType); 
             JobHistory.ReduceAttempt.logFinished(status.getTaskID(), status.getShuffleFinishTime(),
-                    status.getSortFinishTime(), status.getFinishTime(),
-                    trackerHostname,
+                    status.getSortFinishTime(), status.getFinishTime(), 
+                    trackerHostname, 
                     taskType,
-                    status.getStateString(),
+                    status.getStateString(), 
                     status.getCounters());
         }
 
-        JobHistory.Task.logFinished(tip.getTIPId(),
-                taskType,
+        JobHistory.Task.logFinished(tip.getTIPId(), 
+                taskType, 
                 tip.getExecFinishTime(),
-                status.getCounters());
+                status.getCounters()); 
 
 
         int newNumAttempts = tip.getActiveTasks().size();
@@ -2543,13 +2617,6 @@ class JobInProgress {
             jobtracker.markCompletedTaskAttempt(status.getTaskTracker(), taskid);
         } else if (tip.isMapTask()) {
             // save map digests
-            if(LOG.isDebugEnabled()) {
-                String[] digests = status.getDigests();
-                for (String d : digests) {
-                    LOG.debug("Add digest to " + tip.getTIPId().toString() + ": " + ShaAbstractHash.convertHashToString(d.getBytes()));
-                }
-            }
-
             voting.addHash(tip.getTIPId(), true, status.getDigests());
 
             runningMapTasks -= 1;
@@ -2561,7 +2628,7 @@ class JobInProgress {
             finishedMapTasks += 1;
 
             mapTaskCompletionEventTracker[taskid.getTaskID().getId()]++;
-            // if it's deferred execution, check if there is some taskcompletionevent to run
+            // if it's deferred execution, check if there is some taskcompletionevent to run 
             if(conf.getDeferredExecution()) {
                 executionDecision(taskid.getTaskID());
             } else {
@@ -2613,13 +2680,6 @@ class JobInProgress {
         } else {
             // save reduce digests
             synchronized (reduce_voters) {
-                if(LOG.isDebugEnabled()) {
-                    String[] digests = status.getDigests();
-                    for (String d : digests) {
-                        LOG.debug("Add digest to " + tip.getTIPId().toString() + ": " + ShaAbstractHash.convertHashToString(d.getBytes()));
-                    }
-                }
-
                 voting.addHash(tip.getTIPId(), false, status.getDigests());
 
                 int maj = voting.hasMajorityOfDigests(tip.getTIPId());
@@ -2681,7 +2741,7 @@ class JobInProgress {
 
     /**
      * Verifies if it got a majority of digests. If so, notifies the completion of the task
-     *
+     * 
      * @param taskid
      */
     private int executionDecision(TaskID taskid) {
@@ -2748,9 +2808,9 @@ class JobInProgress {
             status.setEndTime(this.finishTime);
 
             LOG.info("Job " + this.status.getJobID() + " has completed successfully.");
-            JobHistory.JobInfo.logFinished(this.status.getJobID(), finishTime,
-                    this.finishedMapTasks,
-                    this.finishedReduceTasks, failedMapTasks,
+            JobHistory.JobInfo.logFinished(this.status.getJobID(), finishTime, 
+                    this.finishedMapTasks, 
+                    this.finishedReduceTasks, failedMapTasks, 
                     failedReduceTasks, getCounters());
             // Note that finalize will close the job history handles which garbage collect
             // might try to finalize
@@ -2768,16 +2828,16 @@ class JobInProgress {
                         1.0f, 1.0f, 1.0f, JobStatus.FAILED,
                         status.getJobPriority());
                 this.finishTime = System.currentTimeMillis();
-                JobHistory.JobInfo.logFailed(this.status.getJobID(), finishTime,
-                        this.finishedMapTasks,
+                JobHistory.JobInfo.logFailed(this.status.getJobID(), finishTime, 
+                        this.finishedMapTasks, 
                         this.finishedReduceTasks);
             } else {
                 this.status = new JobStatus(status.getJobID(),
                         1.0f, 1.0f, 1.0f, JobStatus.KILLED,
                         status.getJobPriority());
                 this.finishTime = System.currentTimeMillis();
-                JobHistory.JobInfo.logKilled(this.status.getJobID(), finishTime,
-                        this.finishedMapTasks,
+                JobHistory.JobInfo.logKilled(this.status.getJobID(), finishTime, 
+                        this.finishedMapTasks, 
                         this.finishedReduceTasks);
             }
             garbageCollect();
@@ -2791,13 +2851,13 @@ class JobInProgress {
 
     /**
      * Terminate the job and all its component tasks.
-     *
-     * Calling this will lead to marking the job as failed/killed. Cleanup
-     * tip will be launched. If the job has not initiated, it will directly call
+     * 
+     * Calling this will lead to marking the job as failed/killed. Cleanup 
+     * tip will be launched. If the job has not initiated, it will directly call 
      * terminateJob as there is no need to launch cleanup tip.
-     *
+     * 
      * This method is reentrant.
-     *
+     * 
      * @param jobTerminationState job termination state
      */
     private synchronized void terminate(int jobTerminationState) {
@@ -2856,13 +2916,13 @@ class JobInProgress {
 
         while (!reduceCleanupTasks.isEmpty()) {
             taskid = reduceCleanupTasks.remove(0);
-            tip = reduces[taskid.getTaskID().getId()];
+            tip = reduces[taskid.getTaskID().getId()];	
             updateTaskStatus(tip, tip.getTaskStatus(taskid));
         }
     }
 
     /**
-     * Kill the job and all its component tasks. This method should be called from
+     * Kill the job and all its component tasks. This method should be called from 
      * jobtracker and should return fast as it locks the jobtracker.
      */
     public void kill() {
@@ -2882,7 +2942,7 @@ class JobInProgress {
 
     /**
      * Fails the job and all its component tasks. This should be called only from
-     * {@link JobInProgress} or {@link JobTracker}. Look at
+     * {@link JobInProgress} or {@link JobTracker}. Look at 
      * {@link JobTracker#failJob(JobInProgress)} for more details.
      */
     synchronized void fail() {
@@ -2893,17 +2953,17 @@ class JobInProgress {
     /**
      * A task assigned to this JobInProgress has reported in as failed.
      * Most of the time, we'll just reschedule execution.  However, after
-     * many repeated failures we may instead decide to allow the entire
+     * many repeated failures we may instead decide to allow the entire 
      * job to fail or succeed if the user doesn't care about a few tasks failing.
      *
      * Even if a task has reported as completed in the past, it might later
      * be reported as failed.  That's because the TaskTracker that hosts a map
      * task might die before the entire job can complete.  If that happens,
-     * we need to schedule reexecution so that downstream reduce tasks can
+     * we need to schedule reexecution so that downstream reduce tasks can 
      * obtain the map task's output.
      */
-    private void failedTask(TaskInProgress tip, TaskAttemptID taskid,
-            TaskStatus status,
+    private void failedTask(TaskInProgress tip, TaskAttemptID taskid, 
+            TaskStatus status, 
             TaskTrackerStatus taskTrackerStatus,
             boolean wasRunning, boolean wasComplete) {
         final JobTrackerInstrumentation metrics = jobtracker.getInstrumentation();
@@ -2953,10 +3013,10 @@ class JobInProgress {
             if (tip.isMapTask()) {
                 // Put the task back in the cache. This will help locality for cases
                 // where we have a different TaskTracker from the same rack/switch
-                // asking for a task.
+                // asking for a task. 
                 // We bother about only those TIPs that were successful
-                // earlier (wasComplete and !isComplete)
-                // (since they might have been removed from the cache of other
+                // earlier (wasComplete and !isComplete) 
+                // (since they might have been removed from the cache of other 
                 // racks/switches, if the input split blocks were present there too)
                 failMap(tip);
                 finishedMapTasks -= 1;
@@ -2983,7 +3043,7 @@ class JobInProgress {
             StringUtils.arrayToString(taskDiagnosticInfo.toArray(new String[0]));
         String taskType = getTaskType(tip);
         if (taskStatus.getIsMap()) {
-            JobHistory.MapAttempt.logStarted(taskid, startTime,
+            JobHistory.MapAttempt.logStarted(taskid, startTime, 
                     taskTrackerName, taskTrackerPort, taskType);
             if (taskStatus.getRunState() == TaskStatus.State.FAILED) {
                 JobHistory.MapAttempt.logFailed(taskid, finishTime,
@@ -2993,7 +3053,7 @@ class JobInProgress {
                         taskTrackerHostName, diagInfo, taskType);
             }
         } else {
-            JobHistory.ReduceAttempt.logStarted(taskid, startTime,
+            JobHistory.ReduceAttempt.logStarted(taskid, startTime, 
                     taskTrackerName, taskTrackerPort, taskType);
             if (taskStatus.getRunState() == TaskStatus.State.FAILED) {
                 JobHistory.ReduceAttempt.logFailed(taskid, finishTime,
@@ -3010,12 +3070,12 @@ class JobInProgress {
             if (tip.isMapTask()) {
                 failedMapTasks++;
             } else {
-                failedReduceTasks++;
+                failedReduceTasks++; 
             }
         }
 
-        // Note down that a task has failed on this tasktracker
-        if (status.getRunState() == TaskStatus.State.FAILED) {
+        // Note down that a task has failed on this tasktracker 
+        if (status.getRunState() == TaskStatus.State.FAILED) { 
             addTrackerTaskFailure(taskTrackerName);
         }
 
@@ -3025,7 +3085,7 @@ class JobInProgress {
         jobtracker.markCompletedTaskAttempt(status.getTaskTracker(), taskid);
 
         //
-        // Check if we need to kill the job because of too many failures or
+        // Check if we need to kill the job because of too many failures or 
         // if the job is complete since all component tasks have completed
 
         // We do it once per TIP and that too for the task that fails the TIP
@@ -3035,15 +3095,15 @@ class JobInProgress {
             // 'reduceFailuresPercent' of reduce tasks to fail
             //
             boolean killJob = tip.isJobCleanupTask() || tip.isJobSetupTask() ? true :
-                tip.isMapTask() ?
+                tip.isMapTask() ? 
                         ((++failedMapTIPs*100) > (mapFailuresPercent*numMapTasks)) :
                             ((++failedReduceTIPs*100) > (reduceFailuresPercent*numReduceTasks));
 
                         if (killJob) {
                             LOG.info("Aborting job " + profile.getJobID());
-                            JobHistory.Task.logFailed(tip.getTIPId(),
-                                    taskType,
-                                    finishTime,
+                            JobHistory.Task.logFailed(tip.getTIPId(), 
+                                    taskType,  
+                                    finishTime, 
                                     diagInfo);
                             if (tip.isJobCleanupTask()) {
                                 // kill the other tip
@@ -3082,24 +3142,28 @@ class JobInProgress {
     }
 
     boolean isSetupFinished() {
-        return setup[0].isComplete() || setup[0].isFailed() || setup[1].isComplete()
-                || setup[1].isFailed();
+        if (setup[0].isComplete() || setup[0].isFailed() || setup[1].isComplete()
+                || setup[1].isFailed()) {
+            return true;
+        }
+        return false;
     }
 
     /**
      * Fail a task with a given reason, but without a status object.
-     *
+     * 
      * Assuming {@link JobTracker} is locked on entry.
-     *
+     * 
      * @param tip The task's tip
      * @param taskid The task id
      * @param reason The reason that the task failed
      * @param trackerName The task tracker the task failed on
+     * @param siblings The task siblings
      */
-    public void failedTask(TaskInProgress tip, TaskAttemptID taskid, String reason,
-            TaskStatus.Phase phase, TaskStatus.State state,
+    public void failedTask(TaskInProgress tip, TaskAttemptID taskid, String reason, 
+            TaskStatus.Phase phase, TaskStatus.State state, 
             String trackerName) {
-        TaskStatus status = TaskStatus.createTaskStatus(tip.isMapTask(),
+        TaskStatus status = TaskStatus.createTaskStatus(tip.isMapTask(), 
                 taskid,
                 0.0f,
                 state,
@@ -3109,7 +3173,7 @@ class JobInProgress {
                 new Counters());
 
         // update the actual start-time of the attempt
-        TaskStatus oldStatus = tip.getTaskStatus(taskid);
+        TaskStatus oldStatus = tip.getTaskStatus(taskid); 
         long startTime = oldStatus == null ? System.currentTimeMillis() : oldStatus.getStartTime();
         status.setStartTime(startTime);
         status.setFinishTime(System.currentTimeMillis());
@@ -3122,6 +3186,7 @@ class JobInProgress {
             JobHistory.Task.logFailed(tip.getTIPId(), taskType, tip.getExecFinishTime(), reason, taskid);
         }
     }
+
 
     /**
      * The job is dead.  We're now GC'ing it, getting rid of the job
@@ -3152,10 +3217,10 @@ class JobInProgress {
 
             // JobClient always creates a new directory with job files
             // so we remove that directory to cleanup
-            // Delete temp dfs dirs created if any, like in case of
-            // speculative exn of reduces.
+            // Delete temp dfs dirs created if any, like in case of 
+            // speculative exn of reduces.  
             Path tempDir = jobtracker.getSystemDirectoryForJob(getJobID());
-            new CleanupQueue().addToQueue(conf,tempDir);
+            new CleanupQueue().addToQueue(conf,tempDir); 
         } catch (IOException e) {
             LOG.warn("Error cleaning up "+profile.getJobID()+": "+e);
         }
@@ -3175,7 +3240,7 @@ class JobInProgress {
     public synchronized TaskInProgress getTaskInProgress(TaskID tipid) {
         if (tipid.isMap()) {
             if (tipid.equals(cleanup[0].getTIPId())) { // cleanup map tip
-                return cleanup[0];
+                return cleanup[0]; 
             }
             if (tipid.equals(setup[0].getTIPId())) { //setup map tip
                 return setup[0];
@@ -3187,7 +3252,7 @@ class JobInProgress {
             }
         } else {
             if (tipid.equals(cleanup[1].getTIPId())) { // cleanup reduce tip
-                return cleanup[1];
+                return cleanup[1]; 
             }
             if (tipid.equals(setup[1].getTIPId())) { //setup reduce tip
                 return setup[1];
@@ -3233,10 +3298,10 @@ class JobInProgress {
 
         if (taskCompletionEvents.size() > fromEventId) {
             int actualMax = Math.min(maxEvents, (taskCompletionEvents.size() - fromEventId));
-            events = taskCompletionEvents.subList(fromEventId, actualMax + fromEventId).toArray(events);
+            events = taskCompletionEvents.subList(fromEventId, actualMax + fromEventId).toArray(events);        
         }
 
-        return events;
+        return events; 
     }
 
     /*
@@ -3245,7 +3310,7 @@ class JobInProgress {
         at org.apache.hadoop.mapred.JobTracker.processHeartbeat(JobTracker.java:2792)
         at org.apache.hadoop.mapred.JobTracker.heartbeat(JobTracker.java:2564)
      */
-    synchronized void fetchFailureNotification(TaskInProgress tip,
+    synchronized void fetchFailureNotification(TaskInProgress tip, 
             TaskAttemptID mapTaskId, String trackerName) {
         Integer fetchFailures = mapTaskIdToFetchFailuresMap.get(mapTaskId);
 
@@ -3262,8 +3327,8 @@ class JobInProgress {
         if (fetchFailures >= MAX_FETCH_FAILURES_NOTIFICATIONS && isMapFaulty) {
             LOG.info("Too many fetch-failures for output of task: " + mapTaskId + " ... killing it");
 
-            failedTask(tip, mapTaskId, "Too many fetch-failures",
-                    (tip.isMapTask() ? TaskStatus.Phase.MAP : TaskStatus.Phase.REDUCE),
+            failedTask(tip, mapTaskId, "Too many fetch-failures",                            
+                    (tip.isMapTask() ? TaskStatus.Phase.MAP : TaskStatus.Phase.REDUCE), 
                     TaskStatus.State.FAILED, trackerName);
 
             mapTaskIdToFetchFailuresMap.remove(mapTaskId);
@@ -3285,6 +3350,19 @@ class JobInProgress {
     public synchronized void setSchedulingInfo(Object schedulingInfo) {
         this.schedulingInfo = schedulingInfo;
         this.status.setSchedulingInfo(schedulingInfo.toString());
+    }
+
+    /**
+     * To keep track of kill and initTasks status of this job. initTasks() take 
+     * a lock on JobInProgress object. kill should avoid waiting on 
+     * JobInProgress lock since it may take a while to do initTasks().
+     */
+    private static class JobInitKillStatus {
+        //flag to be set if kill is called
+        boolean killed;
+
+        boolean initStarted;
+        boolean initDone;
     }
 
     boolean isComplete() {
@@ -3402,7 +3480,6 @@ class JobInProgress {
     public void setFailedMapTIPs(int failedMapTIPs) {
         this.failedMapTIPs = failedMapTIPs;
     }
-
     public int getRunningMapTasks() {
         return runningMapTasks;
     }
@@ -3442,7 +3519,6 @@ class JobInProgress {
     public void setFailedReduceTasks(int failedReduceTasks) {
         this.failedReduceTasks = failedReduceTasks;
     }
-
     public int getNumMapTasks() {
         return numMapTasks;
     }
@@ -3475,58 +3551,11 @@ class JobInProgress {
         this.replicatedNumReduceTasks = replicatedNumReduceTasks;
     }
 
-    public int getTamperedMap() {
-        return tamperedMap;
-    }
-
-    public void addTamperedMap() {
-        this.tamperedMap++;
-    }
-
-    public int getTamperedReduce() {
-        return tamperedReduce;
-    }
-
-    public void addTamperedReduce() {
-        this.tamperedReduce++;
-    }
-
-    // Per-job counters
-    public enum Counter {
-        NUMBER_REPLICAS,
-        TOTAL_MAPS,
-        NUM_FAILED_MAPS,
-        NUM_FAILED_REDUCES,
-        TOTAL_LAUNCHED_MAPS,
-        TOTAL_LAUNCHED_REDUCES,
-        OTHER_LOCAL_MAPS,
-        DATA_LOCAL_MAPS,
-        RACK_LOCAL_MAPS,
-    }
 
     /**
-     * Used when the a kill is issued to a job which is initializing.
+     * Thread that is constantly checking when the job ended successfully or with errors.
      */
-    static class KillInterruptedException extends InterruptedException {
-        private static final long serialVersionUID = 1L;
-        public KillInterruptedException(String msg) {
-            super(msg);
-        }
-    }
-
-    /**
-     * To keep track of kill and initTasks status of this job. initTasks() take
-     * a lock on JobInProgress object. kill should avoid waiting on
-     * JobInProgress lock since it may take a while to do initTasks().
-     */
-    private static class JobInitKillStatus {
-        //flag to be set if kill is called
-        boolean killed;
-
-        boolean initStarted;
-        boolean initDone;
-    }
-
+    private boolean more_tasks = false;
     private class JobEndProcess extends Thread {
         private boolean lock = true;
         public void run() {
@@ -3559,7 +3588,7 @@ class JobInProgress {
                         boolean k = maps[i].wasKilled();
                         int actSize = maps[i].getActiveTasks().size();
 
-                        buf.append(maps[i].getTIPId().toString() + "\t" + run +"\t" + comp + "\t"
+                        buf.append(maps[i].getTIPId().toString() + "\t" + run +"\t" + comp + "\t" 
                                 + f + "\t" + k + "\t" + "\t" + actSize + "\n");
                     }
 
@@ -3577,7 +3606,7 @@ class JobInProgress {
                         boolean k = reduces[i].wasKilled();
                         int actSize = reduces[i].getActiveTasks().size();
 
-                        buf.append(reduces[i].getTIPId().toString() + "\t" + run +"\t" + comp + "\t"
+                        buf.append(reduces[i].getTIPId().toString() + "\t" + run +"\t" + comp + "\t" 
                                 + f + "\t" + k + "\t" + "\t" + actSize + "\n");
                     }
 
@@ -3593,8 +3622,8 @@ class JobInProgress {
                     failRedTasks += reduces[i].getActiveTasks().size();
                 }
 
-                if((runMapTasks-failMapTasks) == 0
-                        && (runReduceTasks-failRedTasks) == 0
+                if((runMapTasks-failMapTasks) == 0 
+                        && (runReduceTasks-failRedTasks) == 0 
                         && finishedMapTasks >=  MajorityVoting.twoThirds(replicatedNumMapTasks)
                         && finishedReduceTasks >=  MajorityVoting.twoThirds(replicatedNumReduceTasks)) {
 
@@ -3606,7 +3635,7 @@ class JobInProgress {
                             if(finMapTasks == replicatedNumMapTasks || finReduceTasks == replicatedNumReduceTasks) {
                                 LOG.fatal("Job " + jobId.toString() + " will fail. All reduce tasks havent returned the same result.");
                                 fail();
-                            }
+                            } 
                         }
                     }
                 }
@@ -3631,5 +3660,22 @@ class JobInProgress {
         public void stopIt() {
             lock=false;
         }
+    }
+
+    public int getTamperedMap() {
+        return tamperedMap;
+    }
+
+    public void addTamperedMap() {
+        this.tamperedMap++;
+    }
+
+
+    public int getTamperedReduce() {
+        return tamperedReduce;
+    }
+
+    public void addTamperedReduce() {
+        this.tamperedReduce++;
     }
 }

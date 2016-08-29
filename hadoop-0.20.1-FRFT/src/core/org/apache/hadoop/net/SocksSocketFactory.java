@@ -84,7 +84,8 @@ public class SocksSocketFactory extends SocketFactory implements
 
   /* @inheritDoc */
   @Override
-  public Socket createSocket(String host, int port) throws IOException {
+  public Socket createSocket(String host, int port) throws IOException,
+      UnknownHostException {
 
     Socket socket = createSocket();
     socket.connect(new InetSocketAddress(host, port));
@@ -94,7 +95,8 @@ public class SocksSocketFactory extends SocketFactory implements
   /* @inheritDoc */
   @Override
   public Socket createSocket(String host, int port,
-      InetAddress localHostAddr, int localPort) throws IOException {
+      InetAddress localHostAddr, int localPort) throws IOException,
+      UnknownHostException {
 
     Socket socket = createSocket();
     socket.bind(new InetSocketAddress(localHostAddr, localPort));

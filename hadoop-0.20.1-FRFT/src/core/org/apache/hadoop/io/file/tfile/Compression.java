@@ -71,7 +71,7 @@ final class Compression {
   /**
    * Compression algorithms.
    */
-  enum Algorithm {
+  static enum Algorithm {
     LZO(TFile.COMPRESSION_LZO) {
       private transient boolean checked = false;
       private static final String defaultClazz =

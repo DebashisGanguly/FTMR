@@ -3567,7 +3567,7 @@ public class FSNamesystem implements FSConstants, FSNamesystemMBean {
    * @throws AccessControlException if superuser privilege is violated.
    * @throws IOException if 
    */
-  synchronized void saveNamespace() throws IOException {
+  synchronized void saveNamespace() throws AccessControlException, IOException {
     checkSuperuserPrivilege();
     if(!isInSafeMode()) {
       throw new IOException("Safe mode should be turned ON " +
@@ -3786,7 +3786,10 @@ public class FSNamesystem implements FSConstants, FSNamesystemMBean {
         LOG.info("Decommission complete for node " + node.getName());
       }
     }
-    return node.isDecommissioned();
+    if (node.isDecommissioned()) {
+      return true;
+    }
+    return false;
   }
 
   /** 

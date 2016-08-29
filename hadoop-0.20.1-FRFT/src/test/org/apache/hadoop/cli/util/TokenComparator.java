@@ -37,7 +37,11 @@ public class TokenComparator extends ComparatorBase {
     
     while (tokenizer.hasMoreTokens()) {
       String token = tokenizer.nextToken();
-      compareOutput &= actual.indexOf(token) != -1;
+      if (actual.indexOf(token) != -1) {
+        compareOutput &= true;
+      } else {
+        compareOutput &= false;
+      }
     }
     
     return compareOutput;

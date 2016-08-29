@@ -116,8 +116,8 @@ public class DistCp implements Tool {
   private static final int MAX_MAPS_PER_NODE = 20;
   private static final int SYNC_FILE_MAX = 10;
 
-  enum Counter { COPY, SKIP, FAIL, BYTESCOPIED, BYTESEXPECTED }
-  enum Options {
+  static enum Counter { COPY, SKIP, FAIL, BYTESCOPIED, BYTESEXPECTED }
+  static enum Options {
     DELETE("-delete", NAME + ".delete"),
     FILE_LIMIT("-filelimit", NAME + ".limit.file"),
     SIZE_LIMIT("-sizelimit", NAME + ".limit.size"),
@@ -128,7 +128,7 @@ public class DistCp implements Tool {
 
     final String cmd, propertyname;
 
-    Options(String cmd, String propertyname) {
+    private Options(String cmd, String propertyname) {
       this.cmd = cmd;
       this.propertyname = propertyname;
     }
@@ -144,12 +144,12 @@ public class DistCp implements Tool {
       return n;
     }
   }
-  enum FileAttribute {
+  static enum FileAttribute {
     BLOCK_SIZE, REPLICATION, USER, GROUP, PERMISSION;
 
     final char symbol;
 
-    FileAttribute() {symbol = toString().toLowerCase().charAt(0);}
+    private FileAttribute() {symbol = toString().toLowerCase().charAt(0);}
     
     static EnumSet<FileAttribute> parse(String s) {
       if (s == null || s.length() == 0) {

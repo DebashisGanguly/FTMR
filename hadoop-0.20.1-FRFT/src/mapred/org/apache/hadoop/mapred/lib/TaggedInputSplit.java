@@ -106,7 +106,7 @@ class TaggedInputSplit implements Configurable, InputSplit {
 	@SuppressWarnings("unchecked")
 	public void readFields(DataInput in) throws IOException {
 		inputSplitClass = (Class<? extends InputSplit>) readClass(in);
-		inputSplit = ReflectionUtils
+		inputSplit = (InputSplit) ReflectionUtils
 		.newInstance(inputSplitClass, conf);
 		inputSplit.readFields(in);
 		inputFormatClass = (Class<? extends InputFormat>) readClass(in);

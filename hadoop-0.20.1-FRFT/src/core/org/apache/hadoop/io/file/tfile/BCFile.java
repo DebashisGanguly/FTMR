@@ -83,7 +83,7 @@ final class BCFile {
     /**
      * Call-back interface to register a block after a block is closed.
      */
-    private interface BlockRegister {
+    private static interface BlockRegister {
       /**
        * Register a block that is fully closed.
        * 
@@ -95,7 +95,7 @@ final class BCFile {
        *          One byte after the end of the block. Compressed block size is
        *          offsetEnd - offsetStart.
        */
-      void register(long raw, long offsetStart, long offsetEnd);
+      public void register(long raw, long offsetStart, long offsetEnd);
     }
 
     /**
@@ -342,7 +342,7 @@ final class BCFile {
     }
 
     private BlockAppender prepareMetaBlock(String name, Algorithm compressAlgo)
-        throws IOException {
+        throws IOException, MetaBlockAlreadyExists {
       if (blkInProgress == true) {
         throw new IllegalStateException(
             "Cannot create Meta Block until previous block is closed.");
@@ -378,7 +378,7 @@ final class BCFile {
      *           If the meta block with the name already exists.
      */
     public BlockAppender prepareMetaBlock(String name, String compressionName)
-        throws IOException {
+        throws IOException, MetaBlockAlreadyExists {
       return prepareMetaBlock(name, Compression
           .getCompressionAlgorithmByName(compressionName));
     }
@@ -399,7 +399,8 @@ final class BCFile {
      *           If the meta block with the name already exists.
      * @throws IOException
      */
-    public BlockAppender prepareMetaBlock(String name) throws IOException {
+    public BlockAppender prepareMetaBlock(String name) throws IOException,
+        MetaBlockAlreadyExists {
       return prepareMetaBlock(name, getDefaultCompressionAlgorithm());
     }
 
@@ -693,7 +694,8 @@ final class BCFile {
      * @throws MetaBlockDoesNotExist
      *           The Meta Block with the given name does not exist.
      */
-    public BlockReader getMetaBlock(String name) throws IOException {
+    public BlockReader getMetaBlock(String name) throws IOException,
+        MetaBlockDoesNotExist {
       MetaIndexEntry imeBCIndex = metaIndex.getMetaByName(name);
       if (imeBCIndex == null) {
         throw new MetaBlockDoesNotExist("name=" + name);

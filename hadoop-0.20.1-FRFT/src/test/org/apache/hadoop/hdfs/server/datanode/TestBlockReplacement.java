@@ -236,7 +236,10 @@ public class TestBlockReplacement extends TestCase {
     DataInputStream reply = new DataInputStream(sock.getInputStream());
 
     short status = reply.readShort();
-    return status == DataTransferProtocol.OP_STATUS_SUCCESS;
+    if(status == DataTransferProtocol.OP_STATUS_SUCCESS) {
+      return true;
+    }
+    return false;
   }
 
   /**

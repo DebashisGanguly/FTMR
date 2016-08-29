@@ -291,7 +291,7 @@ public class ProcfsBasedProcessTree {
   private Integer getValidPID(String pid) {
     Integer retPid = -1;
     try {
-      retPid = Integer.parseInt(pid);
+      retPid = Integer.parseInt((String) pid);
       if (retPid <= 0) {
         retPid = -1;
       }
@@ -509,7 +509,10 @@ public class ProcfsBasedProcessTree {
     }
     
     public boolean isParent(ProcessInfo p) {
-      return pid.equals(p.getPpid());
+      if (pid.equals(p.getPpid())) {
+        return true;
+      }
+      return false;
     }
 
     public void updateProcessInfo(String name, Integer ppid, Integer pgrpId,

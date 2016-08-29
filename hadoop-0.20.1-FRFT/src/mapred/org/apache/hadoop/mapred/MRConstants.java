@@ -23,48 +23,48 @@ package org.apache.hadoop.mapred;
  *******************************/
 interface MRConstants {
 	// Timeouts, constants
-	int HEARTBEAT_INTERVAL_MIN = 3 * 1000;
+	public static final int HEARTBEAT_INTERVAL_MIN = 3 * 1000;
 
-	int CLUSTER_INCREMENT = 100;
+	public static final int CLUSTER_INCREMENT = 100;
 
-	long COUNTER_UPDATE_INTERVAL = 60 * 1000;
+	public static final long COUNTER_UPDATE_INTERVAL = 60 * 1000;
 
 	// Copy codes
-	int SUCCESSFUL_COPY = 1;
-	int INVALID_HASH = -3;
-	int INSUFICIENT_TASKS = -4;
-	int SUSPEND = -5;
-	int NONE = -6;
+	public static int SUCCESSFUL_COPY = 1;
+	public static int INVALID_HASH = -3;
+	public static int INSUFICIENT_TASKS = -4;
+	public static int SUSPEND = -5;
+	public static int NONE = -6;
 	
 	//
 	// Result codes
 	//
-	int SUCCESS = 0;
-	int FILE_NOT_FOUND = -1;
+	public static int SUCCESS = 0;
+	public static int FILE_NOT_FOUND = -1;
 
 	/**
 	 * The custom http header used for the map output length.
 	 */
-	String MAP_OUTPUT_LENGTH = "Map-Output-Length";
+	public static final String MAP_OUTPUT_LENGTH = "Map-Output-Length";
 
 	/**
 	 * The custom http header used for the "raw" map output length.
 	 */
-	String RAW_MAP_OUTPUT_LENGTH = "Raw-Map-Output-Length";
+	public static final String RAW_MAP_OUTPUT_LENGTH = "Raw-Map-Output-Length";
 
-	String START_OFFSET = "Start-Offset";
+	public static final String START_OFFSET = "Start-Offset";
 
 	/**
 	 * The map task from which the map output data is being transferred
 	 */
-	String FROM_MAP_TASK = "from-map-task";
+	public static final String FROM_MAP_TASK = "from-map-task";
 
 	/**
 	 * The reduce task number for which this map output is being transferred
 	 */
-	String FOR_REDUCE_TASK = "for-reduce-task";
+	public static final String FOR_REDUCE_TASK = "for-reduce-task";
 
-	String WORKDIR = "work";
+	public static final String WORKDIR = "work";
 
-	String REMOVED_OPTION = "Removed Option";
+	public static final String REMOVED_OPTION = "Removed Option";
 }

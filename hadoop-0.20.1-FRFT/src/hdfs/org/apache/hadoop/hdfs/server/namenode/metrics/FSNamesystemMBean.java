@@ -39,74 +39,74 @@ public interface FSNamesystemMBean {
    * The state of the file system: Safemode or Operational
    * @return the state
    */
-  String getFSState();
+  public String getFSState();
   
   
   /**
    * Number of allocated blocks in the system
    * @return -  number of allocated blocks
    */
-  long getBlocksTotal();
+  public long getBlocksTotal();
 
   /**
    * Total storage capacity
    * @return -  total capacity in bytes
    */
-  long getCapacityTotal();
+  public long getCapacityTotal();
 
 
   /**
    * Free (unused) storage capacity
    * @return -  free capacity in bytes
    */
-  long getCapacityRemaining();
+  public long getCapacityRemaining();
  
   /**
    * Used storage capacity
    * @return -  used capacity in bytes
    */
-  long getCapacityUsed();
+  public long getCapacityUsed();
  
 
   /**
    * Total number of files and directories
    * @return -  num of files and directories
    */
-  long getFilesTotal();
+  public long getFilesTotal();
  
   /**
    * Blocks pending to be replicated
    * @return -  num of blocks to be replicated
    */
-  long getPendingReplicationBlocks();
+  public long getPendingReplicationBlocks();
  
   /**
    * Blocks under replicated 
    * @return -  num of blocks under replicated
    */
-  long getUnderReplicatedBlocks();
+  public long getUnderReplicatedBlocks();
  
   /**
    * Blocks scheduled for replication
    * @return -  num of blocks scheduled for replication
    */
-  long getScheduledReplicationBlocks();
+  public long getScheduledReplicationBlocks();
 
   /**
    * Total Load on the FSNamesystem
    * @return -  total load of FSNamesystem
    */
-  int getTotalLoad();
+  public int getTotalLoad();
 
   /**
    * Number of Live data nodes
    * @return number of live data nodes
    */
-  int numLiveDataNodes();
+  public int numLiveDataNodes();
   
   /**
    * Number of dead data nodes
    * @return number of dead data nodes
    */
-  int numDeadDataNodes();
+  public int numDeadDataNodes();
 }

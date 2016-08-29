@@ -1,11 +1,11 @@
 package org.apache.hadoop.mapred;
 
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 
 public abstract class ShaAbstractHash {
 	MessageDigest newInstance(Digest type) {
@@ -48,7 +48,8 @@ public abstract class ShaAbstractHash {
 
 	/**
 	 * Hash it!
-	 * @param md MessageDigest
+	 * @param md
+	 * @param buf
 	 */
 	byte[] hashIt(MessageDigest md) {
 		// hash it

@@ -212,7 +212,9 @@ public class HadoopArchives implements Tool {
     if (tmp.depth() != 1) {
       return false;
     }
-    return name.endsWith(".har");
+    if (name.endsWith(".har")) 
+      return true;
+    return false;
   }
   
 
@@ -465,7 +467,12 @@ public class HadoopArchives implements Tool {
       public MapStat(String line) {
         String[] splits = line.split(" ");
         pathname = splits[0];
-        isDir = "dir".equals(splits[1]);
+        if ("dir".equals(splits[1])) {
+          isDir = true;
+        }
+        else {
+          isDir = false;
+        }
         if (isDir) {
           children = new ArrayList<String>();
           for (int i = 2; i < splits.length; i++) {

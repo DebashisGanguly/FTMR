@@ -41,7 +41,7 @@ public interface InputSplit extends Writable {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	String getName() throws IOException, InterruptedException;
+	public abstract String getName() throws IOException, InterruptedException;
 
 	/**
 	 * Get the total number of bytes in the data of the <code>InputSplit</code>.

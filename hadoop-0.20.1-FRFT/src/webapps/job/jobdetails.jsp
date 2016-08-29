@@ -162,7 +162,7 @@
         }
     }
     JobID jobIdObj = JobID.forName(jobId);
-    JobInProgress job = tracker.getJob(jobIdObj);
+    JobInProgress job = (JobInProgress) tracker.getJob(jobIdObj);
     
     String action = request.getParameter("action");
     if(JSPUtil.conf.getBoolean(PRIVATE_ACTIONS_KEY, false) && 

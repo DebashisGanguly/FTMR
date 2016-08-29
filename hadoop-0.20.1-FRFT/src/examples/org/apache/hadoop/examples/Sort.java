@@ -168,7 +168,7 @@ public class Sort<K,V> extends Configured implements Tool {
 			inputDir = inputDir.makeQualified(inputDir.getFileSystem(jobConf));
 			Path partitionFile = new Path(inputDir, "_sortPartitioning");
 			TotalOrderPartitioner.setPartitionFile(jobConf, partitionFile);
-			InputSampler.writePartitionFile(jobConf, sampler);
+			InputSampler.<K,V>writePartitionFile(jobConf, sampler);
 			URI partitionUri = new URI(partitionFile.toString() +
 					"#" + "_sortPartitioning");
 			DistributedCache.addCacheFile(partitionUri, jobConf);

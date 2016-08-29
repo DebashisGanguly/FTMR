@@ -29,7 +29,7 @@ public interface RefreshAuthorizationPolicyProtocol extends VersionedProtocol {
   /**
    * Version 1: Initial version
    */
-  long versionID = 1L;
+  public static final long versionID = 1L;
 
   /**
    * Refresh the service-level authorization policy in-effect.

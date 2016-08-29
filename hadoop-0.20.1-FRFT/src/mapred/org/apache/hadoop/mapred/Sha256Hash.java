@@ -1,18 +1,22 @@
 package org.apache.hadoop.mapred;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.MessageDigest;
+import java.util.zip.GZIPInputStream;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.*;
+import org.apache.hadoop.io.DataInputBuffer;
+import org.apache.hadoop.io.DataOutputBuffer;
+import org.apache.hadoop.io.SequenceFile;
+import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.util.ReflectionUtils;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.MessageDigest;
-import java.util.zip.GZIPInputStream;
 
 public class Sha256Hash extends ShaAbstractHash {
 
@@ -138,7 +142,7 @@ public class Sha256Hash extends ShaAbstractHash {
 	/**
 	 * Hash it!
 	 * @param md
-	 * @return  digests
+	 * @param buf
 	 */
 	byte[] hashIt(MessageDigest md) {
 		// hash it

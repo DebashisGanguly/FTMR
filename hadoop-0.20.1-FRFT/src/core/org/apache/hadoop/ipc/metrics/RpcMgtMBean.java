@@ -95,11 +95,11 @@ public interface RpcMgtMBean {
    * The number of open RPC conections
    * @return the number of open rpc connections
    */
-  int getNumOpenConnections();
+  public int getNumOpenConnections();
   
   /**
    * The number of rpc calls in the queue.
    * @return The number of rpc calls in the queue.
    */
-  int getCallQueueLen();
+  public int getCallQueueLen();
 }

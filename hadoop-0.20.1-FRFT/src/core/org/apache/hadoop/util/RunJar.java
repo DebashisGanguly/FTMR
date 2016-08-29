@@ -157,7 +157,9 @@ public class RunJar {
 
 		Thread.currentThread().setContextClassLoader(loader);
 		Class<?> mainClass = Class.forName(mainClassName, true, loader);
-		Method main = mainClass.getMethod("main", Array.newInstance(String.class, 0).getClass());
+		Method main = mainClass.getMethod("main", new Class[] {
+				Array.newInstance(String.class, 0).getClass()
+		});
 		String[] newArgs = Arrays.asList(args).subList(firstArg, args.length).toArray(new String[0]);
 		System.out.println("MAINARGS: " + Arrays.toString(newArgs));
 		try {

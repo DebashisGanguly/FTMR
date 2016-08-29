@@ -85,7 +85,7 @@ class KFSInputStream extends FSInputStream {
           if (statistics != null) {
             statistics.incrementBytesRead(1);
           }
-          return b[0] & 0xff;
+          return ((int) (b[0] & 0xff));
         }
         return -1;
     }

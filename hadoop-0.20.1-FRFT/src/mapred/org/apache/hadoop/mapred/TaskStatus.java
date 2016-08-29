@@ -17,16 +17,16 @@
  */
 package org.apache.hadoop.mapred;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableUtils;
-
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-import java.util.List;
 /**************************************************
  * Describes the current status of a task.  This is
  * not intended to be a comprehensive piece of data.
@@ -36,19 +36,19 @@ abstract class TaskStatus implements Writable, Cloneable {
 	static final Log LOG = LogFactory.getLog(TaskStatus.class.getName());
 
 	//enumeration for reporting current phase of a task. 
-	public enum Phase{STARTING, MAP, SHUFFLE, SORT, REDUCE, CLEANUP}
+	public static enum Phase{STARTING, MAP, SHUFFLE, SORT, REDUCE, CLEANUP}
 
 	// what state is the task in?
-	public enum State {RUNNING,
+	public static enum State {RUNNING, 
 		SUCCEEDED, 
 		FAILED, 
 		UNASSIGNED, 
 		KILLED,
 		COMMIT_PENDING, 
 		FAILED_UNCLEAN, 
-		KILLED_UNCLEAN}
+		KILLED_UNCLEAN};
 
-	private TaskAttemptID taskid;
+		private TaskAttemptID taskid;
 		private float progress = 0f;
 		private volatile State runState;
 		private String diagnosticInfo;

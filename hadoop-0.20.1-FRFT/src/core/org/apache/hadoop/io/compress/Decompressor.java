@@ -36,7 +36,7 @@ public interface Decompressor {
    * @param off Start offset
    * @param len Length
    */
-  void setInput(byte[] b, int off, int len);
+  public void setInput(byte[] b, int off, int len);
   
   /**
    * Returns true if the input data buffer is empty and 
@@ -45,7 +45,7 @@ public interface Decompressor {
    * @return <code>true</code> if the input data buffer is empty and 
    * #setInput() should be called in order to provide more input.
    */
-  boolean needsInput();
+  public boolean needsInput();
   
   /**
    * Sets preset dictionary for compression. A preset dictionary
@@ -55,13 +55,13 @@ public interface Decompressor {
    * @param off Start offset
    * @param len Length
    */
-  void setDictionary(byte[] b, int off, int len);
+  public void setDictionary(byte[] b, int off, int len);
   
   /**
    * Returns <code>true</code> if a preset dictionary is needed for decompression.
    * @return <code>true</code> if a preset dictionary is needed for decompression
    */
-  boolean needsDictionary();
+  public boolean needsDictionary();
 
   /**
    * Returns true if the end of the compressed 
@@ -69,7 +69,7 @@ public interface Decompressor {
    * @return <code>true</code> if the end of the compressed
    * data output stream has been reached.
    */
-  boolean finished();
+  public boolean finished();
   
   /**
    * Fills specified buffer with uncompressed data. Returns actual number
@@ -83,15 +83,15 @@ public interface Decompressor {
    * @return The actual number of bytes of compressed data.
    * @throws IOException
    */
-  int decompress(byte[] b, int off, int len) throws IOException;
+  public int decompress(byte[] b, int off, int len) throws IOException;
   
   /**
    * Resets decompressor so that a new set of input data can be processed.
    */
-  void reset();
+  public void reset();
   
   /**
    * Closes the decompressor and discards any unprocessed input.
    */
-  void end();
+  public void end(); 
 }

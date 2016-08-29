@@ -42,7 +42,7 @@ public interface Reporter extends Progressable {
   /**
    * A constant of Reporter type that does nothing.
    */
-  Reporter NULL = new Reporter() {
+  public static final Reporter NULL = new Reporter() {
       public void setStatus(String s) {
       }
       public void progress() {
@@ -67,7 +67,7 @@ public interface Reporter extends Progressable {
    * 
    * @param status brief description of the current status.
    */
-  void setStatus(String status);
+  public abstract void setStatus(String status);
   
   /**
    * Get the {@link Counter} of the given group with the given name.
@@ -75,7 +75,7 @@ public interface Reporter extends Progressable {
    * @param name counter name
    * @return the <code>Counter</code> of the given group/name.
    */
-  Counter getCounter(Enum<?> name);
+  public abstract Counter getCounter(Enum<?> name);
 
   /**
    * Get the {@link Counter} of the given group with the given name.
@@ -84,7 +84,7 @@ public interface Reporter extends Progressable {
    * @param name counter name
    * @return the <code>Counter</code> of the given group/name.
    */
-  Counter getCounter(String group, String name);
+  public abstract Counter getCounter(String group, String name);
   
   /**
    * Increments the counter identified by the key, which can be of
@@ -95,7 +95,7 @@ public interface Reporter extends Progressable {
    * @param amount A non-negative amount by which the counter is to 
    *               be incremented.
    */
-  void incrCounter(Enum<?> key, long amount);
+  public abstract void incrCounter(Enum<?> key, long amount);
   
   /**
    * Increments the counter identified by the group and counter name
@@ -106,7 +106,7 @@ public interface Reporter extends Progressable {
    * @param amount A non-negative amount by which the counter is to 
    *               be incremented.
    */
-  void incrCounter(String group, String counter, long amount);
+  public abstract void incrCounter(String group, String counter, long amount);
   
   /**
    * Get the {@link InputSplit} object for a map.
@@ -114,6 +114,6 @@ public interface Reporter extends Progressable {
    * @return the <code>InputSplit</code> that the map is reading from.
    * @throws UnsupportedOperationException if called outside a mapper
    */
-  InputSplit getInputSplit()
+  public abstract InputSplit getInputSplit() 
     throws UnsupportedOperationException;
 }

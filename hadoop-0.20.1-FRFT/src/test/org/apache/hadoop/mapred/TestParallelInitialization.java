@@ -62,7 +62,7 @@ public class TestParallelInitialization extends TestCase {
           numJobsCompleted.notifyAll();
           LOG.info("JobNumber " + jobNumber + " succeeded");
         }
-      } catch (InterruptedException ie) {}
+      } catch (InterruptedException ie) {};
       this.status.setRunState(JobStatus.SUCCEEDED);
     }
 

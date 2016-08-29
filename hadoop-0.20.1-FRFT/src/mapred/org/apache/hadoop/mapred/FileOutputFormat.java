@@ -95,8 +95,8 @@ public abstract class FileOutputFormat<K, V> implements OutputFormat<K, V> {
                     throws IOException;
 
     public void checkOutputSpecs(FileSystem ignored, JobConf job) 
-            throws
-            IOException {
+            throws FileAlreadyExistsException, 
+            InvalidJobConfException, IOException {
         // Ensure that the output directory is set and not already there
         Path outDir = getOutputPath(job);
         if (outDir == null && job.getNumReduceTasks() != 0) {

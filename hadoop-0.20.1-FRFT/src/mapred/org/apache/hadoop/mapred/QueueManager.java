@@ -67,7 +67,7 @@ class QueueManager {
   /**
    * Enum representing an operation that can be performed on a queue.
    */
-  enum QueueOperation {
+  static enum QueueOperation {
     SUBMIT_JOB ("acl-submit-job", false),
     ADMINISTER_JOBS ("acl-administer-jobs", true);
     // TODO: Add ACL for LIST_JOBS when we have ability to authenticate 
@@ -247,8 +247,8 @@ class QueueManager {
   
   private void initialize(Configuration conf) {
     aclsEnabled = conf.getBoolean("mapred.acls.enabled", false);
-    String[] queues = conf.getStrings("mapred.queue.names",
-            JobConf.DEFAULT_QUEUE_NAME);
+    String[] queues = conf.getStrings("mapred.queue.names", 
+                                  new String[] {JobConf.DEFAULT_QUEUE_NAME});
     addToSet(queueNames, queues);
     
     // for every queue, and every operation, get the ACL
@@ -285,7 +285,7 @@ class QueueManager {
         queueInfoList.add(new JobQueueInfo(queue,null));
       }
     }
-    return queueInfoList.toArray(new JobQueueInfo[queueInfoList
+    return (JobQueueInfo[]) queueInfoList.toArray(new JobQueueInfo[queueInfoList
         .size()]);
   }
 

@@ -112,7 +112,7 @@ JobSubmissionProtocol, TaskTrackerManager, RefreshAuthorizationPolicyProtocol {
     // tracker could be blacklisted across all jobs
     private int MAX_BLACKLISTS_PER_TRACKER = 4;
 
-    public enum State { INITIALIZING, RUNNING }
+    public static enum State { INITIALIZING, RUNNING }
     State state = State.INITIALIZING;
     private static final int FS_ACCESS_RETRY_PERIOD = 10000;
 
@@ -1533,7 +1533,7 @@ JobSubmissionProtocol, TaskTrackerManager, RefreshAuthorizationPolicyProtocol {
 
         // This is a directory of temporary submission files.  We delete it
         // on startup, and can delete any files that we're done with
-        JobTracker.conf = conf;
+        this.conf = conf;
         JobConf jobConf = new JobConf(conf);
 
         initializeTaskMemoryRelatedConfig();
@@ -1541,11 +1541,11 @@ JobSubmissionProtocol, TaskTrackerManager, RefreshAuthorizationPolicyProtocol {
         // Read the hosts/exclude files to restrict access to the jobtracker.
         this.hostsReader = new HostsFileReader(conf.get("mapred.hosts", ""), conf.get("mapred.hosts.exclude", ""));
 
-        queueManager = new QueueManager(JobTracker.conf);
+        queueManager = new QueueManager(this.conf);
 
         // Create the scheduler
         Class<? extends TaskScheduler> schedulerClass = conf.getClass("mapred.jobtracker.taskScheduler", JobQueueTaskScheduler.class, TaskScheduler.class);
-        taskScheduler = ReflectionUtils.newInstance(schedulerClass, conf);
+        taskScheduler = (TaskScheduler) ReflectionUtils.newInstance(schedulerClass, conf);
 
         // Set ports, start RPC servers, setup security policy etc.
         InetSocketAddress addr = getAddress(conf);
@@ -1554,11 +1554,11 @@ JobSubmissionProtocol, TaskTrackerManager, RefreshAuthorizationPolicyProtocol {
 
         // Set service-level authorization security policy
         if (conf.getBoolean(ServiceAuthorizationManager.SERVICE_AUTHORIZATION_CONFIG, false)) {
-            PolicyProvider policyProvider =
-                    ReflectionUtils.newInstance(
-                            conf.getClass(PolicyProvider.POLICY_PROVIDER_CONFIG,
-                                    MapReducePolicyProvider.class, PolicyProvider.class),
-                                    conf);
+            PolicyProvider policyProvider = 
+                    (PolicyProvider)(ReflectionUtils.newInstance(
+                            conf.getClass(PolicyProvider.POLICY_PROVIDER_CONFIG, 
+                                    MapReducePolicyProvider.class, PolicyProvider.class), 
+                                    conf));
             SecurityUtil.setPolicy(new ConfiguredPolicy(conf, policyProvider));
         }
 
@@ -1608,7 +1608,7 @@ JobSubmissionProtocol, TaskTrackerManager, RefreshAuthorizationPolicyProtocol {
         Class<? extends JobTrackerInstrumentation> metricsInst = getInstrumentationClass(jobConf);
         try {
             java.lang.reflect.Constructor<? extends JobTrackerInstrumentation> c =
-                    metricsInst.getConstructor(JobTracker.class, JobConf.class);
+                    metricsInst.getConstructor(new Class[] {JobTracker.class, JobConf.class} );
             tmp = c.newInstance(this, jobConf);
         } catch(Exception e) {
             //Reflection can throw lots of exceptions -- handle them all by 
@@ -1621,10 +1621,10 @@ JobSubmissionProtocol, TaskTrackerManager, RefreshAuthorizationPolicyProtocol {
         // The rpc/web-server ports can be ephemeral ports... 
         // ... ensure we have the correct info
         this.port = interTrackerServer.getListenerAddress().getPort();
-        JobTracker.conf.set("mapred.job.tracker", (this.localMachine + ":" + this.port));
+        this.conf.set("mapred.job.tracker", (this.localMachine + ":" + this.port));
         LOG.info("JobTracker up at: " + this.port);
         this.infoPort = this.infoServer.getPort();
-        JobTracker.conf.set("mapred.job.tracker.http.address", infoBindAddress + ":" + this.infoPort);
+        this.conf.set("mapred.job.tracker.http.address", infoBindAddress + ":" + this.infoPort); 
         LOG.info("JobTracker webserver: " + this.infoServer.getPort());
 
         // start the recovery manager
@@ -2680,11 +2680,6 @@ JobSubmissionProtocol, TaskTrackerManager, RefreshAuthorizationPolicyProtocol {
         return false;
     }
 
-    /**
-     * Tells if the digests of the task should be tampered.
-     * @param taskid
-     * @return
-     */
     private boolean shouldTamper(TaskAttemptID taskid) {
         if(taskid == null)
             return false;
@@ -3109,7 +3104,7 @@ JobSubmissionProtocol, TaskTrackerManager, RefreshAuthorizationPolicyProtocol {
             return jobs.get(jobId).getStatus();
         }
 
-        JobInProgress job = new JobInProgress(jobId, this, conf);
+        JobInProgress job = new JobInProgress(jobId, this, this.conf);
 
         String queue = job.getProfile().getQueueName();
         if(!(queueManager.getQueues().contains(queue))) {      
@@ -3975,10 +3970,13 @@ JobSubmissionProtocol, TaskTrackerManager, RefreshAuthorizationPolicyProtocol {
     }
 
     private boolean perTaskMemoryConfigurationSetOnJT() {
-        return !(limitMaxMemForMapTasks == JobConf.DISABLED_MEMORY_LIMIT
+        if (limitMaxMemForMapTasks == JobConf.DISABLED_MEMORY_LIMIT
                 || limitMaxMemForReduceTasks == JobConf.DISABLED_MEMORY_LIMIT
                 || memSizeForMapSlotOnJT == JobConf.DISABLED_MEMORY_LIMIT
-                || memSizeForReduceSlotOnJT == JobConf.DISABLED_MEMORY_LIMIT);
+                || memSizeForReduceSlotOnJT == JobConf.DISABLED_MEMORY_LIMIT) {
+            return false;
+        }
+        return true;
     }
 
     /**

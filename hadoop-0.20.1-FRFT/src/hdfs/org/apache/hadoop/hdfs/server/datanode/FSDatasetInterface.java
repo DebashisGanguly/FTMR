@@ -48,14 +48,14 @@ public interface FSDatasetInterface extends FSDatasetMBean {
    * @return the length of the metadata file for the specified block.
    * @throws IOException
    */
-  long getMetaDataLength(Block b) throws IOException;
+  public long getMetaDataLength(Block b) throws IOException;
   
   /**
    * This class provides the input stream and length of the metadata
    * of a block
    *
    */
-  class MetaDataInputStream extends FilterInputStream {
+  static class MetaDataInputStream extends FilterInputStream {
     MetaDataInputStream(InputStream stream, long len) {
       super(stream);
       length = len;
@@ -73,7 +73,7 @@ public interface FSDatasetInterface extends FSDatasetMBean {
    * @return the metadata input stream; 
    * @throws IOException
    */
-  MetaDataInputStream getMetaDataInputStream(Block b)
+  public MetaDataInputStream getMetaDataInputStream(Block b)
         throws IOException;
   
   /**
@@ -82,7 +82,7 @@ public interface FSDatasetInterface extends FSDatasetMBean {
    * @return true of the metafile for specified block exits
    * @throws IOException
    */
-  boolean metaFileExists(Block b) throws IOException;
+  public boolean metaFileExists(Block b) throws IOException;
 
 
   /**
@@ -91,12 +91,12 @@ public interface FSDatasetInterface extends FSDatasetMBean {
    * @return   the specified block's on-disk length (excluding metadta)
    * @throws IOException
    */
-  long getLength(Block b) throws IOException;
+  public long getLength(Block b) throws IOException;
 
   /**
    * @return the generation stamp stored with the block.
    */
-  Block getStoredBlock(long blkid) throws IOException;
+  public Block getStoredBlock(long blkid) throws IOException;
 
   /**
    * Returns an input stream to read the contents of the specified block
@@ -104,7 +104,7 @@ public interface FSDatasetInterface extends FSDatasetMBean {
    * @return an input stream to read the contents of the specified block
    * @throws IOException
    */
-  InputStream getBlockInputStream(Block b) throws IOException;
+  public InputStream getBlockInputStream(Block b) throws IOException;
   
   /**
    * Returns an input stream at specified offset of the specified block
@@ -114,7 +114,7 @@ public interface FSDatasetInterface extends FSDatasetMBean {
    *  starting at the offset
    * @throws IOException
    */
-  InputStream getBlockInputStream(Block b, long seekOffset)
+  public InputStream getBlockInputStream(Block b, long seekOffset)
             throws IOException;
 
   /**
@@ -127,7 +127,7 @@ public interface FSDatasetInterface extends FSDatasetMBean {
    *  starting at the offset
    * @throws IOException
    */
-  BlockInputStreams getTmpInputStreams(Block b, long blkoff, long ckoff)
+  public BlockInputStreams getTmpInputStreams(Block b, long blkoff, long ckoff)
             throws IOException;
 
      /**
@@ -136,7 +136,7 @@ public interface FSDatasetInterface extends FSDatasetMBean {
       * of a block
       *
       */
-     class BlockWriteStreams {
+     static class BlockWriteStreams {
       OutputStream dataOut;
       OutputStream checksumOut;
       BlockWriteStreams(OutputStream dOut, OutputStream cOut) {
@@ -150,7 +150,7 @@ public interface FSDatasetInterface extends FSDatasetMBean {
    * This class contains the input streams for the data and checksum
    * of a block
    */
-  class BlockInputStreams implements Closeable {
+  static class BlockInputStreams implements Closeable {
     final InputStream dataIn;
     final InputStream checksumIn;
 
@@ -174,12 +174,12 @@ public interface FSDatasetInterface extends FSDatasetMBean {
    *  and CRC
    * @throws IOException
    */
-  BlockWriteStreams writeToBlock(Block b, boolean isRecovery) throws IOException;
+  public BlockWriteStreams writeToBlock(Block b, boolean isRecovery) throws IOException;
 
   /**
    * Update the block to the new generation stamp and length.  
    */
-  void updateBlock(Block oldblock, Block newblock) throws IOException;
+  public void updateBlock(Block oldblock, Block newblock) throws IOException;
   
   /**
    * Finalizes the block previously opened for writing using writeToBlock.
@@ -188,7 +188,7 @@ public interface FSDatasetInterface extends FSDatasetMBean {
    * @param b
    * @throws IOException
    */
-  void finalizeBlock(Block b) throws IOException;
+  public void finalizeBlock(Block b) throws IOException;
 
   /**
    * Unfinalizes the block previously opened for writing using writeToBlock.
@@ -196,43 +196,43 @@ public interface FSDatasetInterface extends FSDatasetMBean {
    * @param b
    * @throws IOException
    */
-  void unfinalizeBlock(Block b) throws IOException;
+  public void unfinalizeBlock(Block b) throws IOException;
 
   /**
    * Returns the block report - the full list of blocks stored
    * @return - the block report - the full list of blocks stored
    */
-  Block[] getBlockReport();
+  public Block[] getBlockReport();
 
   /**
    * Is the block valid?
    * @param b
    * @return - true if the specified block is valid
    */
-  boolean isValidBlock(Block b);
+  public boolean isValidBlock(Block b);
 
   /**
    * Invalidates the specified blocks
    * @param invalidBlks - the blocks to be invalidated
    * @throws IOException
    */
-  void invalidate(Block invalidBlks[]) throws IOException;
+  public void invalidate(Block invalidBlks[]) throws IOException;
 
     /**
      * Check if all the data directories are healthy
      * @throws DiskErrorException
      */
-    void checkDataDir() throws DiskErrorException;
+  public void checkDataDir() throws DiskErrorException;
       
     /**
      * Stringifies the name of the storage
      */
-    String toString();
+  public String toString();
   
   /**
    * Shutdown the FSDataset
    */
-  void shutdown();
+  public void shutdown();
 
   /**
    * Returns the current offset in the data stream.
@@ -241,7 +241,7 @@ public interface FSDatasetInterface extends FSDatasetMBean {
    * @return the position of the file pointer in the data stream
    * @throws IOException
    */
-  long getChannelPosition(Block b, BlockWriteStreams stream) throws IOException;
+  public long getChannelPosition(Block b, BlockWriteStreams stream) throws IOException;
 
   /**
    * Sets the file pointer of the data stream and checksum stream to
@@ -254,8 +254,8 @@ public interface FSDatasetInterface extends FSDatasetMBean {
    *        should be set
    * @throws IOException
    */
-  void setChannelPosition(Block b, BlockWriteStreams stream, long dataOffset,
-                          long ckOffset) throws IOException;
+  public void setChannelPosition(Block b, BlockWriteStreams stream, long dataOffset,
+                                 long ckOffset) throws IOException;
 
   /**
    * Validate that the contents in the Block matches
@@ -263,5 +263,5 @@ public interface FSDatasetInterface extends FSDatasetMBean {
    * @param b The block to be verified.
    * @throws IOException
    */
-  void validateBlockMetadata(Block b) throws IOException;
+  public void validateBlockMetadata(Block b) throws IOException;
 }
