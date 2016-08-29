@@ -151,7 +151,7 @@ public class TaskAttemptID extends org.apache.hadoop.mapred.ID {
       return null;
     try {
       String[] parts = str.split(Character.toString(SEPARATOR));
-      if(parts.length == 6) {
+      if(parts.length == 7) {
         if(parts[0].equals(ATTEMPT)) {
           boolean isMap = false;
           if(parts[3].equals("m")) isMap = true;
@@ -161,7 +161,8 @@ public class TaskAttemptID extends org.apache.hadoop.mapred.ID {
                        (parts[1],
                         Integer.parseInt(parts[2]),
                         isMap, Integer.parseInt(parts[4]), 
-                        Integer.parseInt(parts[5]));
+                        Integer.parseInt(parts[5]),
+                        Integer.parseInt(parts[6]));
         }
       }
     } catch (Exception ex) {

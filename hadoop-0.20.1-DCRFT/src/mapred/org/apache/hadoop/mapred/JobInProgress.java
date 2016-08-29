@@ -491,9 +491,9 @@ class JobInProgress {
       for (int j = 0; j < numberOfReplicas; j++) {
           int idx = (i * numberOfReplicas) + j;
       
-          /*maps[idx] = new TaskInProgress(jobId, jobFile,
+          maps[idx] = new TaskInProgress(jobId, jobFile,
                                    splits[i], 
-                                   jobtracker, conf, this, i, j);*/
+                                   jobtracker, conf, this, i, j);
       }
     }
     LOG.info("Input size for job " + jobId + " = " + inputLength

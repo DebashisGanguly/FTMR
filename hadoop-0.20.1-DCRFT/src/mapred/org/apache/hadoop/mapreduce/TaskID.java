@@ -55,7 +55,23 @@ public class TaskID extends org.apache.hadoop.mapred.ID {
   
   private JobID jobId;
   private boolean isMap;
-
+  private int replicaId;
+    
+  public TaskID(JobID jobId, boolean isMap, int id, int replicaId) {
+    super(id);
+    if(jobId == null) {
+      throw new IllegalArgumentException("jobId cannot be null");
+    }
+        
+    this.jobId = jobId;
+    this.isMap = isMap;
+    this.replicaId = replicaId;
+  }
+    
+  public int getReplicaId() {
+    return replicaId;
+  }
+    
   /**
    * Constructs a TaskID object from given {@link JobID}.  
    * @param jobId JobID that this tip belongs to 
@@ -81,6 +97,10 @@ public class TaskID extends org.apache.hadoop.mapred.ID {
   public TaskID(String jtIdentifier, int jobId, boolean isMap, int id) {
     this(new JobID(jtIdentifier, jobId), isMap, id);
   }
+    
+  public TaskID(String jtIdentifier, int jobId, boolean isMap, int id, int replicaId) {
+    this(new JobID(jtIdentifier, jobId), isMap, id, replicaId);
+  }
   
   public TaskID() { 
     jobId = new JobID();
@@ -102,7 +122,7 @@ public class TaskID extends org.apache.hadoop.mapred.ID {
       return false;
 
     TaskID that = (TaskID)o;
-    return this.isMap == that.isMap && this.jobId.equals(that.jobId);
+    return this.isMap == that.isMap && this.jobId.equals(that.jobId) && this.replicaId == that.replicaId;
   }
 
   /**Compare TaskInProgressIds by first jobIds, then by tip numbers. Reduces are 
@@ -112,7 +132,7 @@ public class TaskID extends org.apache.hadoop.mapred.ID {
     TaskID that = (TaskID)o;
     int jobComp = this.jobId.compareTo(that.jobId);
     if(jobComp == 0) {
-      if(this.isMap == that.isMap) {
+      if(this.isMap == that.isMap && this.replicaId == that.replicaId) {
         return this.id - that.id;
       }
       else return this.isMap ? -1 : 1;
@@ -124,12 +144,26 @@ public class TaskID extends org.apache.hadoop.mapred.ID {
     return appendTo(new StringBuilder(TASK)).toString();
   }
 
+  public String toStringWithoutReplica() {
+    return appendToWithoutReplica(new StringBuilder(TASK)).toString();
+  }
+    
   /**
    * Add the unique string to the given builder.
    * @param builder the builder to append to
    * @return the builder that was passed in
    */
   protected StringBuilder appendTo(StringBuilder builder) {
+    return jobId.appendTo(builder).
+                 append(SEPARATOR).
+                 append(isMap ? 'm' : 'r').
+                 append(SEPARATOR).
+                 append(idFormat.format(id)).
+                 append(SEPARATOR).
+                 append(replicaId);
+  }
+    
+  protected StringBuilder appendToWithoutReplica(StringBuilder builder) {
     return jobId.appendTo(builder).
                  append(SEPARATOR).
                  append(isMap ? 'm' : 'r').
@@ -147,6 +181,7 @@ public class TaskID extends org.apache.hadoop.mapred.ID {
     super.readFields(in);
     jobId.readFields(in);
     isMap = in.readBoolean();
+    replicaId = in.readInt();
   }
 
   @Override
@@ -154,6 +189,7 @@ public class TaskID extends org.apache.hadoop.mapred.ID {
     super.write(out);
     jobId.write(out);
     out.writeBoolean(isMap);
+    out.writeInt(replicaId);
   }
   
   /** Construct a TaskID object from given string 
@@ -166,7 +202,7 @@ public class TaskID extends org.apache.hadoop.mapred.ID {
       return null;
     try {
       String[] parts = str.split("_");
-      if(parts.length == 5) {
+      if(parts.length == 6) {
         if(parts[0].equals(TASK)) {
           boolean isMap = false;
           if(parts[3].equals("m")) isMap = true;
@@ -175,13 +211,14 @@ public class TaskID extends org.apache.hadoop.mapred.ID {
           return new org.apache.hadoop.mapred.TaskID(parts[1], 
                                                      Integer.parseInt(parts[2]),
                                                      isMap, 
-                                                     Integer.parseInt(parts[4]));
+                                                     Integer.parseInt(parts[4]),
+                                                     Integer.parseInt(parts[5]));
         }
       }
     }catch (Exception ex) {//fall below
     }
     throw new IllegalArgumentException("TaskId string : " + str 
         + " is not properly formed");
-  }
+    }
   
 }

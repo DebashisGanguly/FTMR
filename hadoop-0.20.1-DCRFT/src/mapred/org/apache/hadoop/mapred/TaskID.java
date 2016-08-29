@@ -55,6 +55,10 @@ public class TaskID extends org.apache.hadoop.mapreduce.TaskID {
   public TaskID(org.apache.hadoop.mapreduce.JobID jobId, boolean isMap,int id) {
     super(jobId, isMap, id);
   }
+    
+  public TaskID(org.apache.hadoop.mapreduce.JobID jobId, boolean isMap,int id, int replicaId) {
+    super(jobId, isMap, id, replicaId);
+  }
   
   /**
    * Constructs a TaskInProgressId object from given parts.
@@ -65,6 +69,10 @@ public class TaskID extends org.apache.hadoop.mapreduce.TaskID {
    */
   public TaskID(String jtIdentifier, int jobId, boolean isMap, int id) {
     this(new JobID(jtIdentifier, jobId), isMap, id);
+  }
+    
+  public TaskID(String jtIdentifier, int jobId, boolean isMap, int id, int replicaId) {
+    this(new JobID(jtIdentifier, jobId), isMap, id, replicaId);
   }
   
   public TaskID() {
@@ -81,7 +89,7 @@ public class TaskID extends org.apache.hadoop.mapreduce.TaskID {
       return (TaskID) old;
     } else {
       return new TaskID(JobID.downgrade(old.getJobID()), old.isMap(), 
-                        old.getId());
+                        old.getId(), 0);
     }
   }
 
@@ -114,26 +122,35 @@ public class TaskID extends org.apache.hadoop.mapreduce.TaskID {
    */
   @Deprecated
   public static String getTaskIDsPattern(String jtIdentifier, Integer jobId
-      , Boolean isMap, Integer taskId) {
+      , Boolean isMap, Integer taskId, Integer replicaId) {
     StringBuilder builder = new StringBuilder(TASK).append(SEPARATOR)
-      .append(getTaskIDsPatternWOPrefix(jtIdentifier, jobId, isMap, taskId));
+      .append(getTaskIDsPatternWOPrefix(jtIdentifier, jobId, isMap, taskId, replicaId));
     return builder.toString();
   }
   
   @Deprecated
   static StringBuilder getTaskIDsPatternWOPrefix(String jtIdentifier
-      , Integer jobId, Boolean isMap, Integer taskId) {
+      , Integer jobId, Boolean isMap, Integer taskId, Integer replicaId) {
     StringBuilder builder = new StringBuilder();
     builder.append(JobID.getJobIDsPatternWOPrefix(jtIdentifier, jobId))
       .append(SEPARATOR)
       .append(isMap != null ? (isMap ? "m" : "r") : "(m|r)").append(SEPARATOR)
-      .append(taskId != null ? idFormat.format(taskId) : "[0-9]*");
+      .append(taskId != null ? idFormat.format(taskId) : "[0-9]*").append(SEPARATOR)
+      .append(replicaId);
     return builder;
   }
 
   public static TaskID forName(String str
                                ) throws IllegalArgumentException {
     return (TaskID) org.apache.hadoop.mapreduce.TaskID.forName(str);
+  }
+    
+  public String toString() {
+    return super.toString();
+  }
+    
+  public String toStringWithoutReplica() {
+    return super.toStringWithoutReplica();
   }
 
 }

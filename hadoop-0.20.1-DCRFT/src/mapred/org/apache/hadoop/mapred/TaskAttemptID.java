@@ -62,8 +62,8 @@ public class TaskAttemptID extends org.apache.hadoop.mapreduce.TaskAttemptID {
    * @param id the task attempt number
    */
   public TaskAttemptID(String jtIdentifier, int jobId, boolean isMap, 
-                       int taskId, int id) {
-    this(new TaskID(jtIdentifier, jobId, isMap, taskId), id);
+                       int taskId, int replicaId, int id) {
+    this(new TaskID(jtIdentifier, jobId, isMap, taskId, replicaId), id);
   }
   
   public TaskAttemptID() { 
@@ -129,19 +129,19 @@ public class TaskAttemptID extends org.apache.hadoop.mapreduce.TaskAttemptID {
    */
   @Deprecated
   public static String getTaskAttemptIDsPattern(String jtIdentifier,
-      Integer jobId, Boolean isMap, Integer taskId, Integer attemptId) {
+      Integer jobId, Boolean isMap, Integer taskId, Integer replicaId, Integer attemptId) {
     StringBuilder builder = new StringBuilder(ATTEMPT).append(SEPARATOR);
     builder.append(getTaskAttemptIDsPatternWOPrefix(jtIdentifier, jobId,
-        isMap, taskId, attemptId));
+        isMap, taskId, replicaId, attemptId));
     return builder.toString();
   }
   
   @Deprecated
   static StringBuilder getTaskAttemptIDsPatternWOPrefix(String jtIdentifier
-      , Integer jobId, Boolean isMap, Integer taskId, Integer attemptId) {
+      , Integer jobId, Boolean isMap, Integer taskId, Integer replicaId, Integer attemptId) {
     StringBuilder builder = new StringBuilder();
     builder.append(TaskID.getTaskIDsPatternWOPrefix(jtIdentifier
-        , jobId, isMap, taskId))
+        , jobId, isMap, taskId, replicaId))
         .append(SEPARATOR)
         .append(attemptId != null ? attemptId : "[0-9]*");
     return builder;
