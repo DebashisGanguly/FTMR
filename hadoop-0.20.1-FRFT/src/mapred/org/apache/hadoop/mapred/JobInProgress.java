@@ -1589,6 +1589,10 @@ class JobInProgress {
         }
                         
         int  target = findNewReduceTask(tts, clusterSize, numUniqueHosts, status.reduceProgress());
+                        
+        if (target == -1) {
+            return null;
+        }
 
         if(LOG.isDebugEnabled()) {
             LOG.debug("Reduce task fetched");
