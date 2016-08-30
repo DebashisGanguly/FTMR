@@ -27,16 +27,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.Iterator;
-import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.examples.Sort;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapred.Counters.Group;
-import org.apache.hadoop.mapred.jobcontrol.Job;
-import org.apache.hadoop.mapred.jobcontrol.JobControl;
+import org.apache.hadoop.mapred.RunningJob;
+import org.apache.hadoop.mapred.jobcontrol.*;
 import org.apache.hadoop.mapred.lib.IdentityMapper;
 import org.apache.hadoop.mapred.lib.IdentityReducer;
 import org.apache.hadoop.streaming.StreamJob;
@@ -127,20 +127,14 @@ public class GridMixRunner {
                 sb.append("-mapper cat ");
                 sb.append("-reducer cat ");
                 sb.append("-numReduceTasks ").append(numReducers);
-
                 String[] args = sb.toString().split(" ");
+                
                 clearDir(outdir);
                 try {
-                    ClassLoader sysClassLoader = ClassLoader
-                            .getSystemClassLoader();
-                    // Get the URLs
-                    URL[] urls = ((URLClassLoader) sysClassLoader).getURLs();
-
                     JobConf jobconf = StreamJob.createJob(args);
                     jobconf.setJobName("GridmixStreamingSorter." + size);
                     jobconf.setCompressMapOutput(mapoutputCompressed);
                     jobconf.setBoolean("mapred.output.compress", outputCompressed);
-                    jobconf.setInt("dfs.replication", 1);
                     Job job = new Job(jobconf);
                     gridmix.addJob(job);
                 } catch (Exception ex) {
@@ -176,8 +170,7 @@ public class GridMixRunner {
                     jobConf.setOutputValueClass(org.apache.hadoop.io.Text.class);
                     jobConf.setCompressMapOutput(mapoutputCompressed);
                     jobConf.setBoolean("mapred.output.compress", outputCompressed);
-                    jobConf.setInt("dfs.replication", 1);
-
+                    
                     FileInputFormat.addInputPaths(jobConf, indir);
                     FileOutputFormat.setOutputPath(jobConf, new Path(outdir));
 
@@ -247,7 +240,6 @@ public class GridMixRunner {
                 try {
                     JobConf jobconf = CombinerJobCreator.createJob(args);
                     jobconf.setJobName("GridmixCombinerJob." + size);
-                    jobconf.setInt("dfs.replication", 1);
                     Job job = new Job(jobconf);
                     gridmix.addJob(job);
                 } catch (Exception ex) {
@@ -264,7 +256,7 @@ public class GridMixRunner {
                 final String indir = getInputDirsFor(prop, size
                         .defaultPath(FIXCOMPSEQ));
                 final String outdir = addTSSuffix("perf-out/mq-out-dir-" + size);
-                int iter = 1;
+                int iter = 3;
                 try {
                     Job pjob = null;
                     Job job = null;
@@ -295,9 +287,6 @@ public class GridMixRunner {
                         JobConf jobconf = GenericMRLoadJobCreator.createJob(
                                 args, mapoutputCompressed, outputCompressed);
                         jobconf.setJobName("GridmixMonsterQuery." + size);
-                        int repl = (i+1==iter)? 1 : 3;
-                        jobconf.setInt("dfs.replication", repl);
-
                         job = new Job(jobconf);
                         if (pjob != null) {
                             job.addDependingJob(pjob);
@@ -338,8 +327,6 @@ public class GridMixRunner {
                     JobConf jobconf = GenericMRLoadJobCreator.createJob(args,
                             mapoutputCompressed, outputCompressed);
                     jobconf.setJobName("GridmixWebdataSort." + size);
-                    jobconf.setInt("dfs.replication", 1);
-
                     Job job = new Job(jobconf);
                     gridmix.addJob(job);
                 } catch (Exception ex) {
@@ -380,12 +367,10 @@ public class GridMixRunner {
 
     private static Configuration initConfig() {
         Configuration conf = new Configuration();
-        // gridmix_config.xml
-        String configDir = System.getProperty("GRIDMIXCONF_PATH");
         String configFile = System.getenv("GRIDMIXCONFIG");
 
         if (configFile == null) {
-            configDir = System.getProperty("user.dir");
+            String configDir = System.getProperty("user.dir");
             if (configDir == null) {
                 configDir = ".";
             }
@@ -537,18 +522,6 @@ public class GridMixRunner {
 
     private TreeMap<String, String> getStatForJob(Job job) {
         TreeMap<String, String> retv = new TreeMap<String, String>();
-        try {
-            if (job == null || job.getAssignedJobID() == null) {
-                if (job != null)
-                    System.out.println("Error: " + job.getMessage());
-                throw new RuntimeException((job == null) ? "Job is null" : job
-                        .getAssignedJobID()
-                        + " is null - " + job.getMessage());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         String mapreduceID = job.getAssignedJobID().toString();
         JobClient jc = job.getJobClient();
         JobConf jobconf = job.getJobConf();
@@ -561,16 +534,8 @@ public class GridMixRunner {
         try {
             RunningJob running = jc.getJob(JobID.forName(mapreduceID));
 
-            if(running == null)
-                System.out.println("ERROR: " + mapreduceID + " is null");
-
             Counters jobCounters = running.getCounters();
-
-            retv.put(mapreduceID + "." + jobName + "." + "jobStartTime", ""
-                    + running.getStarttime());
-            retv.put(mapreduceID + "." + jobName + "." + "jobEndTime", ""
-                    + running.getEndtime());
-
+            
             Iterator<Group> groups = jobCounters.iterator();
             while (groups.hasNext()) {
                 Group g = groups.next();
@@ -618,7 +583,7 @@ public class GridMixRunner {
                     + startTime);
             retv.put(mapreduceID + "." + jobName + "." + "mapEndTime", ""
                     + finishTime);
-            long shuffleFinishedTime = 0;
+            
             for (int j = 0; j < reduces.length; j++) {
                 TaskReport reduce = reduces[j];
                 long thisStartTime = reduce.getStartTime();
@@ -629,10 +594,6 @@ public class GridMixRunner {
                 if (startTime > thisStartTime) {
                     startTime = thisStartTime;
                 }
-
-                if (shuffleFinishedTime < reduce.getShuffleFinishedTime())
-                    shuffleFinishedTime = reduce.getShuffleFinishedTime();
-
                 if (finishTime < thisFinishTime) {
                     finishTime = thisFinishTime;
                 }
@@ -643,8 +604,6 @@ public class GridMixRunner {
 
             retv.put(mapreduceID + "." + jobName + "." + "reduceStartTime", ""
                     + startTime);
-            retv.put(mapreduceID + "." + jobName + "."
-                    + "reduceShuffleFinishedTime", "" + shuffleFinishedTime);
             retv.put(mapreduceID + "." + jobName + "." + "reduceEndTime", ""
                     + finishTime);
 
@@ -700,6 +659,18 @@ public class GridMixRunner {
         long startTime = System.currentTimeMillis();
         while (!gridmix.allFinished()) {
             try {
+                System.out.println("Jobs in waiting state: "
+                                   + gridmix.getWaitingJobs().size());
+                System.out.println("Jobs in ready state: "
+                                   + gridmix.getReadyJobs().size());
+                System.out.println("Jobs in running state: "
+                                   + gridmix.getRunningJobs().size());
+                System.out.println("Jobs in success state: "
+                                   + gridmix.getSuccessfulJobs().size());
+                System.out.println("Jobs in failed state: "
+                                   + gridmix.getFailedJobs().size());
+                System.out.println("\n");
+                
                 Thread.sleep(10 * 1000);
             } catch (Exception e) {
 

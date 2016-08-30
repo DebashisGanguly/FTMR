@@ -14,7 +14,7 @@
 </property>
 <property>
   <name>fs.default.name</name>
-  <value>hdfs://localhost:54310</value>
+  <value>hdfs://master:54310</value>
 </property>
 
 </configuration>
