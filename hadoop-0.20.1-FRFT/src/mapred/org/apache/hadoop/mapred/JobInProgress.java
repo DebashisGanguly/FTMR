@@ -119,8 +119,8 @@ class JobInProgress {
     private int failedMapTasks 		= 0; 
     private int failedReduceTasks 	= 0;
 
-    //    private static final float DEFAULT_COMPLETED_MAPS_PERCENT_FOR_REDUCE_SLOWSTART = 0.05f;
-    //    int completedMapsForReduceSlowstart = 0;
+    private static final float DEFAULT_COMPLETED_MAPS_PERCENT_FOR_REDUCE_SLOWSTART = 0.05f;
+    int completedMapsForReduceSlowstart = 0;
 
     // runningMapTasks include speculative tasks, so we need to capture 
     // speculative tasks separately 
@@ -698,10 +698,7 @@ class JobInProgress {
 
         // Calculate the minimum number of maps to be complete before 
         // we should start scheduling reduces
-        //        completedMapsForReduceSlowstart = 
-        //                (int)Math.ceil((conf.getFloat("mapred.reduce.slowstart.completed.maps", 
-        //                        DEFAULT_COMPLETED_MAPS_PERCENT_FOR_REDUCE_SLOWSTART) * 
-        //                        MajorityVoting.getThreshold(replicatedNumMapTasks)));
+        completedMapsForReduceSlowstart = MajorityVoting.getThreshold(replicatedNumMapTasks);
 
         // create cleanup two cleanup tips, one map and one reduce.
         cleanup = new TaskInProgress[2];
@@ -1555,11 +1552,7 @@ class JobInProgress {
      * @return
      */
     public synchronized boolean scheduleReduces() {
-        /*if(conf.getDeferredExecution())
-            return !summapTaskcounter.hasAnyLowerLimit(MajorityVoting.getThreshold(replicatedNumMapTasks)/numMapTasks);
-
-        return  !summapTaskcounter.hasAnyLowerLimit(1);*/
-        return pendingMaps() == 0;
+        return finishedMapTasks >= completedMapsForReduceSlowstart;
     }
 
     /**
@@ -1591,11 +1584,11 @@ class JobInProgress {
             return null;
         }
 
-        // idx
-        int  target = findNewReduceTask(tts, clusterSize, numUniqueHosts, status.reduceProgress());
-        if (target == -1) {
+        if (!scheduleReduces()) {
             return null;
         }
+                        
+        int  target = findNewReduceTask(tts, clusterSize, numUniqueHosts, status.reduceProgress());
 
         if(LOG.isDebugEnabled()) {
             LOG.debug("Reduce task fetched");
