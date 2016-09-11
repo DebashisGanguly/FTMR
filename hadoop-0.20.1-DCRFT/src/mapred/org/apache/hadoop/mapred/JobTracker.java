@@ -2620,6 +2620,10 @@ public class JobTracker implements MRConstants, InterTrackerProtocol,
     return response;
   }
   
+  public synchronized int shouldTamperMapDigest(TaskAttemptID taskId) {
+    return jip.shouldTamperMapDigest(taskId);
+  }
+      
   /**
    * Calculates next heartbeat interval using cluster size.
    * Heartbeat interval is incremented 1second for every 50 nodes. 

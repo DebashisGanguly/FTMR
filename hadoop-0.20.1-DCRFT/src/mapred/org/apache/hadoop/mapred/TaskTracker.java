@@ -2037,7 +2037,7 @@ public class TaskTracker
             String digest = digestCollection.remove(this.taskStatus.getTaskID());
               
             if(digest != null) {
-                this.taskStatus.setDigests(digest);
+                this.taskStatus.setDigest(digest);
             }
         }
       }
@@ -2603,11 +2603,11 @@ public class TaskTracker
   public void sendDigest(TaskAttemptID taskid, String digest)
   throws IOException {
     synchronized (digestCollection) {
-        /*if(jobClient.shouldTamperMapDigest(taskid) == 0)
+        if(jobClient.shouldTamperMapDigest(taskid) == 0)
             digestCollection.put(taskid, digest);
         else if(jobClient.shouldTamperMapDigest(taskid) == 1)
             digestCollection.put(taskid, null);
-        else if(jobClient.shouldTamperMapDigest(taskid) == 2)*/
+        else if(jobClient.shouldTamperMapDigest(taskid) == 2)
             digestCollection.put(taskid, digest + "Error");
     }
   }

@@ -138,4 +138,12 @@ interface InterTrackerProtocol extends VersionedProtocol {
    * Returns the buildVersion of the JobTracker 
    */
   public String getBuildVersion() throws IOException;
+  
+  /**
+   * Query jobtracker if map task should be tampered or not if yes then which type
+   * @param task attempt id
+   * @return type of fault injection
+   * @throws IOException
+   */
+  public int shouldTamperMapDigest(TaskAttemptID taskid)  throws IOException;
 }

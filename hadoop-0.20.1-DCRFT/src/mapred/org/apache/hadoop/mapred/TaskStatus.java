@@ -343,7 +343,7 @@ abstract class TaskStatus implements Writable, Cloneable {
     return digest;
   }
     
-  public void setDigests(String digest) {
+  public void setDigest(String digest) {
     if(digest != null) {
       containsHash = true;
       this.digest = digest;
