@@ -1437,8 +1437,8 @@ class MapTask extends Task {
     }
       
     private void sendDigest(String digest) throws IOException {
-      //if(digest != null)
-        //umbilical.sendDigest(getTaskID(), digest);
+      if(digest != null)
+        umbilical.sendDigest(getTaskID(), digest);
     }
       
     private void mergeParts() throws IOException, InterruptedException, 

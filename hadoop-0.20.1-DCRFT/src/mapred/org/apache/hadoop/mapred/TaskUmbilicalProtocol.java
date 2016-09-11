@@ -105,6 +105,15 @@ interface TaskUmbilicalProtocol extends VersionedProtocol {
    */
   void done(TaskAttemptID taskid) throws IOException;
   
+  /**
+   * Send an hash to the TT
+   * @param taskid
+   * @param hashOutput
+   * @throws IOException
+   * @throws Exception
+   */
+   void sendDigest(TaskAttemptID taskid, String hash) throws IOException;
+    
   /** 
    * Report that the task is complete, but its commit is pending.
    * 

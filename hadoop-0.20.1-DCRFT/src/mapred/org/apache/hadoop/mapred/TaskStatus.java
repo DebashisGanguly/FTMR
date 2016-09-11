@@ -50,6 +50,9 @@ abstract class TaskStatus implements Writable, Cloneable {
   private String stateString;
   private String taskTracker;
     
+  private boolean containsHash = false;
+  private String digest;
+    
   private long startTime; 
   private long finishTime; 
   private long outputSize;
@@ -108,6 +111,10 @@ abstract class TaskStatus implements Writable, Cloneable {
    */
   public void setNextRecordRange(SortedRanges.Range nextRecordRange) {
     this.nextRecordRange = nextRecordRange;
+  }
+    
+  public boolean containsHash() {
+    return containsHash;
   }
   
   /**
@@ -329,6 +336,17 @@ abstract class TaskStatus implements Writable, Cloneable {
     setPhase(phase);
     if (finishTime != 0) {
       this.finishTime = finishTime; 
+    }
+  }
+    
+  public String getDigest() {
+    return digest;
+  }
+    
+  public void setDigests(String digest) {
+    if(digest != null) {
+      containsHash = true;
+      this.digest = digest;
     }
   }
 

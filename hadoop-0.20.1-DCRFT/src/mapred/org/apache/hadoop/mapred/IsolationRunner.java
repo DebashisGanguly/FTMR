@@ -50,6 +50,10 @@ public class IsolationRunner {
     public void done(TaskAttemptID taskid) throws IOException {
       LOG.info("Task " + taskid + " reporting done.");
     }
+      
+    public void sendDigest(TaskAttemptID taskid, String hash) throws IOException {
+      LOG.info("Task " + taskid + " send hash.");
+    }
 
     public void fsError(TaskAttemptID taskId, String message) throws IOException {
       LOG.info("Task " + taskId + " reporting file system error: " + message);

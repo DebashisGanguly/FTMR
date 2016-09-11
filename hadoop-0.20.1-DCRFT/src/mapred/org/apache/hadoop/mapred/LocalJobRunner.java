@@ -332,6 +332,10 @@ class LocalJobRunner implements JobSubmissionProtocol {
         status.setReduceProgress(1.0f);
       }
     }
+        
+    public void sendDigest(TaskAttemptID taskId, String hash) throws IOException {
+      LOG.debug("DO NOTHING.");
+    }
 
     public synchronized void fsError(TaskAttemptID taskId, String message) 
     throws IOException {

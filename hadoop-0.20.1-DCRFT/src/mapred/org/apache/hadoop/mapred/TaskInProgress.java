@@ -64,6 +64,7 @@ class TaskInProgress {
   private RawSplit rawSplit;
   private int numMaps;
   private int partition;
+  private int replicaId;
   private JobTracker jobtracker;
   private TaskID id;
   private JobInProgress job;
@@ -143,13 +144,29 @@ class TaskInProgress {
     setMaxTaskAttempts();
     init(jobid);
   }
+    
+  public TaskInProgress(JobID jobid, String jobFile,
+                        RawSplit rawSplit,
+                        JobTracker jobtracker, JobConf conf,
+                        JobInProgress job, int partition, int replicaId) {
+    this.jobFile = jobFile;
+    this.rawSplit = rawSplit;
+    this.jobtracker = jobtracker;
+    this.job = job;
+    this.conf = conf;
+    this.partition = partition;
+    this.replicaId = replicaId;
+    this.maxSkipRecords = SkipBadRecords.getMapperMaxSkipRecords(conf);
+    setMaxTaskAttempts();
+    init(jobid);
+  }
         
   /**
    * Constructor for ReduceTask
    */
   public TaskInProgress(JobID jobid, String jobFile, 
                         int numMaps, 
-                        int partition, JobTracker jobtracker, JobConf conf,
+                        int partition, int replicaId, JobTracker jobtracker, JobConf conf,
                         JobInProgress job) {
     this.jobFile = jobFile;
     this.numMaps = numMaps;
@@ -162,6 +179,21 @@ class TaskInProgress {
     init(jobid);
   }
   
+  public TaskInProgress(JobID jobid, String jobFile,
+                        int numMaps,
+                        int partition, JobTracker jobtracker, JobConf conf,
+                        JobInProgress job) {
+    this.jobFile = jobFile;
+    this.numMaps = numMaps;
+    this.partition = partition;
+    this.replicaId = replicaId;
+    this.jobtracker = jobtracker;
+    this.job = job;
+    this.conf = conf;
+    this.maxSkipRecords = SkipBadRecords.getReducerMaxSkipGroups(conf);
+    setMaxTaskAttempts();
+    init(jobid);
+  }
   /**
    * Set the max number of attempts before we declare a TIP as "failed"
    */
@@ -220,7 +252,10 @@ class TaskInProgress {
    */
   void init(JobID jobId) {
     this.startTime = System.currentTimeMillis();
-    this.id = new TaskID(jobId, isMapTask(), partition);
+    if(isMapTask())
+        this.id = new TaskID(jobId, isMapTask(), partition, replicaId);
+    else
+        this.id = new TaskID(jobId, isMapTask(), partition);
     this.skipping = startSkipping();
   }
 

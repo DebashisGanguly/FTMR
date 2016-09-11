@@ -167,6 +167,10 @@ public class TaskTracker
   volatile boolean shuttingDown = false;
     
   Map<TaskAttemptID, TaskInProgress> tasks = new HashMap<TaskAttemptID, TaskInProgress>();
+  
+  // Map for taskId -> digest
+  private Map<TaskAttemptID, String> digestCollection = new HashMap<TaskAttemptID, String>();
+                 
   /**
    * Map from taskId -> TaskInProgress.
    */
@@ -2027,6 +2031,15 @@ public class TaskTracker
         }
       } else {
         this.taskStatus.setRunState(TaskStatus.State.SUCCEEDED);
+        
+        //set digest of succeeded task in task status
+        synchronized (digestCollection) {
+            String digest = digestCollection.remove(this.taskStatus.getTaskID());
+              
+            if(digest != null) {
+                this.taskStatus.setDigests(digest);
+            }
+        }
       }
       this.taskStatus.setProgress(1.0f);
       this.taskStatus.setFinishTime(System.currentTimeMillis());
@@ -2317,6 +2330,21 @@ public class TaskTracker
       // Cleanup on the finished task
       cleanup(true);
     }
+      
+    public synchronized void kill() throws IOException {
+      if (taskStatus.getRunState() == TaskStatus.State.RUNNING ||
+          taskStatus.getRunState() == TaskStatus.State.COMMIT_PENDING ||
+          isCleaningup()) {
+          wasKilled = true;
+          // runner could be null if task-cleanup attempt is not localized yet
+          if (runner != null) {
+            runner.kill();
+          }
+       }
+          
+       removeFromMemoryManager(task.getTaskID());
+       releaseSlot();
+    }
 
     /**
      * Something went wrong and the task must be killed.
@@ -2569,6 +2597,21 @@ public class TaskTracker
     return commitResponses.contains(taskid); //don't remove it now
   }
   
+  /**
+  * Collects the digests
+  */
+  public void sendDigest(TaskAttemptID taskid, String digest)
+  throws IOException {
+    synchronized (digestCollection) {
+        /*if(jobClient.shouldTamperMapDigest(taskid) == 0)
+            digestCollection.put(taskid, digest);
+        else if(jobClient.shouldTamperMapDigest(taskid) == 1)
+            digestCollection.put(taskid, null);
+        else if(jobClient.shouldTamperMapDigest(taskid) == 2)*/
+            digestCollection.put(taskid, digest + "Error");
+    }
+  }
+                 
   /**
    * The task is done.
    */
