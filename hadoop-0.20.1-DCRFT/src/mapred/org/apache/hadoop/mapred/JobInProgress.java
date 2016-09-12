@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.IdentityHashMap;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -226,12 +227,60 @@ class JobInProgress {
     }
   }
     
+  private class VotingSystem {
+    private Map<TaskAttemptID, String> digestCollection = new HashMap<TaskAttemptID, String>();
+    private NatureOfFaults natureOfFaults;
+    private int numberOfFaults;
+        
+    public VotingSystem(NatureOfFaults natureOfFaults, int numberOfFaults) {
+        this.natureOfFaults = natureOfFaults;
+        this.numberOfFaults = numberOfFaults;
+    }
+        
+    public void addDigest(TaskAttemptID taskId, String digest) {
+        synchronized (digestCollection) {
+            digestCollection.put(taskId, digest);
+        }
+    }
+        
+    public boolean hasMajorityConsensus() {
+        return true;
+    }
+  }
+  
+  private class FaultInjector {
+    private NatureOfFaults natureOfFaults;
+    private int numberOfFaults;
+    private boolean injectFaults;
+        
+    public FaultInjector(NatureOfFaults natureOfFaults, int numberOfFaults, boolean injectFaults) {
+        this.natureOfFaults = natureOfFaults;
+        this.numberOfFaults = numberOfFaults;
+        this.injectFaults = injectFaults;
+    }
+        
+    public int shouldTamperMapDigest(TaskAttemptID taskId) {
+        if(injectFaults) {
+            if (natureOfFaults == NatureOfFaults.FAIL_STOP) {
+                return 1;
+            } else if (natureOfFaults == NatureOfFaults.SILENT_ERROR) {
+                return 2;
+            }
+        }
+        
+        return 0;
+    }
+  }
+    
   private int numberOfFaults;
   private NatureOfFaults natureOfFaults;
   private int numberOfReplicas;
   private int replicatedNumMapTasks;
   private boolean injectFaults;
-  
+    
+  private VotingSystem votingSystem;
+  private FaultInjector faultInjector;
+    
   /**
    * Create an almost empty JobInProgress, which can be used only for tests
    */
@@ -251,6 +300,9 @@ class JobInProgress {
     this.numberOfReplicas = this.natureOfFaults == NatureOfFaults.FAIL_STOP ? numberOfFaults + 1 : 2 * numberOfFaults +1;
     this.replicatedNumMapTasks = this.numberOfReplicas * numMapTasks;
     this.injectFaults = conf.getMapFaultInjection();
+      
+    this.votingSystem = new VotingSystem(natureOfFaults, numberOfFaults);
+    this.faultInjector = new FaultInjector(natureOfFaults, numberOfFaults, injectFaults);
   }
   
   /**
@@ -304,6 +356,9 @@ class JobInProgress {
     this.numberOfReplicas = this.natureOfFaults == NatureOfFaults.FAIL_STOP ? numberOfFaults + 1 : 2 * numberOfFaults +1;
     this.replicatedNumMapTasks = this.numberOfReplicas * numMapTasks;
     this.injectFaults = conf.getMapFaultInjection();
+      
+    this.votingSystem = new VotingSystem(natureOfFaults, numberOfFaults);
+    this.faultInjector = new FaultInjector(natureOfFaults, numberOfFaults, injectFaults);
       
     this.taskCompletionEvents = new ArrayList<TaskCompletionEvent>
        (replicatedNumMapTasks + numReduceTasks + 10);
@@ -368,6 +423,10 @@ class JobInProgress {
       }
     }
   }
+    
+  public int shouldTamperMapDigest(TaskAttemptID taskId) {
+    return faultInjector.shouldTamperMapDigest(taskId);
+  }
   
   private Map<Node, List<TaskInProgress>> createCache(
                          JobClient.RawSplit[] splits, int maxLevel) {
@@ -384,6 +443,24 @@ class JobInProgress {
         continue;
       }
 
+      if(splitLocations.length < numberOfReplicas) {
+        // in case there are fewer split locations than the number of replicas,
+        // copy the existing locations to the missing places
+        String [] sl = new String[numberOfReplicas];
+        for(int s = 0; s < numberOfReplicas; s++) {
+            sl[s] = splitLocations[s%splitLocations.length];
+        }
+        splitLocations = sl;
+      } else if (splitLocations.length > numberOfReplicas) {
+        // in case there are more split locations than the number of replicas,
+        // discard the excess locations
+        String [] sl = new String[numberOfReplicas];
+        for(int s = 0; s < numberOfReplicas; s++) {
+            sl[s] = splitLocations[s];
+        }
+        splitLocations = sl;
+      }
+        
       int replica = 0;
         
       for(String host: splitLocations) {

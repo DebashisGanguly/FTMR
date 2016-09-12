@@ -2621,7 +2621,12 @@ public class JobTracker implements MRConstants, InterTrackerProtocol,
   }
   
   public synchronized int shouldTamperMapDigest(TaskAttemptID taskId) {
-    return jip.shouldTamperMapDigest(taskId);
+    TaskInProgress tip = taskidToTIPMap.get(taskId);
+    if(tip != null) {
+      JobInProgress jip = tip.getJob();
+      return jip.shouldTamperMapDigest(taskId);
+    }
+    return 0;
   }
       
   /**
