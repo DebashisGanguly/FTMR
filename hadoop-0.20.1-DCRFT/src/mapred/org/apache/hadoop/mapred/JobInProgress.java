@@ -479,7 +479,7 @@ class JobInProgress {
             
           int idx = replica + (numberOfReplicas * i);
             
-          LOG.info("tip:" + maps[i].getTIPId() + " has split on node:" + node);
+          LOG.info("tip:" + maps[idx].getTIPId() + " has split on node:" + node);
             
           hostMaps.add(maps[idx]);
           node = node.getParent();
