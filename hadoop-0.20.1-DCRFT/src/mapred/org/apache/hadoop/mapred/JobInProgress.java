@@ -465,13 +465,11 @@ class JobInProgress {
         
       for(String host: splitLocations) {
         Node node = jobtracker.resolveAndAddToTopology(host);
-        LOG.info("tip:" + maps[i].getTIPId() + " has split on node:" + node);
         for (int j = 0; j < maxLevel; j++) {
           List<TaskInProgress> hostMaps = cache.get(node);
           if (hostMaps == null) {
             hostMaps = new ArrayList<TaskInProgress>();
             cache.put(node, hostMaps);
-            hostMaps.add(maps[i]);
           }
           //check whether the hostMaps already contains an entry for a TIP
           //This will be true for nodes that are racks and multiple nodes in
@@ -481,9 +479,9 @@ class JobInProgress {
             
           int idx = replica + (numberOfReplicas * i);
             
-          if (hostMaps.get(hostMaps.size() - 1) != maps[idx]) {
-            hostMaps.add(maps[idx]);
-          }
+          LOG.info("tip:" + maps[i].getTIPId() + " has split on node:" + node);
+            
+          hostMaps.add(maps[idx]);
           node = node.getParent();
         }
           
