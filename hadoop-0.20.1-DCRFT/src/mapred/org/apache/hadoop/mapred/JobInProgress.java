@@ -263,7 +263,7 @@ class JobInProgress {
     this.conf = conf;
     this.jobId = jobid;
     this.numMapTasks = conf.getNumMapTasks();
-    this.numReduceTasks = this.numMapTasks; //create same number reduces as maps
+    this.numReduceTasks = conf.getNumReduceTasks();
     this.maxLevel = NetworkTopology.DEFAULT_HOST_LEVEL;
     this.anyCacheLevel = this.maxLevel+1;
     this.jobtracker = null;
@@ -322,7 +322,7 @@ class JobInProgress {
     }
 
     this.numMapTasks = conf.getNumMapTasks();
-    this.numReduceTasks = this.numMapTasks; //create same number reduces as maps
+    this.numReduceTasks = conf.getNumReduceTasks();
       
     //set variables related to fault-tolerance scheme
     this.numberOfFaults = conf.getNumMapFaults();
