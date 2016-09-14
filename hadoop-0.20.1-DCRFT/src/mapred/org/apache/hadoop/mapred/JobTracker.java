@@ -1436,7 +1436,7 @@ public class JobTracker implements MRConstants, InterTrackerProtocol,
   
   // All the known TaskInProgress items, mapped to by taskids (taskid->TIP)
   Map<TaskAttemptID, TaskInProgress> taskidToTIPMap =
-    new TreeMap<TaskAttemptID, TaskInProgress>();
+    new HashMap<TaskAttemptID, TaskInProgress>();
 
   // (taskid --> trackerID) 
   TreeMap<TaskAttemptID, String> taskidToTrackerMap = new TreeMap<TaskAttemptID, String>();
@@ -2624,7 +2624,7 @@ public class JobTracker implements MRConstants, InterTrackerProtocol,
     TaskInProgress tip = taskidToTIPMap.get(taskId);
     if(tip != null) {
       JobInProgress jip = tip.getJob();
-      return jip.shouldTamperMapDigest(taskId);
+      return jip.shouldTamperMapDigest(tip);
     }
     return 0;
   }

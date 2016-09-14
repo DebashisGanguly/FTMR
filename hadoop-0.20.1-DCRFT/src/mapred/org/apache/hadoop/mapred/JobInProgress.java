@@ -228,13 +228,10 @@ class JobInProgress {
   }
     
   private class VotingSystem {
-    private Map<TaskAttemptID, String> digestCollection = new HashMap<TaskAttemptID, String>();
-    private NatureOfFaults natureOfFaults;
-    private int numberOfFaults;
-        
-    public VotingSystem(NatureOfFaults natureOfFaults, int numberOfFaults) {
-        this.natureOfFaults = natureOfFaults;
-        this.numberOfFaults = numberOfFaults;
+    private Map<TaskAttemptID, String> digestCollection;
+      
+    public VotingSystem() {
+        this.digestCollection = new HashMap<TaskAttemptID, String>();
     }
         
     public void addDigest(TaskAttemptID taskId, String digest) {
@@ -244,31 +241,10 @@ class JobInProgress {
     }
         
     public boolean hasMajorityConsensus() {
-        return true;
-    }
-  }
-  
-  private class FaultInjector {
-    private NatureOfFaults natureOfFaults;
-    private int numberOfFaults;
-    private boolean injectFaults;
-        
-    public FaultInjector(NatureOfFaults natureOfFaults, int numberOfFaults, boolean injectFaults) {
-        this.natureOfFaults = natureOfFaults;
-        this.numberOfFaults = numberOfFaults;
-        this.injectFaults = injectFaults;
-    }
-        
-    public int shouldTamperMapDigest(TaskAttemptID taskId) {
-        if(injectFaults) {
-            if (natureOfFaults == NatureOfFaults.FAIL_STOP) {
-                return 1;
-            } else if (natureOfFaults == NatureOfFaults.SILENT_ERROR) {
-                return 2;
-            }
+        if(finishedMapTasks >= completedMapsForReduceSlowstart) {
+           return true;
         }
-        
-        return 0;
+        return false;
     }
   }
     
@@ -279,7 +255,6 @@ class JobInProgress {
   private boolean injectFaults;
     
   private VotingSystem votingSystem;
-  private FaultInjector faultInjector;
     
   /**
    * Create an almost empty JobInProgress, which can be used only for tests
@@ -288,7 +263,7 @@ class JobInProgress {
     this.conf = conf;
     this.jobId = jobid;
     this.numMapTasks = conf.getNumMapTasks();
-    this.numReduceTasks = conf.getNumReduceTasks();
+    this.numReduceTasks = this.numMapTasks; //create same number reduces as maps
     this.maxLevel = NetworkTopology.DEFAULT_HOST_LEVEL;
     this.anyCacheLevel = this.maxLevel+1;
     this.jobtracker = null;
@@ -301,8 +276,7 @@ class JobInProgress {
     this.replicatedNumMapTasks = this.numberOfReplicas * numMapTasks;
     this.injectFaults = conf.getMapFaultInjection();
       
-    this.votingSystem = new VotingSystem(natureOfFaults, numberOfFaults);
-    this.faultInjector = new FaultInjector(natureOfFaults, numberOfFaults, injectFaults);
+    this.votingSystem = new VotingSystem();
   }
   
   /**
@@ -348,7 +322,7 @@ class JobInProgress {
     }
 
     this.numMapTasks = conf.getNumMapTasks();
-    this.numReduceTasks = conf.getNumReduceTasks();
+    this.numReduceTasks = this.numMapTasks; //create same number reduces as maps
       
     //set variables related to fault-tolerance scheme
     this.numberOfFaults = conf.getNumMapFaults();
@@ -357,8 +331,7 @@ class JobInProgress {
     this.replicatedNumMapTasks = this.numberOfReplicas * numMapTasks;
     this.injectFaults = conf.getMapFaultInjection();
       
-    this.votingSystem = new VotingSystem(natureOfFaults, numberOfFaults);
-    this.faultInjector = new FaultInjector(natureOfFaults, numberOfFaults, injectFaults);
+    this.votingSystem = new VotingSystem();
       
     this.taskCompletionEvents = new ArrayList<TaskCompletionEvent>
        (replicatedNumMapTasks + numReduceTasks + 10);
@@ -424,8 +397,31 @@ class JobInProgress {
     }
   }
     
-  public int shouldTamperMapDigest(TaskAttemptID taskId) {
-    return faultInjector.shouldTamperMapDigest(taskId);
+  public int shouldTamperMapDigest(TaskInProgress tip) {
+    if(injectFaults) {
+      int partitionId = tip.getIdWithinJob();
+      int replicaId = tip.getTIPId().getReplicaId();
+        
+      ArrayList<Integer> faultyReplicas = new ArrayList<Integer>(numberOfFaults);
+      for(int i = 0; i < numberOfFaults; i++) {
+        faultyReplicas.add((partitionId + i) % numberOfReplicas);
+      }
+        
+      if (faultyReplicas.contains(replicaId)) {
+        if (natureOfFaults == NatureOfFaults.FAIL_STOP) {
+            return 1;
+        } else if (natureOfFaults == NatureOfFaults.SILENT_ERROR) {
+            return 2;
+        }
+      } else {
+        return 0;
+      }
+    }
+    return 0;
+  }
+    
+  private int getReplicatedMapIndex(TaskInProgress tip) {
+    return (tip.getIdWithinJob() * numberOfReplicas) + tip.getTIPId().getReplicaId();
   }
   
   private Map<Node, List<TaskInProgress>> createCache(
@@ -1298,7 +1294,7 @@ class JobInProgress {
   }
   
   public synchronized boolean scheduleReduces() {
-    return finishedMapTasks >= completedMapsForReduceSlowstart;
+    return votingSystem.hasMajorityConsensus();
   }
   
   /**
@@ -1437,7 +1433,7 @@ class JobInProgress {
       Node tracker = jobtracker.getNode(tts.getHost());
       int level = this.maxLevel;
       // find the right level across split locations
-      for (String local : maps[tip.getIdWithinJob()].getSplitLocations()) {
+      for (String local : maps[getReplicatedMapIndex(tip)].getSplitLocations()) {
         Node datanode = jobtracker.getNode(local);
         int newLevel = this.maxLevel;
         if (tracker != null && datanode != null) {
@@ -1886,7 +1882,7 @@ class JobInProgress {
               nonRunningMapCache.remove(key);
             }
 
-            return tip.getIdWithinJob();
+            return getReplicatedMapIndex(tip);
           }
         }
         key = key.getParent();
@@ -1930,7 +1926,7 @@ class JobInProgress {
             nonRunningMapCache.remove(parent);
           }
           LOG.info("Choosing a non-local task " + tip.getTIPId());
-          return tip.getIdWithinJob();
+          return getReplicatedMapIndex(tip);
         }
       }
     }
@@ -1942,7 +1938,7 @@ class JobInProgress {
       scheduleMap(tip);
 
       LOG.info("Choosing a non-local task " + tip.getTIPId());
-      return tip.getIdWithinJob();
+      return getReplicatedMapIndex(tip);
     }
 
     //
@@ -1964,7 +1960,7 @@ class JobInProgress {
               if (cacheForLevel.size() == 0) {
                 runningMapCache.remove(key);
               }
-              return tip.getIdWithinJob();
+              return getReplicatedMapIndex(tip);
             }
           }
           key = key.getParent();
@@ -1990,7 +1986,7 @@ class JobInProgress {
             }
             LOG.info("Choosing a non-local task " + tip.getTIPId() 
                      + " for speculation");
-            return tip.getIdWithinJob();
+            return getReplicatedMapIndex(tip);
           }
         }
       }
@@ -2001,7 +1997,7 @@ class JobInProgress {
       if (tip != null) {
         LOG.info("Choosing a non-local task " + tip.getTIPId() 
                  + " for speculation");
-        return tip.getIdWithinJob();
+        return getReplicatedMapIndex(tip);
       }
     }
     
