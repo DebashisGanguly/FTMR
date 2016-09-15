@@ -782,8 +782,9 @@ public class JobClient extends Configured implements MRConstants, Tool  {
     }
     job.set("mapred.job.split.file", submitSplitFile.toString());
     job.setNumMapTasks(maps);
-        
-    // Write job file to JobTracker's fs        
+    job.setNumReduceTasks(maps);
+                                            
+    // Write job file to JobTracker's fs
     FSDataOutputStream out = 
       FileSystem.create(fs, submitJobFile,
                         new FsPermission(JOB_FILE_PERMISSION));
