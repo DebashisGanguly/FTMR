@@ -167,9 +167,6 @@ public class TaskTracker
   volatile boolean shuttingDown = false;
     
   Map<TaskAttemptID, TaskInProgress> tasks = new HashMap<TaskAttemptID, TaskInProgress>();
-  
-  // Map for taskId -> digest
-  private Map<TaskAttemptID, String> digestCollection = new HashMap<TaskAttemptID, String>();
                  
   /**
    * Map from taskId -> TaskInProgress.
@@ -2031,15 +2028,6 @@ public class TaskTracker
         }
       } else {
         this.taskStatus.setRunState(TaskStatus.State.SUCCEEDED);
-        
-        //set digest of succeeded task in task status
-        synchronized (digestCollection) {
-            String digest = digestCollection.remove(this.taskStatus.getTaskID());
-              
-            if(digest != null) {
-                this.taskStatus.setDigest(digest);
-            }
-        }
       }
       this.taskStatus.setProgress(1.0f);
       this.taskStatus.setFinishTime(System.currentTimeMillis());
@@ -2602,14 +2590,12 @@ public class TaskTracker
   */
   public void sendDigest(TaskAttemptID taskid, String digest)
   throws IOException {
-    synchronized (digestCollection) {
-        if(jobClient.shouldTamperMapDigest(taskid) == 0)
-            digestCollection.put(taskid, digest);
-        else if(jobClient.shouldTamperMapDigest(taskid) == 1)
-            digestCollection.put(taskid, null);
-        else if(jobClient.shouldTamperMapDigest(taskid) == 2)
-            digestCollection.put(taskid, digest + "Error");
-    }
+    if(jobClient.shouldTamperMapDigest(taskid) == 0)
+        jobClient.sendDigest(taskid, digest);
+    else if(jobClient.shouldTamperMapDigest(taskid) == 1)
+        jobClient.sendDigest(taskid, null);
+    else if(jobClient.shouldTamperMapDigest(taskid) == 2)
+        jobClient.sendDigest(taskid, digest + "Error");
   }
                  
   /**

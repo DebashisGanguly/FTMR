@@ -228,15 +228,15 @@ class JobInProgress {
   }
     
   private class VotingSystem {
-    private Map<TaskAttemptID, String> digestCollection;
+    private String[][] digestCollection;
       
     public VotingSystem() {
-        this.digestCollection = new HashMap<TaskAttemptID, String>();
+        this.digestCollection = new String[numMapTasks][numberOfReplicas];
     }
         
-    public void addDigest(TaskAttemptID taskId, String digest) {
+    public void addDigest(TaskInProgress tip, String digest) {
         synchronized (digestCollection) {
-            digestCollection.put(taskId, digest);
+            digestCollection[tip.getIdWithinJob()][tip.getTIPId().getReplicaId()] = digest;
         }
     }
         
@@ -418,6 +418,10 @@ class JobInProgress {
       }
     }
     return 0;
+  }
+    
+  public int sendDigest(TaskInProgress tip, String digest) {
+      votingSystem.addDigest(tip, digest);
   }
     
   private int getReplicatedMapIndex(TaskInProgress tip) {
@@ -1105,8 +1109,12 @@ class JobInProgress {
       TaskInProgress tip = null;
       if (isMapSlot) {
         if (!mapCleanupTasks.isEmpty()) {
-          taskid = mapCleanupTasks.remove(0);
-          tip = maps[taskid.getTaskID().getId()];
+          taskid = mapCleanupTasks.remove(0)
+            
+          int partitionId = taskid.getTaskID().getId();
+          int replicaId  = taskid.getTaskID().getReplicaNumber();
+          int idx = taskid.getTaskID().getId() * numberOfReplicas + taskid.getTaskID().getReplicaNumber();
+          tip = maps[idx];
         }
       } else {
         if (!reduceCleanupTasks.isEmpty()) {

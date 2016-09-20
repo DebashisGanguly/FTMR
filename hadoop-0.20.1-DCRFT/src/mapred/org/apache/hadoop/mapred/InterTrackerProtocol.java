@@ -146,4 +146,11 @@ interface InterTrackerProtocol extends VersionedProtocol {
    * @throws IOException
    */
   public int shouldTamperMapDigest(TaskAttemptID taskid)  throws IOException;
+    
+  /**
+   * Send digest to the job tracker from task tracer for a given map attempt
+   * @param task attempt id
+   * @param digest of the output
+   */
+  public void sendDigest(TaskAttemptID taskId, String digest);
 }

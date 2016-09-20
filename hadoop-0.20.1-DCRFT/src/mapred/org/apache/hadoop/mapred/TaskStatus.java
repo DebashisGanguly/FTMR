@@ -49,10 +49,7 @@ abstract class TaskStatus implements Writable, Cloneable {
   private String diagnosticInfo;
   private String stateString;
   private String taskTracker;
-    
-  private boolean containsHash = false;
-  private String digest;
-    
+
   private long startTime; 
   private long finishTime; 
   private long outputSize;
@@ -113,10 +110,6 @@ abstract class TaskStatus implements Writable, Cloneable {
     this.nextRecordRange = nextRecordRange;
   }
     
-  public boolean containsHash() {
-    return containsHash;
-  }
-  
   /**
    * Get task finish time. if shuffleFinishTime and sortFinishTime 
    * are not set before, these are set to finishTime. It takes care of 
@@ -338,18 +331,7 @@ abstract class TaskStatus implements Writable, Cloneable {
       this.finishTime = finishTime; 
     }
   }
-    
-  public String getDigest() {
-    return digest;
-  }
-    
-  public void setDigest(String digest) {
-    if(digest != null) {
-      containsHash = true;
-      this.digest = digest;
-    }
-  }
-
+ 
   /**
    * Clear out transient information after sending out a status-update
    * from either the {@link Task} to the {@link TaskTracker} or from the

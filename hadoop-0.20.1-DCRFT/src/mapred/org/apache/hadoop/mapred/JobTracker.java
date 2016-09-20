@@ -2628,6 +2628,14 @@ public class JobTracker implements MRConstants, InterTrackerProtocol,
     }
     return 0;
   }
+       
+  public synchronized void sendDigest(TaskAttemptID taskId, String digest) {
+      TaskInProgress tip = taskidToTIPMap.get(taskId);
+      if(tip != null) {
+          JobInProgress jip = tip.getJob();
+          jip.sendDigest(tip, digest);
+      }
+  }
       
   /**
    * Calculates next heartbeat interval using cluster size.
