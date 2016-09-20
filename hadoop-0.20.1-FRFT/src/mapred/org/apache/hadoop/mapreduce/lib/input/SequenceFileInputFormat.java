@@ -36,33 +36,34 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 /** An {@link InputFormat} for {@link SequenceFile}s. */
 public class SequenceFileInputFormat<K, V> extends FileInputFormat<K, V> {
 
-	@Override
-	public RecordReader<K, V> createRecordReader(InputSplit split,
-			TaskAttemptContext context
-			) throws IOException {
-		return new SequenceFileRecordReader<K,V>();
-	}
+  @Override
+  public RecordReader<K, V> createRecordReader(InputSplit split,
+                                               TaskAttemptContext context
+                                               ) throws IOException {
+    return new SequenceFileRecordReader<K,V>();
+  }
 
-	@Override
-	protected long getFormatMinSplitSize() {
-		return SequenceFile.SYNC_INTERVAL;
-	}
+  @Override
+  protected long getFormatMinSplitSize() {
+    return SequenceFile.SYNC_INTERVAL;
+  }
 
-	@Override
-	protected List<FileStatus> listStatus(JobContext job)throws IOException {
+  @Override
+  protected List<FileStatus> listStatus(JobContext job
+                                        )throws IOException {
 
-		List<FileStatus> files = super.listStatus(job);
-		int len = files.size();
-		for(int i=0; i < len; ++i) {
-			FileStatus file = files.get(i);
-			if (file.isDir()) {     // it's a MapFile
-				Path p = file.getPath();
-				FileSystem fs = p.getFileSystem(job.getConfiguration());
-				// use the data file
-				files.set(i, fs.getFileStatus(new Path(p, MapFile.DATA_FILE_NAME)));
-			}
-		}
-		return files;
-	}
+    List<FileStatus> files = super.listStatus(job);
+    int len = files.size();
+    for(int i=0; i < len; ++i) {
+      FileStatus file = files.get(i);
+      if (file.isDir()) {     // it's a MapFile
+        Path p = file.getPath();
+        FileSystem fs = p.getFileSystem(job.getConfiguration());
+        // use the data file
+        files.set(i, fs.getFileStatus(new Path(p, MapFile.DATA_FILE_NAME)));
+      }
+    }
+    return files;
+  }
 }
 

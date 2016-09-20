@@ -4,9 +4,8 @@
     <property name="version" value="0.1"/>
     <property name="final.name" value="${name}-${version}"/>
     <property name="year" value="2008"/>	
-    <property name="hadoop.dir" value="${basedir}/../../../"/>
+	<property name="hadoop.dir" value="${basedir}/../../../"/>
     <property name="lib.dir" value="${hadoop.dir}/lib"/>
-    <property name="buildjar.dir" value="${hadoop.dir}/build"/>
     <property name="src.dir" value="${basedir}/src"/>
     <property name="conf.dir" value="${basedir}/conf"/>
     <property name="docs.dir" value="${basedir}/docs"/>
@@ -26,14 +25,14 @@
     </target>
   
     <target name="compile" depends="init" description="Compilation target">
-        <javac srcdir="src/java/" destdir="${build.dir}" debug="on">
+        <javac srcdir="src/java/" destdir="${build.dir}">
         	<classpath refid="classpath" />
         </javac>
     </target>
 	
 
-    <target name="compress" depends="compile" description="Compression target">
-        <jar jarfile="${build.dir}/gridmix.jar" basedir="${build.dir}" includes="**/*.class" />
+	 <target name="compress" depends="compile" description="Compression target">
+  	      <jar jarfile="${build.dir}/gridmix.jar" basedir="${build.dir}" includes="**/*.class" />
                    
 
         <copy todir="." includeEmptyDirs="false">
@@ -56,19 +55,13 @@
     <!-- the normal classpath -->
     <path id="classpath">
 	    <pathelement location="${build.classes}"/>
-	    <fileset dir="${buildjar.dir}">
-	       <include name="*.jar" />
-	    </fileset>
 	    <fileset dir="${lib.dir}">
 	       <include name="*.jar" />
 	       <exclude name="**/excluded/" />
 	    </fileset>
 	    <fileset dir="${hadoop.dir}">
 	       <include name="**.jar" />
-               <include name="contrib/streaming/*.jar" />
-	    </fileset>
-	    <fileset dir="${build.dir}">
-	       <include name="hadoop*.jar" />
+           <include name="contrib/streaming/*.jar" />
 	    </fileset>
     </path>
 </project>

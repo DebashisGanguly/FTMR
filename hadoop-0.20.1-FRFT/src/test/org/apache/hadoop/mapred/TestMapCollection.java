@@ -18,20 +18,20 @@
 
 package org.apache.hadoop.mapred;
 
+import junit.framework.TestCase;
+
+import java.io.IOException;
 import java.io.DataInput;
 import java.io.DataOutput;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 
 import junit.framework.TestCase;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.NullWritable;
-import org.apache.hadoop.io.WritableComparable;
-import org.apache.hadoop.io.WritableComparator;
+import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapred.lib.NullOutputFormat;
 
 public class TestMapCollection extends TestCase {
@@ -206,11 +206,6 @@ public class TestMapCollection extends TestCase {
     public void readFields(DataInput in) throws IOException { }
     public long getLength() { return 0L; }
     public String[] getLocations() { return new String[0]; }
-	@Override
-	public String getName() throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
-		return null;
-	}
   }
 
   public static class FakeIF

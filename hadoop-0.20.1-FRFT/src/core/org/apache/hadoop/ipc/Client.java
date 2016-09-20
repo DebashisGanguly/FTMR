@@ -59,7 +59,8 @@ import org.apache.hadoop.util.ReflectionUtils;
  */
 public class Client {
   
-  public static final Log LOG = LogFactory.getLog(Client.class);
+  public static final Log LOG =
+    LogFactory.getLog(Client.class);
   private Hashtable<ConnectionId, Connection> connections =
     new Hashtable<ConnectionId, Connection>();
 
@@ -625,7 +626,8 @@ public class Client {
   public Client(Class<? extends Writable> valueClass, Configuration conf, 
       SocketFactory factory) {
     this.valueClass = valueClass;
-    this.maxIdleTime = conf.getInt("ipc.client.connection.maxidletime", 10000); //10s
+    this.maxIdleTime = 
+      conf.getInt("ipc.client.connection.maxidletime", 10000); //10s
     this.maxRetries = conf.getInt("ipc.client.connect.max.retries", 10);
     this.tcpNoDelay = conf.getBoolean("ipc.client.tcpnodelay", false);
     this.pingInterval = getPingInterval(conf);

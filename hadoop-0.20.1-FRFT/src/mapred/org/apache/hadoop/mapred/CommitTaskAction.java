@@ -28,29 +28,27 @@ import java.io.IOException;
  * 
  */
 class CommitTaskAction extends TaskTrackerAction {
-	private TaskAttemptID taskId;
+  private TaskAttemptID taskId;
+  
+  public CommitTaskAction() {
+    super(ActionType.COMMIT_TASK);
+    taskId = new TaskAttemptID();
+  }
+  
+  public CommitTaskAction(TaskAttemptID taskId) {
+    super(ActionType.COMMIT_TASK);
+    this.taskId = taskId;
+  }
+  
+  public TaskAttemptID getTaskID() {
+    return taskId;
+  }
+  
+  public void write(DataOutput out) throws IOException {
+    taskId.write(out);
+  }
 
-	public CommitTaskAction() {
-		super(ActionType.COMMIT_TASK);
-		taskId = new TaskAttemptID();
-	}
-
-	public CommitTaskAction(TaskAttemptID taskId) {
-		super(ActionType.COMMIT_TASK);
-		this.taskId = taskId;
-	}
-
-	public TaskAttemptID getTaskID() {
-		return taskId;
-	}
-
-	public void write(DataOutput out) throws IOException {
-		out.writeUTF(taskId.toString());
-		//		taskId.write(out);
-	}
-
-	public void readFields(DataInput in) throws IOException {
-		taskId = TaskAttemptID.forName(in.readUTF());
-		//		taskId.readFields(in);
-	}
+  public void readFields(DataInput in) throws IOException {
+    taskId.readFields(in);
+  }
 }

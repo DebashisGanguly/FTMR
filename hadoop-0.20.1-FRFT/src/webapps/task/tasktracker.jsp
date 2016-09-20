@@ -29,7 +29,8 @@
 <center>
 <table border=2 cellpadding="5" cellspacing="2">
 <tr><td align="center">Task Attempts</td><td>Status</td>
-    <td>Progress</td><td>Errors</td><td>TaskTracker</td></tr>
+    <td>Progress</td><td>Errors</td></tr>
+
   <%
      Iterator itr = tracker.getRunningTaskStatuses().iterator();
      while (itr.hasNext()) {
@@ -39,7 +40,6 @@
        out.print("</td><td>" + 
                  StringUtils.formatPercent(status.getProgress(), 2));
        out.print("</td><td><pre>" + status.getDiagnosticInfo() + "</pre></td>");
-       out.print("<td><pre>" + status.getTaskTracker() + "</pre></td>");
        out.print("</tr>\n");
      }
   %>

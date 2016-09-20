@@ -30,15 +30,12 @@ package org.apache.hadoop.mapred;
 @Deprecated
 public abstract class ID extends org.apache.hadoop.mapreduce.ID {
 
-	/** constructs an ID object from the given int */
-	public ID(int id) {
-		super(id);
-	}
+  /** constructs an ID object from the given int */
+  public ID(int id) {
+    super(id);
+  }
 
-	protected ID() {
-	}
+  protected ID() {
+  }
 
-	public boolean equalsWithReplica(Object o) {
-		return true;
-	}
 }

@@ -19,11 +19,7 @@
 package org.apache.hadoop.thriftfs;
 
 import junit.framework.TestCase;
-import org.apache.hadoop.hdfs.DistributedFileSystem;
-import org.apache.hadoop.hdfs.MiniDFSCluster;
-
-import javax.security.auth.login.Configuration;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * This class is supposed to test ThriftHadoopFileSystem but has a long long

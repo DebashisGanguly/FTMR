@@ -25,38 +25,38 @@ import org.apache.hadoop.util.Progressable;
  */
 @Deprecated
 public class TaskAttemptContext 
-extends org.apache.hadoop.mapreduce.TaskAttemptContext {
-	private Progressable progress;
+       extends org.apache.hadoop.mapreduce.TaskAttemptContext {
+  private Progressable progress;
 
-	TaskAttemptContext(JobConf conf, TaskAttemptID taskid) {
-		this(conf, taskid, Reporter.NULL);
-	}
+  TaskAttemptContext(JobConf conf, TaskAttemptID taskid) {
+    this(conf, taskid, Reporter.NULL);
+  }
+  
+  TaskAttemptContext(JobConf conf, TaskAttemptID taskid,
+                     Progressable progress) {
+    super(conf, taskid);
+    this.progress = progress;
+  }
+  
+  /**
+   * Get the taskAttemptID.
+   *  
+   * @return TaskAttemptID
+   */
+  public TaskAttemptID getTaskAttemptID() {
+    return (TaskAttemptID) super.getTaskAttemptID();
+  }
+  
+  public Progressable getProgressible() {
+    return progress;
+  }
+  
+  public JobConf getJobConf() {
+    return (JobConf) getConfiguration();
+  }
 
-	TaskAttemptContext(JobConf conf, TaskAttemptID taskid, Progressable progress) 
-	{
-		super(conf, taskid);
-		this.progress = progress;
-	}
-
-	/**
-	 * Get the taskAttemptID.
-	 *  
-	 * @return TaskAttemptID
-	 */
-	public TaskAttemptID getTaskAttemptID() {
-		return (TaskAttemptID) super.getTaskAttemptID();
-	}
-
-	public Progressable getProgressible() {
-		return progress;
-	}
-
-	public JobConf getJobConf() {
-		return (JobConf) getConfiguration();
-	}
-
-	@Override
-	public void progress() {
-		progress.progress();
-	}
+  @Override
+  public void progress() {
+    progress.progress();
+  }
 }

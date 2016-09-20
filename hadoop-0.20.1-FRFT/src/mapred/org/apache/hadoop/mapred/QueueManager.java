@@ -54,10 +54,8 @@ class QueueManager {
                                                         = "mapred.queue.";
   // Configured queues
   private Set<String> queueNames;
-  
   // Map of a queue and ACL property name with an ACL
   private HashMap<String, AccessControlList> aclsMap;
-  
   // Map of a queue name to any generic object that represents 
   // scheduler information 
   private HashMap<String, Object> schedulerInfoObjects;
@@ -275,9 +273,7 @@ class QueueManager {
   
   synchronized JobQueueInfo[] getJobQueueInfos() {
     ArrayList<JobQueueInfo> queueInfoList = new ArrayList<JobQueueInfo>();
-    
-    for(String queue : queueNames)
-    {
+    for(String queue : queueNames) {
       Object schedulerInfo = schedulerInfoObjects.get(queue);
       if(schedulerInfo != null) {
         queueInfoList.add(new JobQueueInfo(queue,schedulerInfo.toString()));

@@ -18,26 +18,40 @@
 
 package org.apache.hadoop.mapred;
 
+
 class MapTaskStatus extends TaskStatus {
-    public MapTaskStatus() {}
 
-    public MapTaskStatus(TaskAttemptID taskid, 
-            float progress,
-            State runState, 
-            String diagnosticInfo, 
-            String stateString,
-            String taskTracker, 
-            Phase phase, 
-            Counters counters) {
-        super(taskid, progress, runState, diagnosticInfo, stateString, taskTracker, phase, counters);
-    }
+  public MapTaskStatus() {}
 
-    @Override
-    public boolean getIsMap() {
-        return true;
-    }
+  public MapTaskStatus(TaskAttemptID taskid, float progress,
+          State runState, String diagnosticInfo, String stateString,
+          String taskTracker, Phase phase, Counters counters) {
+    super(taskid, progress, runState, diagnosticInfo, stateString,
+          taskTracker, phase, counters);
+  }
 
-    public Object clone() {
-        return (MapTaskStatus)super.clone();
-    }
+  @Override
+  public boolean getIsMap() {
+    return true;
+  }
+
+  @Override
+  public long getShuffleFinishTime() {
+    throw new UnsupportedOperationException("getShuffleFinishTime() not supported for MapTask");
+  }
+
+  @Override
+  void setShuffleFinishTime(long shuffleFinishTime) {
+    throw new UnsupportedOperationException("setShuffleFinishTime() not supported for MapTask");
+  }
+
+  @Override
+  public long getSortFinishTime() {
+    throw new UnsupportedOperationException("getSortFinishTime() not supported for MapTask");
+  }
+
+  @Override
+  void setSortFinishTime(long sortFinishTime) {
+    throw new UnsupportedOperationException("setSortFinishTime() not supported for MapTask");
+  }
 }

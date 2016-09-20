@@ -27,6 +27,7 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.mapred.JobInProgress.KillInterruptedException;
 import org.apache.hadoop.mapred.JobStatusChangeEvent.EventType;
 
 public class TestParallelInitialization extends TestCase {
@@ -76,7 +77,6 @@ public class TestParallelInitialization extends TestCase {
     
     int maps = 0;
     int reduces = 0;
-    int numReplicas = 3;
     int maxMapTasksPerTracker = 2;
     int maxReduceTasksPerTracker = 2;
     List<JobInProgressListener> listeners =

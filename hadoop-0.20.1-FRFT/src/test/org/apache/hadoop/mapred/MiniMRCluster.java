@@ -521,8 +521,8 @@ public class MiniMRCluster {
          getMapTaskCompletionEventsUpdates(int index, JobID jobId, int max) 
   throws IOException {
     String jtId = jobTracker.getJobTracker().getTrackerIdentifier();
-    TaskAttemptID dummy = new TaskAttemptID(jtId, jobId.getId(), false, 0, 0, 0);
-//    new TaskAttemptID(jtId, jobId.getId(), false, 0, 0);
+    TaskAttemptID dummy = 
+      new TaskAttemptID(jtId, jobId.getId(), false, 0, 0);
     return taskTrackerList.get(index).getTaskTracker()
                                      .getMapCompletionEvents(jobId, 0, max, 
                                                              dummy);

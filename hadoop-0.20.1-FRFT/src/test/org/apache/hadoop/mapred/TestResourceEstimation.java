@@ -18,7 +18,6 @@
 package org.apache.hadoop.mapred;
 
 import junit.framework.TestCase;
-
 import org.apache.hadoop.mapred.JobClient.RawSplit;
 
 public class TestResourceEstimation extends TestCase {
@@ -47,7 +46,7 @@ public class TestResourceEstimation extends TestCase {
       ts.setOutputSize(singleMapOutputSize);
       RawSplit split = new RawSplit();
       split.setDataLength(0);
-      TaskInProgress tip = new TaskInProgress(jid, "", split, null, jc, jip, 0, 0);
+      TaskInProgress tip = new TaskInProgress(jid, "", split, null, jc, jip, 0);
       re.updateWithCompletedTask(ts, tip);
     }
     assertEquals(2* singleMapOutputSize, re.getEstimatedMapOutputSize());
@@ -82,7 +81,7 @@ public class TestResourceEstimation extends TestCase {
       ts.setOutputSize(singleMapOutputSize);
       RawSplit split = new RawSplit();
       split.setDataLength(singleMapInputSize);
-      TaskInProgress tip = new TaskInProgress(jid, "", split, null, jc, jip, 0,0);
+      TaskInProgress tip = new TaskInProgress(jid, "", split, null, jc, jip, 0);
       re.updateWithCompletedTask(ts, tip);
     }
     
@@ -94,7 +93,7 @@ public class TestResourceEstimation extends TestCase {
     ts.setOutputSize(singleMapOutputSize);
     RawSplit split = new RawSplit();
     split.setDataLength(0);
-    TaskInProgress tip = new TaskInProgress(jid, "", split, null, jc, jip, 0, 0);
+    TaskInProgress tip = new TaskInProgress(jid, "", split, null, jc, jip, 0);
     re.updateWithCompletedTask(ts, tip);
     
     long expectedTotalMapOutSize = (singleMapOutputSize*11) * 

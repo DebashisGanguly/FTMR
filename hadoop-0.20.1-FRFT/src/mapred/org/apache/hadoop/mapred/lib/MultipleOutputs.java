@@ -17,27 +17,14 @@
  */
 package org.apache.hadoop.mapred.lib;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
-
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableComparable;
-import org.apache.hadoop.mapred.FileOutputFormat;
-import org.apache.hadoop.mapred.JobConf;
-import org.apache.hadoop.mapred.OutputCollector;
-import org.apache.hadoop.mapred.OutputFormat;
-import org.apache.hadoop.mapred.RecordWriter;
-import org.apache.hadoop.mapred.Reporter;
+import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.util.Progressable;
+
+import java.io.IOException;
+import java.util.*;
 
 /**
  * The MultipleOutputs class simplifies writting to additional outputs other
@@ -128,453 +115,449 @@ import org.apache.hadoop.util.Progressable;
  */
 public class MultipleOutputs {
 
-	private static final String NAMED_OUTPUTS = "mo.namedOutputs";
+  private static final String NAMED_OUTPUTS = "mo.namedOutputs";
 
-	private static final String MO_PREFIX = "mo.namedOutput.";
+  private static final String MO_PREFIX = "mo.namedOutput.";
 
-	private static final String FORMAT = ".format";
-	private static final String KEY = ".key";
-	private static final String VALUE = ".value";
-	private static final String MULTI = ".multi";
+  private static final String FORMAT = ".format";
+  private static final String KEY = ".key";
+  private static final String VALUE = ".value";
+  private static final String MULTI = ".multi";
 
-	private static final String COUNTERS_ENABLED = "mo.counters";
+  private static final String COUNTERS_ENABLED = "mo.counters";
 
-	/**
-	 * Counters group used by the counters of MultipleOutputs.
-	 */
-	private static final String COUNTERS_GROUP = MultipleOutputs.class.getName();
+  /**
+   * Counters group used by the counters of MultipleOutputs.
+   */
+  private static final String COUNTERS_GROUP = MultipleOutputs.class.getName();
 
-	/**
-	 * Checks if a named output is alreadyDefined or not.
-	 *
-	 * @param conf           job conf
-	 * @param namedOutput    named output names
-	 * @param alreadyDefined whether the existence/non-existence of
-	 *                       the named output is to be checked
-	 * @throws IllegalArgumentException if the output name is alreadyDefined or
-	 *                                  not depending on the value of the
-	 *                                  'alreadyDefined' parameter
-	 */
-	private static void checkNamedOutput(JobConf conf, String namedOutput,
-			boolean alreadyDefined) {
-		List<String> definedChannels = getNamedOutputsList(conf);
-		if (alreadyDefined && definedChannels.contains(namedOutput)) {
-			throw new IllegalArgumentException("Named output '" + namedOutput +
-			"' already alreadyDefined");
-		} else if (!alreadyDefined && !definedChannels.contains(namedOutput)) {
-			throw new IllegalArgumentException("Named output '" + namedOutput +
-			"' not defined");
-		}
-	}
+  /**
+   * Checks if a named output is alreadyDefined or not.
+   *
+   * @param conf           job conf
+   * @param namedOutput    named output names
+   * @param alreadyDefined whether the existence/non-existence of
+   *                       the named output is to be checked
+   * @throws IllegalArgumentException if the output name is alreadyDefined or
+   *                                  not depending on the value of the
+   *                                  'alreadyDefined' parameter
+   */
+  private static void checkNamedOutput(JobConf conf, String namedOutput,
+                                       boolean alreadyDefined) {
+    List<String> definedChannels = getNamedOutputsList(conf);
+    if (alreadyDefined && definedChannels.contains(namedOutput)) {
+      throw new IllegalArgumentException("Named output '" + namedOutput +
+        "' already alreadyDefined");
+    } else if (!alreadyDefined && !definedChannels.contains(namedOutput)) {
+      throw new IllegalArgumentException("Named output '" + namedOutput +
+        "' not defined");
+    }
+  }
 
-	/**
-	 * Checks if a named output name is valid token.
-	 *
-	 * @param namedOutput named output Name
-	 * @throws IllegalArgumentException if the output name is not valid.
-	 */
-	private static void checkTokenName(String namedOutput) {
-		if (namedOutput == null || namedOutput.length() == 0) {
-			throw new IllegalArgumentException(
-			"Name cannot be NULL or emtpy");
-		}
-		for (char ch : namedOutput.toCharArray()) {
-			if ((ch >= 'A') && (ch <= 'Z')) {
-				continue;
-			}
-			if ((ch >= 'a') && (ch <= 'z')) {
-				continue;
-			}
-			if ((ch >= '0') && (ch <= '9')) {
-				continue;
-			}
-			throw new IllegalArgumentException(
-					"Name cannot be have a '" + ch + "' char");
-		}
-	}
+  /**
+   * Checks if a named output name is valid token.
+   *
+   * @param namedOutput named output Name
+   * @throws IllegalArgumentException if the output name is not valid.
+   */
+  private static void checkTokenName(String namedOutput) {
+    if (namedOutput == null || namedOutput.length() == 0) {
+      throw new IllegalArgumentException(
+        "Name cannot be NULL or emtpy");
+    }
+    for (char ch : namedOutput.toCharArray()) {
+      if ((ch >= 'A') && (ch <= 'Z')) {
+        continue;
+      }
+      if ((ch >= 'a') && (ch <= 'z')) {
+        continue;
+      }
+      if ((ch >= '0') && (ch <= '9')) {
+        continue;
+      }
+      throw new IllegalArgumentException(
+        "Name cannot be have a '" + ch + "' char");
+    }
+  }
 
-	/**
-	 * Checks if a named output name is valid.
-	 *
-	 * @param namedOutput named output Name
-	 * @throws IllegalArgumentException if the output name is not valid.
-	 */
-	private static void checkNamedOutputName(String namedOutput) {
-		checkTokenName(namedOutput);
-		// name cannot be the name used for the default output
-		if (namedOutput.equals("part")) {
-			throw new IllegalArgumentException("Named output name cannot be 'part'");
-		}
-	}
+  /**
+   * Checks if a named output name is valid.
+   *
+   * @param namedOutput named output Name
+   * @throws IllegalArgumentException if the output name is not valid.
+   */
+  private static void checkNamedOutputName(String namedOutput) {
+    checkTokenName(namedOutput);
+    // name cannot be the name used for the default output
+    if (namedOutput.equals("part")) {
+      throw new IllegalArgumentException(
+        "Named output name cannot be 'part'");
+    }
+  }
 
-	/**
-	 * Returns list of channel names.
-	 *
-	 * @param conf job conf
-	 * @return List of channel Names
-	 */
-	public static List<String> getNamedOutputsList(JobConf conf) {
-		List<String> names = new ArrayList<String>();
-		StringTokenizer st = new StringTokenizer(conf.get(NAMED_OUTPUTS, ""), " ");
-		while (st.hasMoreTokens()) {
-			names.add(st.nextToken());
-		}
-		return names;
-	}
-
-
-	/**
-	 * Returns if a named output is multiple.
-	 *
-	 * @param conf        job conf
-	 * @param namedOutput named output
-	 * @return <code>true</code> if the name output is multi, <code>false</code>
-	 *         if it is single. If the name output is not defined it returns
-	 *         <code>false</code>
-	 */
-	public static boolean isMultiNamedOutput(JobConf conf, String namedOutput) {
-		checkNamedOutput(conf, namedOutput, false);
-		return conf.getBoolean(MO_PREFIX + namedOutput + MULTI, false);
-	}
-
-	/**
-	 * Returns the named output OutputFormat.
-	 *
-	 * @param conf        job conf
-	 * @param namedOutput named output
-	 * @return namedOutput OutputFormat
-	 */
-	public static Class<? extends OutputFormat> getNamedOutputFormatClass(
-			JobConf conf, String namedOutput) {
-		checkNamedOutput(conf, namedOutput, false);
-		return conf.getClass(MO_PREFIX + namedOutput + FORMAT, null,
-				OutputFormat.class);
-	}
-
-	/**
-	 * Returns the key class for a named output.
-	 *
-	 * @param conf        job conf
-	 * @param namedOutput named output
-	 * @return class for the named output key
-	 */
-	public static Class<? extends WritableComparable> getNamedOutputKeyClass(JobConf conf,
-			String namedOutput) {
-		checkNamedOutput(conf, namedOutput, false);
-		return conf.getClass(MO_PREFIX + namedOutput + KEY, null,
-				WritableComparable.class);
-	}
-
-	/**
-	 * Returns the value class for a named output.
-	 *
-	 * @param conf        job conf
-	 * @param namedOutput named output
-	 * @return class of named output value
-	 */
-	public static Class<? extends Writable> getNamedOutputValueClass(JobConf conf,
-			String namedOutput) {
-		checkNamedOutput(conf, namedOutput, false);
-		return conf.getClass(MO_PREFIX + namedOutput + VALUE, null,
-				Writable.class);
-	}
-
-	/**
-	 * Adds a named output for the job.
-	 * <p/>
-	 *
-	 * @param conf              job conf to add the named output
-	 * @param namedOutput       named output name, it has to be a word, letters
-	 *                          and numbers only, cannot be the word 'part' as
-	 *                          that is reserved for the
-	 *                          default output.
-	 * @param outputFormatClass OutputFormat class.
-	 * @param keyClass          key class
-	 * @param valueClass        value class
-	 */
-	public static void addNamedOutput(JobConf conf, String namedOutput,
-			Class<? extends OutputFormat> outputFormatClass,
-			Class<?> keyClass, Class<?> valueClass) {
-		addNamedOutput(conf, namedOutput, false, outputFormatClass, keyClass,
-				valueClass);
-	}
-
-	/**
-	 * Adds a multi named output for the job.
-	 * <p/>
-	 *
-	 * @param conf              job conf to add the named output
-	 * @param namedOutput       named output name, it has to be a word, letters
-	 *                          and numbers only, cannot be the word 'part' as
-	 *                          that is reserved for the
-	 *                          default output.
-	 * @param outputFormatClass OutputFormat class.
-	 * @param keyClass          key class
-	 * @param valueClass        value class
-	 */
-	public static void addMultiNamedOutput(JobConf conf, String namedOutput,
-			Class<? extends OutputFormat> outputFormatClass,
-			Class<?> keyClass, Class<?> valueClass) {
-		addNamedOutput(conf, namedOutput, true, outputFormatClass, keyClass,
-				valueClass);
-	}
-
-	/**
-	 * Adds a named output for the job.
-	 * <p/>
-	 *
-	 * @param conf              job conf to add the named output
-	 * @param namedOutput       named output name, it has to be a word, letters
-	 *                          and numbers only, cannot be the word 'part' as
-	 *                          that is reserved for the
-	 *                          default output.
-	 * @param multi             indicates if the named output is multi
-	 * @param outputFormatClass OutputFormat class.
-	 * @param keyClass          key class
-	 * @param valueClass        value class
-	 */
-	private static void addNamedOutput(JobConf conf, String namedOutput,
-			boolean multi,
-			Class<? extends OutputFormat> outputFormatClass,
-			Class<?> keyClass, Class<?> valueClass) {
-		checkNamedOutputName(namedOutput);
-		checkNamedOutput(conf, namedOutput, true);
-		conf.set(NAMED_OUTPUTS, conf.get(NAMED_OUTPUTS, "") + " " + namedOutput);
-		conf.setClass(MO_PREFIX + namedOutput + FORMAT, outputFormatClass,
-				OutputFormat.class);
-		conf.setClass(MO_PREFIX + namedOutput + KEY, keyClass, Object.class);
-		conf.setClass(MO_PREFIX + namedOutput + VALUE, valueClass, Object.class);
-		conf.setBoolean(MO_PREFIX + namedOutput + MULTI, multi);
-	}
-
-	/**
-	 * Enables or disables counters for the named outputs.
-	 * <p/>
-	 * By default these counters are disabled.
-	 * <p/>
-	 * MultipleOutputs supports counters, by default the are disabled.
-	 * The counters group is the {@link MultipleOutputs} class name.
-	 * </p>
-	 * The names of the counters are the same as the named outputs. For multi
-	 * named outputs the name of the counter is the concatenation of the named
-	 * output, and underscore '_' and the multiname.
-	 *
-	 * @param conf    job conf to enableadd the named output.
-	 * @param enabled indicates if the counters will be enabled or not.
-	 */
-	public static void setCountersEnabled(JobConf conf, boolean enabled) {
-		conf.setBoolean(COUNTERS_ENABLED, enabled);
-	}
-
-	/**
-	 * Returns if the counters for the named outputs are enabled or not.
-	 * <p/>
-	 * By default these counters are disabled.
-	 * <p/>
-	 * MultipleOutputs supports counters, by default the are disabled.
-	 * The counters group is the {@link MultipleOutputs} class name.
-	 * </p>
-	 * The names of the counters are the same as the named outputs. For multi
-	 * named outputs the name of the counter is the concatenation of the named
-	 * output, and underscore '_' and the multiname.
-	 *
-	 *
-	 * @param conf    job conf to enableadd the named output.
-	 * @return TRUE if the counters are enabled, FALSE if they are disabled.
-	 */
-	public static boolean getCountersEnabled(JobConf conf) {
-		return conf.getBoolean(COUNTERS_ENABLED, false);
-	}
-
-	// instance code, to be used from Mapper/Reducer code
-
-	private JobConf conf;
-	private OutputFormat outputFormat;
-	private Set<String> namedOutputs;
-	private Map<String, RecordWriter> recordWriters;
-	private boolean countersEnabled;
-
-	/**
-	 * Creates and initializes multiple named outputs support, it should be
-	 * instantiated in the Mapper/Reducer configure method.
-	 *
-	 * @param job the job configuration object
-	 */
-	public MultipleOutputs(JobConf job) {
-		this.conf = job;
-		outputFormat = new InternalFileOutputFormat();
-		namedOutputs = Collections.unmodifiableSet(
-				new HashSet<String>(MultipleOutputs.getNamedOutputsList(job)));
-		recordWriters = new HashMap<String, RecordWriter>();
-		countersEnabled = getCountersEnabled(job);
-	}
-
-	/**
-	 * Returns iterator with the defined name outputs.
-	 *
-	 * @return iterator with the defined named outputs
-	 */
-	public Iterator<String> getNamedOutputs() {
-		return namedOutputs.iterator();
-	}
+  /**
+   * Returns list of channel names.
+   *
+   * @param conf job conf
+   * @return List of channel Names
+   */
+  public static List<String> getNamedOutputsList(JobConf conf) {
+    List<String> names = new ArrayList<String>();
+    StringTokenizer st = new StringTokenizer(conf.get(NAMED_OUTPUTS, ""), " ");
+    while (st.hasMoreTokens()) {
+      names.add(st.nextToken());
+    }
+    return names;
+  }
 
 
-	// by being synchronized MultipleOutputTask can be use with a
-	// MultithreaderMapRunner.
-	private synchronized RecordWriter getRecordWriter(String namedOutput,
-			String baseFileName,
-			final Reporter reporter)
-	throws IOException 
-	{
-		RecordWriter writer = recordWriters.get(baseFileName);
-		if (writer == null) 
-		{
-			if (countersEnabled && reporter == null) {
-				throw new IllegalArgumentException("Counters are enabled, Reporter cannot be NULL");
-			}
+  /**
+   * Returns if a named output is multiple.
+   *
+   * @param conf        job conf
+   * @param namedOutput named output
+   * @return <code>true</code> if the name output is multi, <code>false</code>
+   *         if it is single. If the name output is not defined it returns
+   *         <code>false</code>
+   */
+  public static boolean isMultiNamedOutput(JobConf conf, String namedOutput) {
+    checkNamedOutput(conf, namedOutput, false);
+    return conf.getBoolean(MO_PREFIX + namedOutput + MULTI, false);
+  }
 
-			JobConf jobConf = new JobConf(conf);
-			jobConf.set(InternalFileOutputFormat.CONFIG_NAMED_OUTPUT, namedOutput);
-			FileSystem fs = FileSystem.get(conf);
+  /**
+   * Returns the named output OutputFormat.
+   *
+   * @param conf        job conf
+   * @param namedOutput named output
+   * @return namedOutput OutputFormat
+   */
+  public static Class<? extends OutputFormat> getNamedOutputFormatClass(
+    JobConf conf, String namedOutput) {
+    checkNamedOutput(conf, namedOutput, false);
+    return conf.getClass(MO_PREFIX + namedOutput + FORMAT, null,
+      OutputFormat.class);
+  }
 
-			writer = outputFormat.getRecordWriter(fs, jobConf, baseFileName, reporter);
+  /**
+   * Returns the key class for a named output.
+   *
+   * @param conf        job conf
+   * @param namedOutput named output
+   * @return class for the named output key
+   */
+  public static Class<? extends WritableComparable> getNamedOutputKeyClass(JobConf conf,
+                                                String namedOutput) {
+    checkNamedOutput(conf, namedOutput, false);
+    return conf.getClass(MO_PREFIX + namedOutput + KEY, null,
+	WritableComparable.class);
+  }
 
-			if (countersEnabled) 
-			{
-				if (reporter == null) {
-					throw new IllegalArgumentException("Counters are enabled, Reporter cannot be NULL");
-				}
+  /**
+   * Returns the value class for a named output.
+   *
+   * @param conf        job conf
+   * @param namedOutput named output
+   * @return class of named output value
+   */
+  public static Class<? extends Writable> getNamedOutputValueClass(JobConf conf,
+                                                  String namedOutput) {
+    checkNamedOutput(conf, namedOutput, false);
+    return conf.getClass(MO_PREFIX + namedOutput + VALUE, null,
+      Writable.class);
+  }
 
-				writer = new RecordWriterWithCounter(writer, baseFileName, reporter);
-			}
+  /**
+   * Adds a named output for the job.
+   * <p/>
+   *
+   * @param conf              job conf to add the named output
+   * @param namedOutput       named output name, it has to be a word, letters
+   *                          and numbers only, cannot be the word 'part' as
+   *                          that is reserved for the
+   *                          default output.
+   * @param outputFormatClass OutputFormat class.
+   * @param keyClass          key class
+   * @param valueClass        value class
+   */
+  public static void addNamedOutput(JobConf conf, String namedOutput,
+                                Class<? extends OutputFormat> outputFormatClass,
+                                Class<?> keyClass, Class<?> valueClass) {
+    addNamedOutput(conf, namedOutput, false, outputFormatClass, keyClass,
+      valueClass);
+  }
 
-			recordWriters.put(baseFileName, writer);
-		}
+  /**
+   * Adds a multi named output for the job.
+   * <p/>
+   *
+   * @param conf              job conf to add the named output
+   * @param namedOutput       named output name, it has to be a word, letters
+   *                          and numbers only, cannot be the word 'part' as
+   *                          that is reserved for the
+   *                          default output.
+   * @param outputFormatClass OutputFormat class.
+   * @param keyClass          key class
+   * @param valueClass        value class
+   */
+  public static void addMultiNamedOutput(JobConf conf, String namedOutput,
+                               Class<? extends OutputFormat> outputFormatClass,
+                               Class<?> keyClass, Class<?> valueClass) {
+    addNamedOutput(conf, namedOutput, true, outputFormatClass, keyClass,
+      valueClass);
+  }
 
-		return writer;
-	}
+  /**
+   * Adds a named output for the job.
+   * <p/>
+   *
+   * @param conf              job conf to add the named output
+   * @param namedOutput       named output name, it has to be a word, letters
+   *                          and numbers only, cannot be the word 'part' as
+   *                          that is reserved for the
+   *                          default output.
+   * @param multi             indicates if the named output is multi
+   * @param outputFormatClass OutputFormat class.
+   * @param keyClass          key class
+   * @param valueClass        value class
+   */
+  private static void addNamedOutput(JobConf conf, String namedOutput,
+                               boolean multi,
+                               Class<? extends OutputFormat> outputFormatClass,
+                               Class<?> keyClass, Class<?> valueClass) {
+    checkNamedOutputName(namedOutput);
+    checkNamedOutput(conf, namedOutput, true);
+    conf.set(NAMED_OUTPUTS, conf.get(NAMED_OUTPUTS, "") + " " + namedOutput);
+    conf.setClass(MO_PREFIX + namedOutput + FORMAT, outputFormatClass,
+      OutputFormat.class);
+    conf.setClass(MO_PREFIX + namedOutput + KEY, keyClass, Object.class);
+    conf.setClass(MO_PREFIX + namedOutput + VALUE, valueClass, Object.class);
+    conf.setBoolean(MO_PREFIX + namedOutput + MULTI, multi);
+  }
 
-	private static class RecordWriterWithCounter 
-	implements RecordWriter 
-	{
-		private RecordWriter writer;
-		private String counterName;
-		private Reporter reporter;
+  /**
+   * Enables or disables counters for the named outputs.
+   * <p/>
+   * By default these counters are disabled.
+   * <p/>
+   * MultipleOutputs supports counters, by default the are disabled.
+   * The counters group is the {@link MultipleOutputs} class name.
+   * </p>
+   * The names of the counters are the same as the named outputs. For multi
+   * named outputs the name of the counter is the concatenation of the named
+   * output, and underscore '_' and the multiname.
+   *
+   * @param conf    job conf to enableadd the named output.
+   * @param enabled indicates if the counters will be enabled or not.
+   */
+  public static void setCountersEnabled(JobConf conf, boolean enabled) {
+    conf.setBoolean(COUNTERS_ENABLED, enabled);
+  }
 
-		public RecordWriterWithCounter(RecordWriter writer, String counterName,
-				Reporter reporter) {
-			this.writer = writer;
-			this.counterName = counterName;
-			this.reporter = reporter;
-		}
+  /**
+   * Returns if the counters for the named outputs are enabled or not.
+   * <p/>
+   * By default these counters are disabled.
+   * <p/>
+   * MultipleOutputs supports counters, by default the are disabled.
+   * The counters group is the {@link MultipleOutputs} class name.
+   * </p>
+   * The names of the counters are the same as the named outputs. For multi
+   * named outputs the name of the counter is the concatenation of the named
+   * output, and underscore '_' and the multiname.
+   *
+   *
+   * @param conf    job conf to enableadd the named output.
+   * @return TRUE if the counters are enabled, FALSE if they are disabled.
+   */
+  public static boolean getCountersEnabled(JobConf conf) {
+    return conf.getBoolean(COUNTERS_ENABLED, false);
+  }
 
-		@SuppressWarnings({"unchecked"})
-		public void write(Object key, Object value) throws IOException {
-			reporter.incrCounter(COUNTERS_GROUP, counterName, 1);
-			writer.write(key, value);
-		}
+  // instance code, to be used from Mapper/Reducer code
 
-		public void close(Reporter reporter) throws IOException {
-			writer.close(reporter);
-		}
-	}
+  private JobConf conf;
+  private OutputFormat outputFormat;
+  private Set<String> namedOutputs;
+  private Map<String, RecordWriter> recordWriters;
+  private boolean countersEnabled;
 
-	/**
-	 * Gets the output collector for a named output.
-	 * <p/>
-	 *
-	 * @param namedOutput the named output name
-	 * @param reporter    the reporter
-	 * @return the output collector for the given named output
-	 * @throws IOException thrown if output collector could not be created
-	 */
-	@SuppressWarnings({"unchecked"})
-	public OutputCollector getCollector(String namedOutput, Reporter reporter)
-	throws IOException {
-		return getCollector(namedOutput, null, reporter);
-	}
+  /**
+   * Creates and initializes multiple named outputs support, it should be
+   * instantiated in the Mapper/Reducer configure method.
+   *
+   * @param job the job configuration object
+   */
+  public MultipleOutputs(JobConf job) {
+    this.conf = job;
+    outputFormat = new InternalFileOutputFormat();
+    namedOutputs = Collections.unmodifiableSet(
+      new HashSet<String>(MultipleOutputs.getNamedOutputsList(job)));
+    recordWriters = new HashMap<String, RecordWriter>();
+    countersEnabled = getCountersEnabled(job);
+  }
 
-	/**
-	 * Gets the output collector for a multi named output.
-	 * <p/>
-	 *
-	 * @param namedOutput the named output name
-	 * @param multiName   the multi name part
-	 * @param reporter    the reporter
-	 * @return the output collector for the given named output
-	 * @throws IOException thrown if output collector could not be created
-	 */
-	@SuppressWarnings({"unchecked"})
-	public OutputCollector getCollector(String namedOutput, String multiName,
-			Reporter reporter)
-	throws IOException {
+  /**
+   * Returns iterator with the defined name outputs.
+   *
+   * @return iterator with the defined named outputs
+   */
+  public Iterator<String> getNamedOutputs() {
+    return namedOutputs.iterator();
+  }
 
-		checkNamedOutputName(namedOutput);
-		if (!namedOutputs.contains(namedOutput)) {
-			throw new IllegalArgumentException("Undefined named output '" + namedOutput + "'");
-		}
 
-		boolean multi = isMultiNamedOutput(conf, namedOutput);
+  // by being synchronized MultipleOutputTask can be use with a
+  // MultithreaderMapRunner.
+  private synchronized RecordWriter getRecordWriter(String namedOutput,
+                                                    String baseFileName,
+                                                    final Reporter reporter)
+    throws IOException {
+    RecordWriter writer = recordWriters.get(baseFileName);
+    if (writer == null) {
+      if (countersEnabled && reporter == null) {
+        throw new IllegalArgumentException(
+          "Counters are enabled, Reporter cannot be NULL");
+      }
+      JobConf jobConf = new JobConf(conf);
+      jobConf.set(InternalFileOutputFormat.CONFIG_NAMED_OUTPUT, namedOutput);
+      FileSystem fs = FileSystem.get(conf);
+      writer =
+        outputFormat.getRecordWriter(fs, jobConf, baseFileName, reporter);
 
-		if (!multi && multiName != null) {
-			throw new IllegalArgumentException("Name output '" + namedOutput + "' has not been defined as multi");
-		}
+      if (countersEnabled) {
+        if (reporter == null) {
+          throw new IllegalArgumentException(
+            "Counters are enabled, Reporter cannot be NULL");
+        }
+        writer = new RecordWriterWithCounter(writer, baseFileName, reporter);
+      }
 
-		if (multi) {
-			checkTokenName(multiName);
-		}
+      recordWriters.put(baseFileName, writer);
+    }
+    return writer;
+  }
 
-		String baseFileName = (multi) ? namedOutput + "_" + multiName : namedOutput;
+  private static class RecordWriterWithCounter implements RecordWriter {
+    private RecordWriter writer;
+    private String counterName;
+    private Reporter reporter;
 
-		final RecordWriter writer = getRecordWriter(namedOutput, baseFileName, reporter);
+    public RecordWriterWithCounter(RecordWriter writer, String counterName,
+                                   Reporter reporter) {
+      this.writer = writer;
+      this.counterName = counterName;
+      this.reporter = reporter;
+    }
 
-		return new OutputCollector() {
+    @SuppressWarnings({"unchecked"})
+    public void write(Object key, Object value) throws IOException {
+      reporter.incrCounter(COUNTERS_GROUP, counterName, 1);
+      writer.write(key, value);
+    }
 
-			@SuppressWarnings({"unchecked"})
-			public void collect(Object key, Object value) throws IOException {
-				writer.write(key, value);
-			}
+    public void close(Reporter reporter) throws IOException {
+      writer.close(reporter);
+    }
+  }
 
-		};
-	}
+  /**
+   * Gets the output collector for a named output.
+   * <p/>
+   *
+   * @param namedOutput the named output name
+   * @param reporter    the reporter
+   * @return the output collector for the given named output
+   * @throws IOException thrown if output collector could not be created
+   */
+  @SuppressWarnings({"unchecked"})
+  public OutputCollector getCollector(String namedOutput, Reporter reporter)
+    throws IOException {
+    return getCollector(namedOutput, null, reporter);
+  }
 
-	/**
-	 * Closes all the opened named outputs.
-	 * <p/>
-	 * If overriden subclasses must invoke <code>super.close()</code> at the
-	 * end of their <code>close()</code>
-	 *
-	 * @throws java.io.IOException thrown if any of the MultipleOutput files
-	 *                             could not be closed properly.
-	 */
-	public void close() throws IOException {
-		for (RecordWriter writer : recordWriters.values()) {
-			writer.close(null);
-		}
-	}
+  /**
+   * Gets the output collector for a multi named output.
+   * <p/>
+   *
+   * @param namedOutput the named output name
+   * @param multiName   the multi name part
+   * @param reporter    the reporter
+   * @return the output collector for the given named output
+   * @throws IOException thrown if output collector could not be created
+   */
+  @SuppressWarnings({"unchecked"})
+  public OutputCollector getCollector(String namedOutput, String multiName,
+                                      Reporter reporter)
+    throws IOException {
 
-	private static class InternalFileOutputFormat extends
-	FileOutputFormat<Object, Object> {
+    checkNamedOutputName(namedOutput);
+    if (!namedOutputs.contains(namedOutput)) {
+      throw new IllegalArgumentException("Undefined named output '" +
+        namedOutput + "'");
+    }
+    boolean multi = isMultiNamedOutput(conf, namedOutput);
 
-		public static final String CONFIG_NAMED_OUTPUT = "mo.config.namedOutput";
+    if (!multi && multiName != null) {
+      throw new IllegalArgumentException("Name output '" + namedOutput +
+        "' has not been defined as multi");
+    }
+    if (multi) {
+      checkTokenName(multiName);
+    }
 
-		@SuppressWarnings({"unchecked"})
-		public RecordWriter<Object, Object> getRecordWriter(
-				FileSystem fs, JobConf job, String baseFileName, Progressable progress)
-				throws IOException {
+    String baseFileName = (multi) ? namedOutput + "_" + multiName : namedOutput;
 
-			String nameOutput = job.get(CONFIG_NAMED_OUTPUT, null);
-			String fileName = getUniqueName(job, baseFileName);
+    final RecordWriter writer =
+      getRecordWriter(namedOutput, baseFileName, reporter);
 
-			// The following trick leverages the instantiation of a record writer via
-			// the job conf thus supporting arbitrary output formats.
-			JobConf outputConf = new JobConf(job);
-			outputConf.setOutputFormat(getNamedOutputFormatClass(job, nameOutput));
-			outputConf.setOutputKeyClass(getNamedOutputKeyClass(job, nameOutput));
-			outputConf.setOutputValueClass(getNamedOutputValueClass(job, nameOutput));
-			OutputFormat outputFormat = outputConf.getOutputFormat();
-			return outputFormat.getRecordWriter(fs, outputConf, fileName, progress);
-		}
-	}
+    return new OutputCollector() {
+
+      @SuppressWarnings({"unchecked"})
+      public void collect(Object key, Object value) throws IOException {
+        writer.write(key, value);
+      }
+
+    };
+  }
+
+  /**
+   * Closes all the opened named outputs.
+   * <p/>
+   * If overriden subclasses must invoke <code>super.close()</code> at the
+   * end of their <code>close()</code>
+   *
+   * @throws java.io.IOException thrown if any of the MultipleOutput files
+   *                             could not be closed properly.
+   */
+  public void close() throws IOException {
+    for (RecordWriter writer : recordWriters.values()) {
+      writer.close(null);
+    }
+  }
+
+  private static class InternalFileOutputFormat extends
+    FileOutputFormat<Object, Object> {
+
+    public static final String CONFIG_NAMED_OUTPUT = "mo.config.namedOutput";
+
+    @SuppressWarnings({"unchecked"})
+    public RecordWriter<Object, Object> getRecordWriter(
+      FileSystem fs, JobConf job, String baseFileName, Progressable progress)
+      throws IOException {
+
+      String nameOutput = job.get(CONFIG_NAMED_OUTPUT, null);
+      String fileName = getUniqueName(job, baseFileName);
+
+      // The following trick leverages the instantiation of a record writer via
+      // the job conf thus supporting arbitrary output formats.
+      JobConf outputConf = new JobConf(job);
+      outputConf.setOutputFormat(getNamedOutputFormatClass(job, nameOutput));
+      outputConf.setOutputKeyClass(getNamedOutputKeyClass(job, nameOutput));
+      outputConf.setOutputValueClass(getNamedOutputValueClass(job, nameOutput));
+      OutputFormat outputFormat = outputConf.getOutputFormat();
+      return outputFormat.getRecordWriter(fs, outputConf, fileName, progress);
+    }
+  }
 
 }

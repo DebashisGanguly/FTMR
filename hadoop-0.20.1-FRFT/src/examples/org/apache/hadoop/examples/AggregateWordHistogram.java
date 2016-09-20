@@ -75,10 +75,7 @@ public class AggregateWordHistogram {
     JobConf conf = ValueAggregatorJob.createValueAggregatorJob(args
         , new Class[] {AggregateWordHistogramPlugin.class});
     
-    long start = System.currentTimeMillis();
     JobClient.runJob(conf);
-    long end = System.currentTimeMillis();
-    System.out.println("AggregateWordHistogram duration: " + ((end-start)/1000) + " sec");
   }
   
 }

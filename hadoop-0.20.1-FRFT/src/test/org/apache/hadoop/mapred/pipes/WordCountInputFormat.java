@@ -18,21 +18,12 @@
 
 package org.apache.hadoop.mapred.pipes;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.io.*;
+import java.util.*;
 
-import org.apache.hadoop.fs.FileStatus;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapred.FileInputFormat;
-import org.apache.hadoop.mapred.InputSplit;
-import org.apache.hadoop.mapred.JobConf;
-import org.apache.hadoop.mapred.RecordReader;
-import org.apache.hadoop.mapred.Reporter;
+import org.apache.hadoop.fs.*;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapred.*;
 
 /**
  * This is a support class to test Hadoop Pipes when using C++ RecordReaders.
@@ -56,11 +47,6 @@ public class WordCountInputFormat
     }
     public long getLength() { return 0L; }
     public String[] getLocations() { return new String[0]; }
-	@Override
-	public String getName() throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
-		return null;
-	}
   }
 
   public InputSplit[] getSplits(JobConf conf, 

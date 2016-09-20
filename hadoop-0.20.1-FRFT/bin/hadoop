@@ -88,8 +88,6 @@ if [ -f "${HADOOP_CONF_DIR}/hadoop-env.sh" ]; then
   . "${HADOOP_CONF_DIR}/hadoop-env.sh"
 fi
 
-export JAVA_HOME=/usr/lib/jvm/java-8-oracle/jre
-
 # some Java parameters
 if [ "$JAVA_HOME" != "" ]; then
   #echo "run java in $JAVA_HOME"
@@ -186,24 +184,19 @@ unset IFS
 # figure out which class to run
 if [ "$COMMAND" = "namenode" ] ; then
   CLASS='org.apache.hadoop.hdfs.server.namenode.NameNode'
-  DEBUG_OPTS="-Xdebug -Xnoagent -Djava.compiler=None -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9024"
   HADOOP_OPTS="$HADOOP_OPTS $HADOOP_NAMENODE_OPTS"
 elif [ "$COMMAND" = "secondarynamenode" ] ; then
   CLASS='org.apache.hadoop.hdfs.server.namenode.SecondaryNameNode'
-  DEBUG_OPTS="-Xdebug -Xnoagent -Djava.compiler=None -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9034"
   HADOOP_OPTS="$HADOOP_OPTS $HADOOP_SECONDARYNAMENODE_OPTS"
 elif [ "$COMMAND" = "datanode" ] ; then
   CLASS='org.apache.hadoop.hdfs.server.datanode.DataNode'
-  DEBUG_OPTS="-Xdebug -Xnoagent -Djava.compiler=None -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9044"
   HADOOP_OPTS="$HADOOP_OPTS $HADOOP_DATANODE_OPTS"
 elif [ "$COMMAND" = "fs" ] ; then
   CLASS=org.apache.hadoop.fs.FsShell
   HADOOP_OPTS="$HADOOP_OPTS $HADOOP_CLIENT_OPTS"
 elif [ "$COMMAND" = "dfs" ] ; then
   CLASS=org.apache.hadoop.fs.FsShell
-  DEBUG_OPTS="-Xdebug -Xnoagent -Djava.compiler=None -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9054"
   HADOOP_OPTS="$HADOOP_OPTS $HADOOP_CLIENT_OPTS"
-  #HADOOP_OPTS="$HADOOP_OPTS $HADOOP_CLIENT_OPTS $DEBUG_OPTS"
 elif [ "$COMMAND" = "dfsadmin" ] ; then
   CLASS=org.apache.hadoop.hdfs.tools.DFSAdmin
   HADOOP_OPTS="$HADOOP_OPTS $HADOOP_CLIENT_OPTS"
@@ -218,34 +211,22 @@ elif [ "$COMMAND" = "balancer" ] ; then
   HADOOP_OPTS="$HADOOP_OPTS $HADOOP_BALANCER_OPTS"
 elif [ "$COMMAND" = "jobtracker" ] ; then
   CLASS=org.apache.hadoop.mapred.JobTracker
-  DEBUG_OPTS="-Xdebug -Xnoagent -Djava.compiler=None -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009"
   HADOOP_OPTS="$HADOOP_OPTS $HADOOP_JOBTRACKER_OPTS"
-  # HADOOP_OPTS="$HADOOP_OPTS $HADOOP_JOBTRACKER_OPTS $DEBUG_OPTS"
 elif [ "$COMMAND" = "tasktracker" ] ; then
   CLASS=org.apache.hadoop.mapred.TaskTracker
-  DEBUG_OPTS="-Xdebug -Xnoagent -Djava.compiler=None -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9059"
   HADOOP_OPTS="$HADOOP_OPTS $HADOOP_TASKTRACKER_OPTS"
-  #HADOOP_OPTS="$HADOOP_OPTS $HADOOP_TASKTRACKER_OPTS $DEBUG_OPTS"
 elif [ "$COMMAND" = "job" ] ; then
-  DEBUG_OPTS="-Xdebug -Xnoagent -Djava.compiler=None -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9069"
   CLASS=org.apache.hadoop.mapred.JobClient
-  HADOOP_OPTS="$DEBUG_OPTS"
 elif [ "$COMMAND" = "queue" ] ; then
-  DEBUG_OPTS="-Xdebug -Xnoagent -Djava.compiler=None -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9079"
   CLASS=org.apache.hadoop.mapred.JobQueueClient
-#  HADOOP_OPTS="$DEBUG_OPTS"
 elif [ "$COMMAND" = "pipes" ] ; then
-  DEBUG_OPTS="-Xdebug -Xnoagent -Djava.compiler=None -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9089"
   CLASS=org.apache.hadoop.mapred.pipes.Submitter
   HADOOP_OPTS="$HADOOP_OPTS $HADOOP_CLIENT_OPTS"
 elif [ "$COMMAND" = "version" ] ; then
   CLASS=org.apache.hadoop.util.VersionInfo
   HADOOP_OPTS="$HADOOP_OPTS $HADOOP_CLIENT_OPTS"
 elif [ "$COMMAND" = "jar" ] ; then
-  # This runs when the hadoop-examples is running
-  DEBUG_OPTS="-Xdebug -Xnoagent -Djava.compiler=None -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9099"
   CLASS=org.apache.hadoop.util.RunJar
-  #HADOOP_OPTS="$DEBUG_OPTS"
 elif [ "$COMMAND" = "distcp" ] ; then
   CLASS=org.apache.hadoop.tools.DistCp
   CLASSPATH=${CLASSPATH}:${TOOL_PATH}
@@ -299,7 +280,6 @@ HADOOP_OPTS="$HADOOP_OPTS -Dhadoop.log.file=$HADOOP_LOGFILE"
 HADOOP_OPTS="$HADOOP_OPTS -Dhadoop.home.dir=$HADOOP_HOME"
 HADOOP_OPTS="$HADOOP_OPTS -Dhadoop.id.str=$HADOOP_IDENT_STRING"
 HADOOP_OPTS="$HADOOP_OPTS -Dhadoop.root.logger=${HADOOP_ROOT_LOGGER:-INFO,console}"
-
 if [ "x$JAVA_LIBRARY_PATH" != "x" ]; then
   HADOOP_OPTS="$HADOOP_OPTS -Djava.library.path=$JAVA_LIBRARY_PATH"
 fi  

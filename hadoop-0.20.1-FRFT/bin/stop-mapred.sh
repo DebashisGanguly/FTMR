@@ -25,5 +25,4 @@ bin=`cd "$bin"; pwd`
 
 "$bin"/hadoop-daemon.sh --config $HADOOP_CONF_DIR stop jobtracker
 "$bin"/hadoop-daemons.sh --config $HADOOP_CONF_DIR stop tasktracker
-"$bin"/hadoop-daemons.sh --config $HADOOP_CONF_DIR stop filetracker
 

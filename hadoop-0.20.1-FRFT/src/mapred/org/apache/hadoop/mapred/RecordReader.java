@@ -19,6 +19,7 @@
 package org.apache.hadoop.mapred;
 
 import java.io.IOException;
+import java.io.DataInput;
 
 /**
  * <code>RecordReader</code> reads &lt;key, value&gt; pairs from an 

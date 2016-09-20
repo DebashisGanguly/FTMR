@@ -19,14 +19,6 @@
 #define HADOOP_SERIAL_UTILS_HH
 
 #include <string>
-#include <errno.h>
-#include <rpc/types.h>
-#include <rpc/xdr.h>
-#include <string>
-#include <string.h>
-#include <stdint.h>
-#include <stdlib.h>
-
 
 namespace HadoopUtils {
 
@@ -164,10 +156,10 @@ namespace HadoopUtils {
     std::string::const_iterator itr;
   };
 
-  int32_t deserializeInt(InStream& stream);
   void serializeInt(int32_t t, OutStream& stream);
-  int64_t deserializeLong(InStream& stream);
+  int32_t deserializeInt(InStream& stream);
   void serializeLong(int64_t t, OutStream& stream);
+  int64_t deserializeLong(InStream& stream);
   void serializeFloat(float t, OutStream& stream);
   float deserializeFloat(InStream& stream);
   void serializeString(const std::string& t, OutStream& stream);

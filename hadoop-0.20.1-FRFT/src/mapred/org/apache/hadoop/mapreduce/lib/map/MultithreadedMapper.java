@@ -243,7 +243,8 @@ public class MultithreadedMapper<K1, V1, K2, V2>
     private Throwable throwable;
 
     MapRunner(Context context) throws IOException, InterruptedException {
-      mapper = ReflectionUtils.newInstance(mapClass, context.getConfiguration());
+      mapper = ReflectionUtils.newInstance(mapClass, 
+                                           context.getConfiguration());
       subcontext = new Context(outer.getConfiguration(), 
                             outer.getTaskAttemptID(),
                             new SubMapRecordReader(),

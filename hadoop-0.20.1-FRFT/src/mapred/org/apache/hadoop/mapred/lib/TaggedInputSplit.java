@@ -36,111 +36,105 @@ import org.apache.hadoop.util.ReflectionUtils;
  */
 class TaggedInputSplit implements Configurable, InputSplit {
 
-	private Class<? extends InputSplit> inputSplitClass;
+  private Class<? extends InputSplit> inputSplitClass;
 
-	private InputSplit inputSplit;
+  private InputSplit inputSplit;
 
-	private Class<? extends InputFormat> inputFormatClass;
+  private Class<? extends InputFormat> inputFormatClass;
 
-	private Class<? extends Mapper> mapperClass;
+  private Class<? extends Mapper> mapperClass;
 
-	private Configuration conf;
+  private Configuration conf;
 
-	public TaggedInputSplit() {
-		// Default constructor.
-	}
+  public TaggedInputSplit() {
+    // Default constructor.
+  }
 
-	/**
-	 * Creates a new TaggedInputSplit.
-	 * 
-	 * @param inputSplit The InputSplit to be tagged
-	 * @param conf The configuration to use
-	 * @param inputFormatClass The InputFormat class to use for this job
-	 * @param mapperClass The Mapper class to use for this job
-	 */
-	public TaggedInputSplit(InputSplit inputSplit, Configuration conf,
-			Class<? extends InputFormat> inputFormatClass,
-			Class<? extends Mapper> mapperClass) {
-		this.inputSplitClass = inputSplit.getClass();
-		this.inputSplit = inputSplit;
-		this.conf = conf;
-		this.inputFormatClass = inputFormatClass;
-		this.mapperClass = mapperClass;
-	}
+  /**
+   * Creates a new TaggedInputSplit.
+   * 
+   * @param inputSplit The InputSplit to be tagged
+   * @param conf The configuration to use
+   * @param inputFormatClass The InputFormat class to use for this job
+   * @param mapperClass The Mapper class to use for this job
+   */
+  public TaggedInputSplit(InputSplit inputSplit, Configuration conf,
+      Class<? extends InputFormat> inputFormatClass,
+      Class<? extends Mapper> mapperClass) {
+    this.inputSplitClass = inputSplit.getClass();
+    this.inputSplit = inputSplit;
+    this.conf = conf;
+    this.inputFormatClass = inputFormatClass;
+    this.mapperClass = mapperClass;
+  }
 
-	/**
-	 * Retrieves the original InputSplit.
-	 * 
-	 * @return The InputSplit that was tagged
-	 */
-	public InputSplit getInputSplit() {
-		return inputSplit;
-	}
+  /**
+   * Retrieves the original InputSplit.
+   * 
+   * @return The InputSplit that was tagged
+   */
+  public InputSplit getInputSplit() {
+    return inputSplit;
+  }
 
-	/**
-	 * Retrieves the InputFormat class to use for this split.
-	 * 
-	 * @return The InputFormat class to use
-	 */
-	public Class<? extends InputFormat> getInputFormatClass() {
-		return inputFormatClass;
-	}
+  /**
+   * Retrieves the InputFormat class to use for this split.
+   * 
+   * @return The InputFormat class to use
+   */
+  public Class<? extends InputFormat> getInputFormatClass() {
+    return inputFormatClass;
+  }
 
-	/**
-	 * Retrieves the Mapper class to use for this split.
-	 * 
-	 * @return The Mapper class to use
-	 */
-	public Class<? extends Mapper> getMapperClass() {
-		return mapperClass;
-	}
+  /**
+   * Retrieves the Mapper class to use for this split.
+   * 
+   * @return The Mapper class to use
+   */
+  public Class<? extends Mapper> getMapperClass() {
+    return mapperClass;
+  }
 
-	public long getLength() throws IOException {
-		return inputSplit.getLength();
-	}
+  public long getLength() throws IOException {
+    return inputSplit.getLength();
+  }
 
-	public String[] getLocations() throws IOException {
-		return inputSplit.getLocations();
-	}
+  public String[] getLocations() throws IOException {
+    return inputSplit.getLocations();
+  }
 
-	@SuppressWarnings("unchecked")
-	public void readFields(DataInput in) throws IOException {
-		inputSplitClass = (Class<? extends InputSplit>) readClass(in);
-		inputSplit = (InputSplit) ReflectionUtils
-		.newInstance(inputSplitClass, conf);
-		inputSplit.readFields(in);
-		inputFormatClass = (Class<? extends InputFormat>) readClass(in);
-		mapperClass = (Class<? extends Mapper>) readClass(in);
-	}
+  @SuppressWarnings("unchecked")
+  public void readFields(DataInput in) throws IOException {
+    inputSplitClass = (Class<? extends InputSplit>) readClass(in);
+    inputSplit = (InputSplit) ReflectionUtils
+       .newInstance(inputSplitClass, conf);
+    inputSplit.readFields(in);
+    inputFormatClass = (Class<? extends InputFormat>) readClass(in);
+    mapperClass = (Class<? extends Mapper>) readClass(in);
+  }
 
-	private Class<?> readClass(DataInput in) throws IOException {
-		String className = Text.readString(in);
-		try {
-			return conf.getClassByName(className);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException("readObject can't find class", e);
-		}
-	}
+  private Class<?> readClass(DataInput in) throws IOException {
+    String className = Text.readString(in);
+    try {
+      return conf.getClassByName(className);
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException("readObject can't find class", e);
+    }
+  }
 
-	public void write(DataOutput out) throws IOException {
-		Text.writeString(out, inputSplitClass.getName());
-		inputSplit.write(out);
-		Text.writeString(out, inputFormatClass.getName());
-		Text.writeString(out, mapperClass.getName());
-	}
+  public void write(DataOutput out) throws IOException {
+    Text.writeString(out, inputSplitClass.getName());
+    inputSplit.write(out);
+    Text.writeString(out, inputFormatClass.getName());
+    Text.writeString(out, mapperClass.getName());
+  }
 
-	public Configuration getConf() {
-		return conf;
-	}
+  public Configuration getConf() {
+    return conf;
+  }
 
-	public void setConf(Configuration conf) {
-		this.conf = conf;
-	}
-
-	@Override
-	public String getName() throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  public void setConf(Configuration conf) {
+    this.conf = conf;
+  }
 
 }

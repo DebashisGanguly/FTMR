@@ -503,12 +503,6 @@ class ControlledMapReduceJob extends Configured implements Tool,
     public String[] getLocations() {
       return new String[0];
     }
-
-	@Override
-	public String getName() throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
-		return null;
-	}
   }
 
   static class ControlledMapReduceJobRunner extends Thread {

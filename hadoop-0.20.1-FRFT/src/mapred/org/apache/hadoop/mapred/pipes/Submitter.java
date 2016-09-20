@@ -25,12 +25,15 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.OptionGroup;
+import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.Parser;
@@ -409,8 +412,6 @@ public class Submitter extends Configured implements Tool {
       if (results.hasOption("output")) {
         FileOutputFormat.setOutputPath(job, 
           new Path((String) results.getOptionValue("output")));
-        FileOutputFormat.setOutputDigestsPath(job, 
-                new Path((String) results.getOptionValue("output")));
       }
       if (results.hasOption("jar")) {
         job.setJar((String) results.getOptionValue("jar"));

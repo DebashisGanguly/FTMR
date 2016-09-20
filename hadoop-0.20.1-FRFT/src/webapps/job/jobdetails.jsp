@@ -31,12 +31,8 @@
     int killedTasks = 0;
     int failedTaskAttempts = 0;
     int killedTaskAttempts = 0;
-
-
     for(int i=0; i < totalTasks; ++i) {
       TaskInProgress task = tasks[i];
-
-      if(task == null) continue;
       if (task.isComplete()) {
         finishedTasks += 1;
       } else if (task.isRunning()) {
@@ -89,8 +85,7 @@
                    "</a>") : 
                   "0"
                   ) + 
-              "</td>"
-	      + "</tr>\n");
+              "</td></tr>\n");
   }
 
   private void printJobLevelTaskSummary(JspWriter out,
@@ -102,7 +97,6 @@
     int runningTasks = 0;
     int finishedTasks = 0;
     int killedTasks = 0;
-
     for(int i=0; i < totalTasks; ++i) {
       TaskInProgress task = tasks[i];
       if (task.isComplete()) {
@@ -111,7 +105,7 @@
         runningTasks += 1;
       } else if (task.isFailed()) {
         killedTasks += 1;
-      } 
+      }
     }
     int pendingTasks = totalTasks - runningTasks - killedTasks - finishedTasks; 
     out.print(((runningTasks > 0)  
@@ -273,47 +267,6 @@
     
     %>
     <p/>
-    <p>
-    <hr>Map Tasks Counter</hr> 
-    <table border=2 cellpadding="5" cellspacing="2">
-    <tr>
-      <th>TaskTracker</th>
-      <th>Map Running</th>
-    </tr>
-	<%
-		Map<String, Integer> trackers1 = job.getMapTaskTrackerCount();
-		Iterator<String> iter1 = trackers1.keySet().iterator();
-		while(iter1.hasNext()) {
-			String k = iter1.next();
-			Integer v = trackers1.get(k);
-
-			out.print("<tr><td>" + k + "</td><td>" + v + "</td></tr>");
-		}
-	%>
-   </table>
-   </p>
-
-    <p>
-    <hr>Reduce Tasks Counter</hr>
-    <table border=2 cellpadding="5" cellspacing="2">
-    <tr>
-      <th>TaskTracker</th>
-      <th>Reduce Running</th>
-    </tr>
-        <%
-                Map<String, Integer> trackers2 = job.getRedTaskTrackerCount();
-                Iterator<String> iter2 = trackers2.keySet().iterator();
-                while(iter2.hasNext()) {
-                        String k = iter2.next();
-                        Integer v = trackers2.get(k);
-
-                        out.print("<tr><td>" + k + "</td><td>" + v + "</td></tr>");
-                }
-        %>
-   </table>
-   </p>
-
-
     <table border=2 cellpadding="5" cellspacing="2">
     <tr>
       <th><br/></th>

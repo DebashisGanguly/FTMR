@@ -45,88 +45,88 @@ import org.apache.hadoop.util.ToolRunner;
  */
 public class ExternalMapReduce extends Configured implements Tool {
 
-	public void configure(JobConf job) {
-		// do nothing
-	}
+  public void configure(JobConf job) {
+    // do nothing
+  }
 
-	public void close()
-	throws IOException {
+  public void close()
+    throws IOException {
 
-	}
+  }
 
-	public static class MapClass extends MapReduceBase 
-	implements Mapper<WritableComparable, Writable,
-	WritableComparable, IntWritable> {
-		public void map(WritableComparable key, Writable value,
-				OutputCollector<WritableComparable, IntWritable> output,
-				Reporter reporter)
-		throws IOException {
-			//check for classpath
-			String classpath = System.getProperty("java.class.path");
-			if (classpath.indexOf("testjob.jar") == -1) {
-				throw new IOException("failed to find in the library " + classpath);
-			}
-			//fork off ls to see if the file exists.
-			// java file.exists() will not work on 
-			// cygwin since it is a symlink
-			String[] argv = new String[2];
-			argv[0] = "ls";
-			argv[1] = "files_tmp";
-			Process p = Runtime.getRuntime().exec(argv);
-			int ret = -1;
-			try {
-				ret = p.waitFor();
-			} catch(InterruptedException ie) {
-				//do nothing here.
-			}
-			if (ret != 0) {
-				throw new IOException("files_tmp does not exist");
-			}
-		}
-	}
+  public static class MapClass extends MapReduceBase 
+    implements Mapper<WritableComparable, Writable,
+                      WritableComparable, IntWritable> {
+    public void map(WritableComparable key, Writable value,
+                    OutputCollector<WritableComparable, IntWritable> output,
+                    Reporter reporter)
+      throws IOException {
+      //check for classpath
+      String classpath = System.getProperty("java.class.path");
+      if (classpath.indexOf("testjob.jar") == -1) {
+        throw new IOException("failed to find in the library " + classpath);
+      }
+      //fork off ls to see if the file exists.
+      // java file.exists() will not work on 
+      // cygwin since it is a symlink
+      String[] argv = new String[2];
+      argv[0] = "ls";
+      argv[1] = "files_tmp";
+      Process p = Runtime.getRuntime().exec(argv);
+      int ret = -1;
+      try {
+        ret = p.waitFor();
+      } catch(InterruptedException ie) {
+        //do nothing here.
+      }
+      if (ret != 0) {
+        throw new IOException("files_tmp does not exist");
+      }
+    }
+  }
 
-	public static class Reduce extends MapReduceBase
-	implements Reducer<WritableComparable, Writable,
-	WritableComparable, IntWritable> {
-		public void reduce(WritableComparable key, Iterator<Writable> values,
-				OutputCollector<WritableComparable, IntWritable> output,
-				Reporter reporter)
-		throws IOException {
-			//do nothing
-		}
-	}
-
-	public int run(String[] argv) throws IOException {
-		if (argv.length < 2) {
-			System.out.println("ExternalMapReduce <input> <output>");
-			return -1;
-		}
-		Path outDir = new Path(argv[1]);
-		Path input = new Path(argv[0]);
-		JobConf testConf = new JobConf(getConf(), ExternalMapReduce.class);
-
-		//try to load a class from libjar
-		try {
-			testConf.getClassByName("testjar.ClassWordCount");
-		} catch (ClassNotFoundException e) {
-			System.out.println("Could not find class from libjar");
-			return -1;
-		}
-
-
-		testConf.setJobName("external job");
-		FileInputFormat.setInputPaths(testConf, input);
-		FileOutputFormat.setOutputPath(testConf, outDir);
-		testConf.setMapperClass(MapClass.class);
-		testConf.setReducerClass(Reduce.class);
-		testConf.setNumReduceTasks(1);
-		JobClient.runJob(testConf);
-		return 0;
-	}
-
-	public static void main(String[] args) throws Exception {
-		int res = ToolRunner.run(new Configuration(),
-				new ExternalMapReduce(), args);
-		System.exit(res);
-	}
+  public static class Reduce extends MapReduceBase
+    implements Reducer<WritableComparable, Writable,
+                       WritableComparable, IntWritable> {
+    public void reduce(WritableComparable key, Iterator<Writable> values,
+                       OutputCollector<WritableComparable, IntWritable> output,
+                       Reporter reporter)
+      throws IOException {
+     //do nothing
+    }
+  }
+  
+  public int run(String[] argv) throws IOException {
+    if (argv.length < 2) {
+      System.out.println("ExternalMapReduce <input> <output>");
+      return -1;
+    }
+    Path outDir = new Path(argv[1]);
+    Path input = new Path(argv[0]);
+    JobConf testConf = new JobConf(getConf(), ExternalMapReduce.class);
+    
+    //try to load a class from libjar
+    try {
+      testConf.getClassByName("testjar.ClassWordCount");
+    } catch (ClassNotFoundException e) {
+      System.out.println("Could not find class from libjar");
+      return -1;
+    }
+    
+    
+    testConf.setJobName("external job");
+    FileInputFormat.setInputPaths(testConf, input);
+    FileOutputFormat.setOutputPath(testConf, outDir);
+    testConf.setMapperClass(MapClass.class);
+    testConf.setReducerClass(Reduce.class);
+    testConf.setNumReduceTasks(1);
+    JobClient.runJob(testConf);
+    return 0;
+  }
+  
+  public static void main(String[] args) throws Exception {
+    int res = ToolRunner.run(new Configuration(),
+                     new ExternalMapReduce(), args);
+    System.exit(res);
+  }
 }

@@ -20,9 +20,6 @@ package org.apache.hadoop.mapred;
 
 import java.io.File;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * TaskTrackerInstrumentation defines a number of instrumentation points
  * associated with TaskTrackers.  By default, the instrumentation points do
@@ -37,7 +34,6 @@ import org.apache.commons.logging.LogFactory;
 class TaskTrackerInstrumentation  {
 
   protected final TaskTracker tt;
-  public static final Log LOG = LogFactory.getLog(TaskRunner.class);
   
   public TaskTrackerInstrumentation(TaskTracker t) {
     tt = t;
@@ -47,23 +43,23 @@ class TaskTrackerInstrumentation  {
    * invoked when task attempt t succeeds
    * @param t
    */
-  public void completeTask(TaskAttemptID t) { LOG.debug(t.getTaskID() + " reported completed."); }
+  public void completeTask(TaskAttemptID t) { }
   
-  public void timedoutTask(TaskAttemptID t) { LOG.debug(t.getTaskID() + " timeout task."); }
+  public void timedoutTask(TaskAttemptID t) { }
   
-  public void taskFailedPing(TaskAttemptID t) { LOG.debug(t.getTaskID() + " failed ping."); }
+  public void taskFailedPing(TaskAttemptID t) { }
 
   /**
    * Called just before task attempt t starts.
    * @param stdout the file containing standard out of the new task
    * @param stderr the file containing standard error of the new task 
    */
-  public void reportTaskLaunch(TaskAttemptID t, File stdout, File stderr)  { LOG.debug(t.getTaskID() + " reported task launch."); }
+  public void reportTaskLaunch(TaskAttemptID t, File stdout, File stderr)  { }
   
   /**
    * called when task t has just finished.
    * @param t
    */
-  public void reportTaskEnd(TaskAttemptID t) { LOG.debug(t.getTaskID() + " reported end."); }
+  public void reportTaskEnd(TaskAttemptID t) {}
    
 }

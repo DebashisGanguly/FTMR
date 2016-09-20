@@ -19,9 +19,7 @@
 package org.apache.hadoop.examples;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -29,16 +27,8 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableComparable;
-import org.apache.hadoop.mapred.ClusterStatus;
-import org.apache.hadoop.mapred.FileOutputFormat;
-import org.apache.hadoop.mapred.InputFormat;
-import org.apache.hadoop.mapred.JobClient;
-import org.apache.hadoop.mapred.JobConf;
-import org.apache.hadoop.mapred.OutputFormat;
-import org.apache.hadoop.mapred.SequenceFileInputFormat;
-import org.apache.hadoop.mapred.SequenceFileOutputFormat;
-import org.apache.hadoop.mapred.join.CompositeInputFormat;
-import org.apache.hadoop.mapred.join.TupleWritable;
+import org.apache.hadoop.mapred.*;
+import org.apache.hadoop.mapred.join.*;
 import org.apache.hadoop.mapred.lib.IdentityMapper;
 import org.apache.hadoop.mapred.lib.IdentityReducer;
 import org.apache.hadoop.util.Tool;
@@ -94,8 +84,10 @@ public class Join extends Configured implements Tool {
        num_reduces = cluster.getTaskTrackers() * 
                        Integer.parseInt(sort_reduces);
     }
-    Class<? extends InputFormat> inputFormatClass = SequenceFileInputFormat.class;
-    Class<? extends OutputFormat> outputFormatClass = SequenceFileOutputFormat.class;
+    Class<? extends InputFormat> inputFormatClass = 
+      SequenceFileInputFormat.class;
+    Class<? extends OutputFormat> outputFormatClass = 
+      SequenceFileOutputFormat.class;
     Class<? extends WritableComparable> outputKeyClass = BytesWritable.class;
     Class<? extends Writable> outputValueClass = TupleWritable.class;
     String op = "inner";
@@ -142,14 +134,16 @@ public class Join extends Configured implements Tool {
       return printUsage();
     }
 
-    FileOutputFormat.setOutputPath(jobConf, new Path(otherArgs.remove(otherArgs.size() - 1)));
+    FileOutputFormat.setOutputPath(jobConf, 
+      new Path(otherArgs.remove(otherArgs.size() - 1)));
     List<Path> plist = new ArrayList<Path>(otherArgs.size());
     for (String s : otherArgs) {
       plist.add(new Path(s));
     }
 
     jobConf.setInputFormat(CompositeInputFormat.class);
-    jobConf.set("mapred.join.expr", CompositeInputFormat.compose(op, inputFormatClass, plist.toArray(new Path[0])));
+    jobConf.set("mapred.join.expr", CompositeInputFormat.compose(
+          op, inputFormatClass, plist.toArray(new Path[0])));
     jobConf.setOutputFormat(outputFormatClass);
 
     jobConf.setOutputKeyClass(outputKeyClass);

@@ -18,16 +18,10 @@
 #include "hadoop/SerialUtils.hh"
 #include "hadoop/StringUtils.hh"
 
-#ifndef HADOOP_SERIAL_UTILS_HH
-#define HADOOP_SERIAL_UTILS_HH
 #include <errno.h>
 #include <rpc/types.h>
 #include <rpc/xdr.h>
 #include <string>
-#include <string.h>
-#include <stdint.h>
-#include <stdlib.h>
-#endif /* MYHEADER_H */
 
 using std::string;
 
@@ -180,11 +174,9 @@ namespace HadoopUtils {
     HADOOP_ASSERT(bytes == buflen, "unexpected end of string reached");
   }
 
-/*
   void serializeInt(int32_t t, OutStream& stream) {
     serializeLong(t,stream);
   }
-*/
 
   void serializeLong(int64_t t, OutStream& stream)
   {
@@ -217,16 +209,9 @@ namespace HadoopUtils {
     }
   }
 
-  void serializeInt(int32_t t, OutStream& stream) {
-    serializeLong(t,stream);
-  }
-
-
-/*
   int32_t deserializeInt(InStream& stream) {
     return deserializeLong(stream);
   }
-*/
 
   int64_t deserializeLong(InStream& stream)
   {
@@ -255,10 +240,6 @@ namespace HadoopUtils {
       t ^= -1ll;
     }
     return t;
-  }
-
-  int32_t deserializeInt(InStream& stream) {
-    return deserializeLong(stream);
   }
 
   void serializeFloat(float t, OutStream& stream)

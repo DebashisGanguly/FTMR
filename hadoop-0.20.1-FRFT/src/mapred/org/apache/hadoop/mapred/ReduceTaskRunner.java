@@ -17,34 +17,35 @@
  */
 package org.apache.hadoop.mapred;
 
-import java.io.IOException;
+import java.io.*;
 
 import org.apache.hadoop.mapred.TaskTracker.TaskInProgress;
 
 /** Runs a reduce task. */
 class ReduceTaskRunner extends TaskRunner {
+  
+  public ReduceTaskRunner(TaskInProgress task, TaskTracker tracker, 
+                          JobConf conf) throws IOException {
+    
+    super(task, tracker, conf);
+  }
 
-	public ReduceTaskRunner(TaskInProgress task, TaskTracker tracker, JobConf conf) 
-	throws IOException {
-		super(task, tracker, conf, false);
-	}
-
-	/** Assemble all of the map output files */
-	public boolean prepare() throws IOException {
-		if (!super.prepare()) {
-			return false;
-		}
-
-		// cleanup from failures
-		mapOutputFile.removeAll(getTask().getTaskID());
-		return true;
-	}
-
-
-	/** Delete all of the temporary map output files. */
-	public void close() throws IOException {
-		LOG.info(getTask() + " done; removing files.");
-		getTask().getProgress().setStatus("closed");
-		mapOutputFile.removeAll(getTask().getTaskID());
-	}
+  /** Assemble all of the map output files */
+  public boolean prepare() throws IOException {
+    if (!super.prepare()) {
+      return false;
+    }
+    
+    // cleanup from failures
+    mapOutputFile.removeAll(getTask().getTaskID());
+    return true;
+  }
+  
+  
+  /** Delete all of the temporary map output files. */
+  public void close() throws IOException {
+    LOG.info(getTask()+" done; removing files.");
+    getTask().getProgress().setStatus("closed");
+    mapOutputFile.removeAll(getTask().getTaskID());
+  }
 }

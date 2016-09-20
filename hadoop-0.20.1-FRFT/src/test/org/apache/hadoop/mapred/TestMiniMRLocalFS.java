@@ -28,11 +28,11 @@ import java.util.Iterator;
 import junit.framework.TestCase;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.examples.SecondarySort;
-import org.apache.hadoop.examples.WordCount;
 import org.apache.hadoop.examples.SecondarySort.FirstGroupingComparator;
 import org.apache.hadoop.examples.SecondarySort.FirstPartitioner;
 import org.apache.hadoop.examples.SecondarySort.IntPair;
+import org.apache.hadoop.examples.SecondarySort;
+import org.apache.hadoop.examples.WordCount;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -173,12 +173,6 @@ public class TestMiniMRLocalFS extends TestCase {
         first = WritableUtils.readVInt(in);
         length = WritableUtils.readVInt(in);
       }
-
-	@Override
-	public String getName() throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
-		return null;
-	}
     }
 
     static class MyRecordReader implements RecordReader<IntWritable, Text> {

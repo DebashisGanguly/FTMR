@@ -47,352 +47,348 @@ import org.apache.hadoop.util.ReflectionUtils;
  * setInput methods.
  */
 public class DBInputFormat<T  extends DBWritable>
-implements InputFormat<LongWritable, T>, JobConfigurable {
-	/**
-	 * A RecordReader that reads records from a SQL table.
-	 * Emits LongWritables containing the record number as 
-	 * key and DBWritables as value.  
-	 */
-	protected class DBRecordReader implements
-	RecordReader<LongWritable, T> {
-		private ResultSet results;
+  implements InputFormat<LongWritable, T>, JobConfigurable {
+  /**
+   * A RecordReader that reads records from a SQL table.
+   * Emits LongWritables containing the record number as 
+   * key and DBWritables as value.  
+   */
+  protected class DBRecordReader implements
+  RecordReader<LongWritable, T> {
+    private ResultSet results;
 
-		private Statement statement;
+    private Statement statement;
 
-		private Class<T> inputClass;
+    private Class<T> inputClass;
 
-		private JobConf job;
+    private JobConf job;
 
-		private DBInputSplit split;
+    private DBInputSplit split;
 
-		private long pos = 0;
+    private long pos = 0;
 
-		/**
-		 * @param split The InputSplit to read data for
-		 * @throws SQLException 
-		 */
-		protected DBRecordReader(DBInputSplit split, Class<T> inputClass, JobConf job) throws SQLException {
-			this.inputClass = inputClass;
-			this.split = split;
-			this.job = job;
+    /**
+     * @param split The InputSplit to read data for
+     * @throws SQLException 
+     */
+    protected DBRecordReader(DBInputSplit split, Class<T> inputClass, JobConf job) throws SQLException {
+      this.inputClass = inputClass;
+      this.split = split;
+      this.job = job;
+      
+      statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 
-			statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+      //statement.setFetchSize(Integer.MIN_VALUE);
+      results = statement.executeQuery(getSelectQuery());
+    }
 
-			//statement.setFetchSize(Integer.MIN_VALUE);
-			results = statement.executeQuery(getSelectQuery());
-		}
+    /** Returns the query for selecting the records, 
+     * subclasses can override this for custom behaviour.*/
+    protected String getSelectQuery() {
+      StringBuilder query = new StringBuilder();
+      
+      if(dbConf.getInputQuery() == null) {
+        query.append("SELECT ");
 
-		/** Returns the query for selecting the records, 
-		 * subclasses can override this for custom behaviour.*/
-		protected String getSelectQuery() {
-			StringBuilder query = new StringBuilder();
+        for (int i = 0; i < fieldNames.length; i++) {
+          query.append(fieldNames[i]);
+          if(i != fieldNames.length -1) {
+            query.append(", ");
+          }
+        }
 
-			if(dbConf.getInputQuery() == null) {
-				query.append("SELECT ");
+        query.append(" FROM ").append(tableName);
+        query.append(" AS ").append(tableName); //in hsqldb this is necessary
+        if (conditions != null && conditions.length() > 0)
+          query.append(" WHERE (").append(conditions).append(")");
+        String orderBy = dbConf.getInputOrderBy();
+        if(orderBy != null && orderBy.length() > 0) {
+          query.append(" ORDER BY ").append(orderBy);
+        }
+      }
+      else {
+        query.append(dbConf.getInputQuery());
+      }
 
-				for (int i = 0; i < fieldNames.length; i++) {
-					query.append(fieldNames[i]);
-					if(i != fieldNames.length -1) {
-						query.append(", ");
-					}
-				}
+      try {
+        query.append(" LIMIT ").append(split.getLength());
+        query.append(" OFFSET ").append(split.getStart());
+      }
+      catch (IOException ex) {
+        //ignore, will not throw
+      }
+      return query.toString();
+    }
 
-				query.append(" FROM ").append(tableName);
-				query.append(" AS ").append(tableName); //in hsqldb this is necessary
-				if (conditions != null && conditions.length() > 0)
-					query.append(" WHERE (").append(conditions).append(")");
-				String orderBy = dbConf.getInputOrderBy();
-				if(orderBy != null && orderBy.length() > 0) {
-					query.append(" ORDER BY ").append(orderBy);
-				}
-			}
-			else {
-				query.append(dbConf.getInputQuery());
-			}
+    /** {@inheritDoc} */
+    public void close() throws IOException {
+      try {
+        connection.commit();
+        results.close();
+        statement.close();
+      } catch (SQLException e) {
+        throw new IOException(e.getMessage());
+      }
+    }
 
-			try {
-				query.append(" LIMIT ").append(split.getLength());
-				query.append(" OFFSET ").append(split.getStart());
-			}
-			catch (IOException ex) {
-				//ignore, will not throw
-			}
-			return query.toString();
-		}
+    /** {@inheritDoc} */
+    public LongWritable createKey() {
+      return new LongWritable();  
+    }
 
-		/** {@inheritDoc} */
-		public void close() throws IOException {
-			try {
-				connection.commit();
-				results.close();
-				statement.close();
-			} catch (SQLException e) {
-				throw new IOException(e.getMessage());
-			}
-		}
+    /** {@inheritDoc} */
+    public T createValue() {
+      return ReflectionUtils.newInstance(inputClass, job);
+    }
 
-		/** {@inheritDoc} */
-		public LongWritable createKey() {
-			return new LongWritable();  
-		}
+    /** {@inheritDoc} */
+    public long getPos() throws IOException {
+      return pos;
+    }
 
-		/** {@inheritDoc} */
-		public T createValue() {
-			return ReflectionUtils.newInstance(inputClass, job);
-		}
+    /** {@inheritDoc} */
+    public float getProgress() throws IOException {
+      return pos / (float)split.getLength();
+    }
 
-		/** {@inheritDoc} */
-		public long getPos() throws IOException {
-			return pos;
-		}
+    /** {@inheritDoc} */
+    public boolean next(LongWritable key, T value) throws IOException {
+      try {
+        if (!results.next())
+          return false;
 
-		/** {@inheritDoc} */
-		public float getProgress() throws IOException {
-			return pos / (float)split.getLength();
-		}
+        // Set the key field value as the output key value
+        key.set(pos + split.getStart());
 
-		/** {@inheritDoc} */
-		public boolean next(LongWritable key, T value) throws IOException {
-			try {
-				if (!results.next())
-					return false;
+        value.readFields(results);
 
-				// Set the key field value as the output key value
-				key.set(pos + split.getStart());
+        pos ++;
+      } catch (SQLException e) {
+        throw new IOException(e.getMessage());
+      }
+      return true;
+    }
+  }
 
-				value.readFields(results);
+  /**
+   * A Class that does nothing, implementing DBWritable
+   */
+  public static class NullDBWritable implements DBWritable, Writable {
+    @Override
+    public void readFields(DataInput in) throws IOException { }
+    @Override
+    public void readFields(ResultSet arg0) throws SQLException { }
+    @Override
+    public void write(DataOutput out) throws IOException { }
+    @Override
+    public void write(PreparedStatement arg0) throws SQLException { }
+  }
+  /**
+   * A InputSplit that spans a set of rows
+   */
+  protected static class DBInputSplit implements InputSplit {
 
-				pos ++;
-			} catch (SQLException e) {
-				throw new IOException(e.getMessage());
-			}
-			return true;
-		}
-	}
+    private long end = 0;
+    private long start = 0;
 
-	/**
-	 * A Class that does nothing, implementing DBWritable
-	 */
-	public static class NullDBWritable implements DBWritable, Writable {
-		@Override
-		public void readFields(DataInput in) throws IOException { }
-		@Override
-		public void readFields(ResultSet arg0) throws SQLException { }
-		@Override
-		public void write(DataOutput out) throws IOException { }
-		@Override
-		public void write(PreparedStatement arg0) throws SQLException { }
-	}
-	/**
-	 * A InputSplit that spans a set of rows
-	 */
-	protected static class DBInputSplit implements InputSplit {
+    /**
+     * Default Constructor
+     */
+    public DBInputSplit() {
+    }
 
-		private long end = 0;
-		private long start = 0;
+    /**
+     * Convenience Constructor
+     * @param start the index of the first row to select
+     * @param end the index of the last row to select
+     */
+    public DBInputSplit(long start, long end) {
+      this.start = start;
+      this.end = end;
+    }
 
-		/**
-		 * Default Constructor
-		 */
-		public DBInputSplit() {}
+    /** {@inheritDoc} */
+    public String[] getLocations() throws IOException {
+      // TODO Add a layer to enable SQL "sharding" and support locality
+      return new String[] {};
+    }
 
-		/**
-		 * Convenience Constructor
-		 * @param start the index of the first row to select
-		 * @param end the index of the last row to select
-		 */
-		public DBInputSplit(long start, long end) {
-			this.start = start;
-			this.end = end;
-		}
+    /**
+     * @return The index of the first row to select
+     */
+    public long getStart() {
+      return start;
+    }
 
-		/** {@inheritDoc} */
-		public String[] getLocations() throws IOException {
-			// TODO Add a layer to enable SQL "sharding" and support locality
-			return new String[] {};
-		}
+    /**
+     * @return The index of the last row to select
+     */
+    public long getEnd() {
+      return end;
+    }
 
-		/**
-		 * @return The index of the first row to select
-		 */
-		public long getStart() {
-			return start;
-		}
+    /**
+     * @return The total row count in this split
+     */
+    public long getLength() throws IOException {
+      return end - start;
+    }
 
-		/**
-		 * @return The index of the last row to select
-		 */
-		public long getEnd() {
-			return end;
-		}
+    /** {@inheritDoc} */
+    public void readFields(DataInput input) throws IOException {
+      start = input.readLong();
+      end = input.readLong();
+    }
 
-		/**
-		 * @return The total row count in this split
-		 */
-		public long getLength() throws IOException {
-			return end - start;
-		}
+    /** {@inheritDoc} */
+    public void write(DataOutput output) throws IOException {
+      output.writeLong(start);
+      output.writeLong(end);
+    }
+  }
 
-		/** {@inheritDoc} */
-		public void readFields(DataInput input) throws IOException {
-			start = input.readLong();
-			end = input.readLong();
-		}
+  private String conditions;
 
-		/** {@inheritDoc} */
-		public void write(DataOutput output) throws IOException {
-			output.writeLong(start);
-			output.writeLong(end);
-		}
+  private Connection connection;
 
-		@Override
-		public String getName() throws IOException, InterruptedException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-	}
+  private String tableName;
 
-	private String conditions;
+  private String[] fieldNames;
 
-	private Connection connection;
+  private DBConfiguration dbConf;
 
-	private String tableName;
+  /** {@inheritDoc} */
+  public void configure(JobConf job) {
 
-	private String[] fieldNames;
+    dbConf = new DBConfiguration(job);
 
-	private DBConfiguration dbConf;
+    try {
+      this.connection = dbConf.getConnection();
+      this.connection.setAutoCommit(false);
+      connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+    }
+    catch (Exception ex) {
+      throw new RuntimeException(ex);
+    }
 
-	/** {@inheritDoc} */
-	public void configure(JobConf job) {
+    tableName = dbConf.getInputTableName();
+    fieldNames = dbConf.getInputFieldNames();
+    conditions = dbConf.getInputConditions();
+  }
 
-		dbConf = new DBConfiguration(job);
+  /** {@inheritDoc} */
+  @SuppressWarnings("unchecked")
+  public RecordReader<LongWritable, T> getRecordReader(InputSplit split,
+      JobConf job, Reporter reporter) throws IOException {
 
-		try {
-			this.connection = dbConf.getConnection();
-			this.connection.setAutoCommit(false);
-			connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-		}
-		catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
+    Class inputClass = dbConf.getInputClass();
+    try {
+      return new DBRecordReader((DBInputSplit) split, inputClass, job);
+    }
+    catch (SQLException ex) {
+      throw new IOException(ex.getMessage());
+    }
+  }
 
-		tableName = dbConf.getInputTableName();
-		fieldNames = dbConf.getInputFieldNames();
-		conditions = dbConf.getInputConditions();
-	}
+  /** {@inheritDoc} */
+  public InputSplit[] getSplits(JobConf job, int chunks) throws IOException {
 
-	/** {@inheritDoc} */
-	@SuppressWarnings("unchecked")
-	public RecordReader<LongWritable, T> getRecordReader(InputSplit split,
-			JobConf job, Reporter reporter) throws IOException {
+    try {
+      Statement statement = connection.createStatement();
 
-		Class inputClass = dbConf.getInputClass();
-		try {
-			return new DBRecordReader((DBInputSplit) split, inputClass, job);
-		}
-		catch (SQLException ex) {
-			throw new IOException(ex.getMessage());
-		}
-	}
+      ResultSet results = statement.executeQuery(getCountQuery());
+      results.next();
 
-	/** {@inheritDoc} */
-	public InputSplit[] getSplits(JobConf job, int chunks) throws IOException {
+      long count = results.getLong(1);
+      long chunkSize = (count / chunks);
 
-		try {
-			Statement statement = connection.createStatement();
+      results.close();
+      statement.close();
 
-			ResultSet results = statement.executeQuery(getCountQuery());
-			results.next();
+      InputSplit[] splits = new InputSplit[chunks];
 
-			long count = results.getLong(1);
-			long chunkSize = (count / chunks);
+      // Split the rows into n-number of chunks and adjust the last chunk
+      // accordingly
+      for (int i = 0; i < chunks; i++) {
+        DBInputSplit split;
 
-			results.close();
-			statement.close();
+        if ((i + 1) == chunks)
+          split = new DBInputSplit(i * chunkSize, count);
+        else
+          split = new DBInputSplit(i * chunkSize, (i * chunkSize)
+              + chunkSize);
 
-			InputSplit[] splits = new InputSplit[chunks];
+        splits[i] = split;
+      }
 
-			// Split the rows into n-number of chunks and adjust the last chunk
-			// accordingly
-			for (int i = 0; i < chunks; i++) {
-				DBInputSplit split;
+      return splits;
+    } catch (SQLException e) {
+      throw new IOException(e.getMessage());
+    }
+  }
 
-				if ((i + 1) == chunks)
-					split = new DBInputSplit(i * chunkSize, count);
-				else
-					split = new DBInputSplit(i * chunkSize, (i * chunkSize)
-							+ chunkSize);
+  /** Returns the query for getting the total number of rows, 
+   * subclasses can override this for custom behaviour.*/
+  protected String getCountQuery() {
+    
+    if(dbConf.getInputCountQuery() != null) {
+      return dbConf.getInputCountQuery();
+    }
+    
+    StringBuilder query = new StringBuilder();
+    query.append("SELECT COUNT(*) FROM " + tableName);
 
-				splits[i] = split;
-			}
+    if (conditions != null && conditions.length() > 0)
+      query.append(" WHERE " + conditions);
+    return query.toString();
+  }
 
-			return splits;
-		} catch (SQLException e) {
-			throw new IOException(e.getMessage());
-		}
-	}
+  /**
+   * Initializes the map-part of the job with the appropriate input settings.
+   * 
+   * @param job The job
+   * @param inputClass the class object implementing DBWritable, which is the 
+   * Java object holding tuple fields.
+   * @param tableName The table to read data from
+   * @param conditions The condition which to select data with, eg. '(updated >
+   * 20070101 AND length > 0)'
+   * @param orderBy the fieldNames in the orderBy clause.
+   * @param fieldNames The field names in the table
+   * @see #setInput(JobConf, Class, String, String)
+   */
+  public static void setInput(JobConf job, Class<? extends DBWritable> inputClass,
+      String tableName,String conditions, String orderBy, String... fieldNames) {
+    job.setInputFormat(DBInputFormat.class);
 
-	/** Returns the query for getting the total number of rows, 
-	 * subclasses can override this for custom behaviour.*/
-	protected String getCountQuery() {
-
-		if(dbConf.getInputCountQuery() != null) {
-			return dbConf.getInputCountQuery();
-		}
-
-		StringBuilder query = new StringBuilder();
-		query.append("SELECT COUNT(*) FROM " + tableName);
-
-		if (conditions != null && conditions.length() > 0)
-			query.append(" WHERE " + conditions);
-		return query.toString();
-	}
-
-	/**
-	 * Initializes the map-part of the job with the appropriate input settings.
-	 * 
-	 * @param job The job
-	 * @param inputClass the class object implementing DBWritable, which is the 
-	 * Java object holding tuple fields.
-	 * @param tableName The table to read data from
-	 * @param conditions The condition which to select data with, eg. '(updated >
-	 * 20070101 AND length > 0)'
-	 * @param orderBy the fieldNames in the orderBy clause.
-	 * @param fieldNames The field names in the table
-	 * @see #setInput(JobConf, Class, String, String)
-	 */
-	public static void setInput(JobConf job, Class<? extends DBWritable> inputClass,
-			String tableName,String conditions, String orderBy, String... fieldNames) {
-		job.setInputFormat(DBInputFormat.class);
-
-		DBConfiguration dbConf = new DBConfiguration(job);
-		dbConf.setInputClass(inputClass);
-		dbConf.setInputTableName(tableName);
-		dbConf.setInputFieldNames(fieldNames);
-		dbConf.setInputConditions(conditions);
-		dbConf.setInputOrderBy(orderBy);
-	}
-
-	/**
-	 * Initializes the map-part of the job with the appropriate input settings.
-	 * 
-	 * @param job The job
-	 * @param inputClass the class object implementing DBWritable, which is the 
-	 * Java object holding tuple fields.
-	 * @param inputQuery the input query to select fields. Example : 
-	 * "SELECT f1, f2, f3 FROM Mytable ORDER BY f1"
-	 * @param inputCountQuery the input query that returns the number of records in
-	 * the table. 
-	 * Example : "SELECT COUNT(f1) FROM Mytable"
-	 * @see #setInput(JobConf, Class, String, String, String, String...)
-	 */
-	public static void setInput(JobConf job, Class<? extends DBWritable> inputClass,
-			String inputQuery, String inputCountQuery) {
-		job.setInputFormat(DBInputFormat.class);
-
-		DBConfiguration dbConf = new DBConfiguration(job);
-		dbConf.setInputClass(inputClass);
-		dbConf.setInputQuery(inputQuery);
-		dbConf.setInputCountQuery(inputCountQuery);
-	}
+    DBConfiguration dbConf = new DBConfiguration(job);
+    dbConf.setInputClass(inputClass);
+    dbConf.setInputTableName(tableName);
+    dbConf.setInputFieldNames(fieldNames);
+    dbConf.setInputConditions(conditions);
+    dbConf.setInputOrderBy(orderBy);
+  }
+  
+  /**
+   * Initializes the map-part of the job with the appropriate input settings.
+   * 
+   * @param job The job
+   * @param inputClass the class object implementing DBWritable, which is the 
+   * Java object holding tuple fields.
+   * @param inputQuery the input query to select fields. Example : 
+   * "SELECT f1, f2, f3 FROM Mytable ORDER BY f1"
+   * @param inputCountQuery the input query that returns the number of records in
+   * the table. 
+   * Example : "SELECT COUNT(f1) FROM Mytable"
+   * @see #setInput(JobConf, Class, String, String, String, String...)
+   */
+  public static void setInput(JobConf job, Class<? extends DBWritable> inputClass,
+      String inputQuery, String inputCountQuery) {
+    job.setInputFormat(DBInputFormat.class);
+    
+    DBConfiguration dbConf = new DBConfiguration(job);
+    dbConf.setInputClass(inputClass);
+    dbConf.setInputQuery(inputQuery);
+    dbConf.setInputCountQuery(inputCountQuery);
+    
+  }
 }

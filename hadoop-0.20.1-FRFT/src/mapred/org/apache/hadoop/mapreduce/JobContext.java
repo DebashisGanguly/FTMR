@@ -23,6 +23,7 @@ import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.RawComparator;
+import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.mapreduce.lib.partition.HashPartitioner;
@@ -32,202 +33,204 @@ import org.apache.hadoop.mapreduce.lib.partition.HashPartitioner;
  * are running.
  */
 public class JobContext {
-	// Put all of the attribute names in here so that Job and JobContext are
-	// consistent.
-	protected static final String INPUT_FORMAT_CLASS_ATTR 	= "mapreduce.inputformat.class";
-	protected static final String MAP_CLASS_ATTR 			= "mapreduce.map.class";
-	protected static final String COMBINE_CLASS_ATTR 		= "mapreduce.combine.class";
-	protected static final String REDUCE_CLASS_ATTR 		= "mapreduce.reduce.class";
-	protected static final String OUTPUT_FORMAT_CLASS_ATTR 	= "mapreduce.outputformat.class";
-	protected static final String PARTITIONER_CLASS_ATTR 	= "mapreduce.partitioner.class";
+  // Put all of the attribute names in here so that Job and JobContext are
+  // consistent.
+  protected static final String INPUT_FORMAT_CLASS_ATTR = 
+    "mapreduce.inputformat.class";
+  protected static final String MAP_CLASS_ATTR = "mapreduce.map.class";
+  protected static final String COMBINE_CLASS_ATTR = "mapreduce.combine.class";
+  protected static final String REDUCE_CLASS_ATTR = "mapreduce.reduce.class";
+  protected static final String OUTPUT_FORMAT_CLASS_ATTR = 
+    "mapreduce.outputformat.class";
+  protected static final String PARTITIONER_CLASS_ATTR = 
+    "mapreduce.partitioner.class";
 
-	protected final org.apache.hadoop.mapred.JobConf conf;
-	private final JobID jobId;
+  protected final org.apache.hadoop.mapred.JobConf conf;
+  private final JobID jobId;
+  
+  public JobContext(Configuration conf, JobID jobId) {
+    this.conf = new org.apache.hadoop.mapred.JobConf(conf);
+    this.jobId = jobId;
+  }
 
-	public JobContext(final Configuration conf, final JobID jobId) { 
-		this.conf = new org.apache.hadoop.mapred.JobConf(conf);
-		this.jobId = jobId;
-	}
+  /**
+   * Return the configuration for the job.
+   * @return the shared configuration object
+   */
+  public Configuration getConfiguration() {
+    return conf;
+  }
 
-	/**
-	 * Return the configuration for the job.
-	 * @return the shared configuration object
-	 */
-	public Configuration getConfiguration() {
-		return conf;
-	}
+  /**
+   * Get the unique ID for the job.
+   * @return the object with the job id
+   */
+  public JobID getJobID() {
+    return jobId;
+  }
+  
+  /**
+   * Get configured the number of reduce tasks for this job. Defaults to 
+   * <code>1</code>.
+   * @return the number of reduce tasks for this job.
+   */
+  public int getNumReduceTasks() {
+    return conf.getNumReduceTasks();
+  }
+  
+  /**
+   * Get the current working directory for the default file system.
+   * 
+   * @return the directory name.
+   */
+  public Path getWorkingDirectory() throws IOException {
+    return conf.getWorkingDirectory();
+  }
 
-	/**
-	 * Get the unique ID for the job.
-	 * @return the object with the job id
-	 */
-	public JobID getJobID() {
-		return jobId;
-	}
+  /**
+   * Get the key class for the job output data.
+   * @return the key class for the job output data.
+   */
+  public Class<?> getOutputKeyClass() {
+    return conf.getOutputKeyClass();
+  }
+  
+  /**
+   * Get the value class for job outputs.
+   * @return the value class for job outputs.
+   */
+  public Class<?> getOutputValueClass() {
+    return conf.getOutputValueClass();
+  }
 
-	/**
-	 * Get configured the number of reduce tasks for this job. Defaults to 
-	 * <code>1</code>.
-	 * @return the number of reduce tasks for this job.
-	 */
-	public int getNumReduceTasks() {
-		return conf.getNumReduceTasks();
-	}
+  /**
+   * Get the key class for the map output data. If it is not set, use the
+   * (final) output key class. This allows the map output key class to be
+   * different than the final output key class.
+   * @return the map output key class.
+   */
+  public Class<?> getMapOutputKeyClass() {
+    return conf.getMapOutputKeyClass();
+  }
 
-	public int getNrOfReplica() {
-		return conf.getFaultTolerance();
-	}
-	/**
-	 * Get the current working directory for the default file system.
-	 * 
-	 * @return the directory name.
-	 */
-	public Path getWorkingDirectory() throws IOException {
-		return conf.getWorkingDirectory();
-	}
+  /**
+   * Get the value class for the map output data. If it is not set, use the
+   * (final) output value class This allows the map output value class to be
+   * different than the final output value class.
+   *  
+   * @return the map output value class.
+   */
+  public Class<?> getMapOutputValueClass() {
+    return conf.getMapOutputValueClass();
+  }
 
-	/**
-	 * Get the key class for the job output data.
-	 * @return the key class for the job output data.
-	 */
-	public Class<?> getOutputKeyClass() {
-		return conf.getOutputKeyClass();
-	}
+  /**
+   * Get the user-specified job name. This is only used to identify the 
+   * job to the user.
+   * 
+   * @return the job's name, defaulting to "".
+   */
+  public String getJobName() {
+    return conf.getJobName();
+  }
 
-	/**
-	 * Get the value class for job outputs.
-	 * @return the value class for job outputs.
-	 */
-	public Class<?> getOutputValueClass() {
-		return conf.getOutputValueClass();
-	}
+  /**
+   * Get the {@link InputFormat} class for the job.
+   * 
+   * @return the {@link InputFormat} class for the job.
+   */
+  @SuppressWarnings("unchecked")
+  public Class<? extends InputFormat<?,?>> getInputFormatClass() 
+     throws ClassNotFoundException {
+    return (Class<? extends InputFormat<?,?>>) 
+      conf.getClass(INPUT_FORMAT_CLASS_ATTR, TextInputFormat.class);
+  }
 
-	/**
-	 * Get the key class for the map output data. If it is not set, use the
-	 * (final) output key class. This allows the map output key class to be
-	 * different than the final output key class.
-	 * @return the map output key class.
-	 */
-	public Class<?> getMapOutputKeyClass() {
-		return conf.getMapOutputKeyClass();
-	}
+  /**
+   * Get the {@link Mapper} class for the job.
+   * 
+   * @return the {@link Mapper} class for the job.
+   */
+  @SuppressWarnings("unchecked")
+  public Class<? extends Mapper<?,?,?,?>> getMapperClass() 
+     throws ClassNotFoundException {
+    return (Class<? extends Mapper<?,?,?,?>>) 
+      conf.getClass(MAP_CLASS_ATTR, Mapper.class);
+  }
 
-	/**
-	 * Get the value class for the map output data. If it is not set, use the
-	 * (final) output value class This allows the map output value class to be
-	 * different than the final output value class.
-	 *  
-	 * @return the map output value class.
-	 */
-	public Class<?> getMapOutputValueClass() {
-		return conf.getMapOutputValueClass();
-	}
+  /**
+   * Get the combiner class for the job.
+   * 
+   * @return the combiner class for the job.
+   */
+  @SuppressWarnings("unchecked")
+  public Class<? extends Reducer<?,?,?,?>> getCombinerClass() 
+     throws ClassNotFoundException {
+    return (Class<? extends Reducer<?,?,?,?>>) 
+      conf.getClass(COMBINE_CLASS_ATTR, null);
+  }
 
-	/**
-	 * Get the user-specified job name. This is only used to identify the 
-	 * job to the user.
-	 * 
-	 * @return the job's name, defaulting to "".
-	 */
-	public String getJobName() {
-		return conf.getJobName();
-	}
+  /**
+   * Get the {@link Reducer} class for the job.
+   * 
+   * @return the {@link Reducer} class for the job.
+   */
+  @SuppressWarnings("unchecked")
+  public Class<? extends Reducer<?,?,?,?>> getReducerClass() 
+     throws ClassNotFoundException {
+    return (Class<? extends Reducer<?,?,?,?>>) 
+      conf.getClass(REDUCE_CLASS_ATTR, Reducer.class);
+  }
 
-	/**
-	 * Get the {@link InputFormat} class for the job.
-	 * 
-	 * @return the {@link InputFormat} class for the job.
-	 */
-	@SuppressWarnings("unchecked")
-	public Class<? extends InputFormat<?,?>> getInputFormatClass() 
-			throws ClassNotFoundException {
-		return (Class<? extends InputFormat<?,?>>) 
-		conf.getClass(INPUT_FORMAT_CLASS_ATTR, TextInputFormat.class);
-	}
+  /**
+   * Get the {@link OutputFormat} class for the job.
+   * 
+   * @return the {@link OutputFormat} class for the job.
+   */
+  @SuppressWarnings("unchecked")
+  public Class<? extends OutputFormat<?,?>> getOutputFormatClass() 
+     throws ClassNotFoundException {
+    return (Class<? extends OutputFormat<?,?>>) 
+      conf.getClass(OUTPUT_FORMAT_CLASS_ATTR, TextOutputFormat.class);
+  }
 
-	/**
-	 * Get the {@link Mapper} class for the job.
-	 * 
-	 * @return the {@link Mapper} class for the job.
-	 */
-	@SuppressWarnings("unchecked")
-	public Class<? extends Mapper<?,?,?,?>> getMapperClass() 
-			throws ClassNotFoundException {
-		return (Class<? extends Mapper<?,?,?,?>>) 
-		conf.getClass(MAP_CLASS_ATTR, Mapper.class);
-	}
+  /**
+   * Get the {@link Partitioner} class for the job.
+   * 
+   * @return the {@link Partitioner} class for the job.
+   */
+  @SuppressWarnings("unchecked")
+  public Class<? extends Partitioner<?,?>> getPartitionerClass() 
+     throws ClassNotFoundException {
+    return (Class<? extends Partitioner<?,?>>) 
+      conf.getClass(PARTITIONER_CLASS_ATTR, HashPartitioner.class);
+  }
 
-	/**
-	 * Get the combiner class for the job.
-	 * 
-	 * @return the combiner class for the job.
-	 */
-	@SuppressWarnings("unchecked")
-	public Class<? extends Reducer<?,?,?,?>> getCombinerClass() 
-			throws ClassNotFoundException {
-		return (Class<? extends Reducer<?,?,?,?>>) conf.getClass(COMBINE_CLASS_ATTR, null);
-	}
+  /**
+   * Get the {@link RawComparator} comparator used to compare keys.
+   * 
+   * @return the {@link RawComparator} comparator used to compare keys.
+   */
+  public RawComparator<?> getSortComparator() {
+    return conf.getOutputKeyComparator();
+  }
 
-	/**
-	 * Get the {@link Reducer} class for the job.
-	 * 
-	 * @return the {@link Reducer} class for the job.
-	 */
-	@SuppressWarnings("unchecked")
-	public Class<? extends Reducer<?,?,?,?>> getReducerClass() 
-			throws ClassNotFoundException {
-		return (Class<? extends Reducer<?,?,?,?>>) 
-		conf.getClass(REDUCE_CLASS_ATTR, Reducer.class);
-	}
+  /**
+   * Get the pathname of the job's jar.
+   * @return the pathname
+   */
+  public String getJar() {
+    return conf.getJar();
+  }
 
-	/**
-	 * Get the {@link OutputFormat} class for the job.
-	 * 
-	 * @return the {@link OutputFormat} class for the job.
-	 */
-	@SuppressWarnings("unchecked")
-	public Class<? extends OutputFormat<?,?>> getOutputFormatClass() 
-			throws ClassNotFoundException {
-		return (Class<? extends OutputFormat<?,?>>) 
-		conf.getClass(OUTPUT_FORMAT_CLASS_ATTR, TextOutputFormat.class);
-	}
-
-	/**
-	 * Get the {@link Partitioner} class for the job.
-	 * 
-	 * @return the {@link Partitioner} class for the job.
-	 */
-	@SuppressWarnings("unchecked")
-	public Class<? extends Partitioner<?,?>> getPartitionerClass() 
-			throws ClassNotFoundException {
-		return (Class<? extends Partitioner<?,?>>) conf.getClass(PARTITIONER_CLASS_ATTR, HashPartitioner.class);
-	}
-
-	/**
-	 * Get the {@link RawComparator} comparator used to compare keys.
-	 * 
-	 * @return the {@link RawComparator} comparator used to compare keys.
-	 */
-	public RawComparator<?> getSortComparator() {
-		return conf.getOutputKeyComparator();
-	}
-
-	/**
-	 * Get the pathname of the job's jar.
-	 * @return the pathname
-	 */
-	public String getJar() {
-		return conf.getJar();
-	}
-
-	/** 
-	 * Get the user defined {@link RawComparator} comparator for 
-	 * grouping keys of inputs to the reduce.
-	 * 
-	 * @return comparator set by the user for grouping values.
-	 * @see Job#setGroupingComparatorClass(Class) for details.  
-	 */
-	public RawComparator<?> getGroupingComparator() {
-		return conf.getOutputValueGroupingComparator();
-	}
+  /** 
+   * Get the user defined {@link RawComparator} comparator for 
+   * grouping keys of inputs to the reduce.
+   * 
+   * @return comparator set by the user for grouping values.
+   * @see Job#setGroupingComparatorClass(Class) for details.  
+   */
+  public RawComparator<?> getGroupingComparator() {
+    return conf.getOutputValueGroupingComparator();
+  }
 }

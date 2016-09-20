@@ -22,10 +22,10 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Iterator;
 
-import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import junit.extensions.TestSetup;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
@@ -374,11 +374,6 @@ public class TestDatamerge extends TestCase {
       public void readFields(DataInput in) throws IOException { }
       public long getLength() { return 0L; }
       public String[] getLocations() { return new String[0]; }
-	@Override
-	public String getName() throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
-		return null;
-	}
     }
 
     public static void setKeyClass(JobConf job, Class<?> k) {

@@ -94,59 +94,55 @@ import org.apache.hadoop.io.compress.CompressionCodec;
  */
 public class Mapper<KEYIN, VALUEIN, KEYOUT, VALUEOUT> {
 
-	public class Context 
-	extends MapContext<KEYIN,VALUEIN,KEYOUT,VALUEOUT> {
-		public Context(Configuration conf, TaskAttemptID taskid,
-				RecordReader<KEYIN,VALUEIN> reader,
-				RecordWriter<KEYOUT,VALUEOUT> writer,
-				OutputCommitter committer,
-				StatusReporter reporter,
-				InputSplit split) throws IOException, InterruptedException {
+  public class Context 
+    extends MapContext<KEYIN,VALUEIN,KEYOUT,VALUEOUT> {
+    public Context(Configuration conf, TaskAttemptID taskid,
+                   RecordReader<KEYIN,VALUEIN> reader,
+                   RecordWriter<KEYOUT,VALUEOUT> writer,
+                   OutputCommitter committer,
+                   StatusReporter reporter,
+                   InputSplit split) throws IOException, InterruptedException {
+      super(conf, taskid, reader, writer, committer, reporter, split);
+    }
+  }
+  
+  /**
+   * Called once at the beginning of the task.
+   */
+  protected void setup(Context context
+                       ) throws IOException, InterruptedException {
+    // NOTHING
+  }
 
-			super(conf, taskid, reader, writer, committer, reporter, split);
-		}
-	}
+  /**
+   * Called once for each key/value pair in the input split. Most applications
+   * should override this, but the default is the identity function.
+   */
+  @SuppressWarnings("unchecked")
+  protected void map(KEYIN key, VALUEIN value, 
+                     Context context) throws IOException, InterruptedException {
+    context.write((KEYOUT) key, (VALUEOUT) value);
+  }
 
-	/**
-	 * Called once at the beginning of the task.
-	 */
-	protected void setup(Context context
-	) throws IOException, InterruptedException {
-		// NOTHING
-	}
-
-	/**
-	 * Called once for each key/value pair in the input split. Most applications
-	 * should override this, but the default is the identity function.
-	 */
-	@SuppressWarnings("unchecked")
-	protected void map(KEYIN key, VALUEIN value, Context context) 
-	throws IOException, InterruptedException {
-		context.write((KEYOUT) key, (VALUEOUT) value);
-	}
-
-	/**
-	 * Called once at the end of the task.
-	 */
-	protected void cleanup(Context context
-	) throws IOException, InterruptedException {
-		// NOTHING
-	}
-
-	/**
-	 * Expert users can override this method for more complete control over the
-	 * execution of the Mapper.
-	 * @param context
-	 * @throws IOException
-	 */
-	public void run(Context context) throws IOException, InterruptedException {
-		setup(context);
-		while (context.nextKeyValue()) {
-			KEYIN k = context.getCurrentKey();
-			VALUEIN v = context.getCurrentValue();
-
-			map(k, v, context);
-		}
-		cleanup(context);
-	}
+  /**
+   * Called once at the end of the task.
+   */
+  protected void cleanup(Context context
+                         ) throws IOException, InterruptedException {
+    // NOTHING
+  }
+  
+  /**
+   * Expert users can override this method for more complete control over the
+   * execution of the Mapper.
+   * @param context
+   * @throws IOException
+   */
+  public void run(Context context) throws IOException, InterruptedException {
+    setup(context);
+    while (context.nextKeyValue()) {
+      map(context.getCurrentKey(), context.getCurrentValue(), context);
+    }
+    cleanup(context);
+  }
 }

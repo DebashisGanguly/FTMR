@@ -17,9 +17,6 @@
  */
 package org.apache.hadoop.mapred;
 
-/**
- * NOTE: scheduleReduces()
- */
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,260 +31,280 @@ import org.apache.hadoop.conf.Configuration;
  * by default).
  */
 class JobQueueTaskScheduler extends TaskScheduler {
-
-    private static final int MIN_CLUSTER_SIZE_FOR_PADDING = 3;
-    public static final Log LOG = LogFactory.getLog(JobQueueTaskScheduler.class);
-
-    protected JobQueueJobInProgressListener jobQueueJobInProgressListener;
-    protected EagerTaskInitializationListener eagerTaskInitializationListener;
-    private float padFraction;
-
-    public JobQueueTaskScheduler() {
-        this.jobQueueJobInProgressListener = new JobQueueJobInProgressListener();
+  
+  private static final int MIN_CLUSTER_SIZE_FOR_PADDING = 3;
+  public static final Log LOG = LogFactory.getLog(JobQueueTaskScheduler.class);
+  
+  protected JobQueueJobInProgressListener jobQueueJobInProgressListener;
+  protected EagerTaskInitializationListener eagerTaskInitializationListener;
+  private float padFraction;
+  
+  public JobQueueTaskScheduler() {
+    this.jobQueueJobInProgressListener = new JobQueueJobInProgressListener();
+  }
+  
+  @Override
+  public synchronized void start() throws IOException {
+    super.start();
+    taskTrackerManager.addJobInProgressListener(jobQueueJobInProgressListener);
+    eagerTaskInitializationListener.setTaskTrackerManager(taskTrackerManager);
+    eagerTaskInitializationListener.start();
+    taskTrackerManager.addJobInProgressListener(
+        eagerTaskInitializationListener);
+  }
+  
+  @Override
+  public synchronized void terminate() throws IOException {
+    if (jobQueueJobInProgressListener != null) {
+      taskTrackerManager.removeJobInProgressListener(
+          jobQueueJobInProgressListener);
     }
-
-    @Override
-    public synchronized void start() throws IOException {
-        super.start();
-        taskTrackerManager.addJobInProgressListener(jobQueueJobInProgressListener);
-        eagerTaskInitializationListener.setTaskTrackerManager(taskTrackerManager);
-        eagerTaskInitializationListener.start();
-        taskTrackerManager.addJobInProgressListener(eagerTaskInitializationListener);
+    if (eagerTaskInitializationListener != null) {
+      taskTrackerManager.removeJobInProgressListener(
+          eagerTaskInitializationListener);
+      eagerTaskInitializationListener.terminate();
     }
+    super.terminate();
+  }
+  
+  @Override
+  public synchronized void setConf(Configuration conf) {
+    super.setConf(conf);
+    padFraction = conf.getFloat("mapred.jobtracker.taskalloc.capacitypad", 
+                                 0.01f);
+    this.eagerTaskInitializationListener =
+      new EagerTaskInitializationListener(conf);
+  }
 
-    @Override
-    public synchronized void terminate() throws IOException {
-        if (jobQueueJobInProgressListener != null) {
-            taskTrackerManager.removeJobInProgressListener(
-                    jobQueueJobInProgressListener);
+  @Override
+  public synchronized List<Task> assignTasks(TaskTrackerStatus taskTracker)
+      throws IOException {
+
+    ClusterStatus clusterStatus = taskTrackerManager.getClusterStatus();
+    final int numTaskTrackers = clusterStatus.getTaskTrackers();
+    final int clusterMapCapacity = clusterStatus.getMaxMapTasks();
+    final int clusterReduceCapacity = clusterStatus.getMaxReduceTasks();
+
+    Collection<JobInProgress> jobQueue =
+      jobQueueJobInProgressListener.getJobQueue();
+
+    //
+    // Get map + reduce counts for the current tracker.
+    //
+    final int trackerMapCapacity = taskTracker.getMaxMapTasks();
+    final int trackerReduceCapacity = taskTracker.getMaxReduceTasks();
+    final int trackerRunningMaps = taskTracker.countMapTasks();
+    final int trackerRunningReduces = taskTracker.countReduceTasks();
+
+    // Assigned tasks
+    List<Task> assignedTasks = new ArrayList<Task>();
+
+    //
+    // Compute (running + pending) map and reduce task numbers across pool
+    //
+    int remainingReduceLoad = 0;
+    int remainingMapLoad = 0;
+    synchronized (jobQueue) {
+      for (JobInProgress job : jobQueue) {
+        if (job.getStatus().getRunState() == JobStatus.RUNNING) {
+          remainingMapLoad += (job.desiredMaps() - job.finishedMaps());
+          if (job.scheduleReduces()) {
+            remainingReduceLoad += 
+              (job.desiredReduces() - job.finishedReduces());
+          }
         }
-        if (eagerTaskInitializationListener != null) {
-            taskTrackerManager.removeJobInProgressListener(
-                    eagerTaskInitializationListener);
-            eagerTaskInitializationListener.terminate();
-        }
-        super.terminate();
+      }
     }
 
-    @Override
-    public synchronized void setConf(Configuration conf) {
-        super.setConf(conf);
-        padFraction = conf.getFloat("mapred.jobtracker.taskalloc.capacitypad", 0.01f);
-
-        this.eagerTaskInitializationListener = new EagerTaskInitializationListener(conf);
+    // Compute the 'load factor' for maps and reduces
+    double mapLoadFactor = 0.0;
+    if (clusterMapCapacity > 0) {
+      mapLoadFactor = (double)remainingMapLoad / clusterMapCapacity;
     }
+    double reduceLoadFactor = 0.0;
+    if (clusterReduceCapacity > 0) {
+      reduceLoadFactor = (double)remainingReduceLoad / clusterReduceCapacity;
+    }
+        
+    //
+    // In the below steps, we allocate first map tasks (if appropriate),
+    // and then reduce tasks if appropriate.  We go through all jobs
+    // in order of job arrival; jobs only get serviced if their 
+    // predecessors are serviced, too.
+    //
 
-    /**
-     * Assign tasks
-     * 
-     * No lado reduce devolve uma task com um reduce TIP
-     */
-    @Override
-    public synchronized List<Task> assignTasks(TaskTrackerStatus taskTracker)
-            throws IOException {
-        ClusterStatus clusterStatus = taskTrackerManager.getClusterStatus();
-        final int numTaskTrackers = clusterStatus.getTaskTrackers();
-        final int clusterMapCapacity = clusterStatus.getMaxMapTasks();
-        final int clusterReduceCapacity = clusterStatus.getMaxReduceTasks();
+    //
+    // We assign tasks to the current taskTracker if the given machine 
+    // has a workload that's less than the maximum load of that kind of
+    // task.
+    // However, if the cluster is close to getting loaded i.e. we don't
+    // have enough _padding_ for speculative executions etc., we only 
+    // schedule the "highest priority" task i.e. the task from the job 
+    // with the highest priority.
+    //
+    
+    final int trackerCurrentMapCapacity = 
+      Math.min((int)Math.ceil(mapLoadFactor * trackerMapCapacity), 
+                              trackerMapCapacity);
+    int availableMapSlots = trackerCurrentMapCapacity - trackerRunningMaps;
+    boolean exceededMapPadding = false;
+    if (availableMapSlots > 0) {
+      exceededMapPadding = 
+        exceededPadding(true, clusterStatus, trackerMapCapacity);
+    }
+    
+    int numLocalMaps = 0;
+    int numNonLocalMaps = 0;
+    scheduleMaps:
+    for (int i=0; i < availableMapSlots; ++i) {
+      synchronized (jobQueue) {
+        for (JobInProgress job : jobQueue) {
+          if (job.getStatus().getRunState() != JobStatus.RUNNING) {
+            continue;
+          }
 
-        Collection<JobInProgress> jobQueue = jobQueueJobInProgressListener.getJobQueue();
-
-        //
-        // Get map + reduce counts for the current tracker.
-        //
-        final int trackerMapCapacity = taskTracker.getMaxMapTasks(); // get the max tasks that can run at same time (mapred.tasktracker.map.tasks.maximum)
-        final int trackerReduceCapacity = taskTracker.getMaxReduceTasks(); // get the max tasks that can run at same time (mapred.tasktracker.reduce.tasks.maximum)
-        final int trackerRunningMaps = taskTracker.countMapTasks();
-        final int trackerRunningReduces = taskTracker.countReduceTasks();
-
-        // Assigned tasks
-        List<Task> assignedTasks = new ArrayList<Task>();
-
-        //
-        // Compute (running + pending) map and reduce task numbers across pool
-        int remainingReduceLoad = 0;
-        int remainingMapLoad = 0;
-        synchronized (jobQueue) {
-            for (JobInProgress job : jobQueue) {
-                if (job.getStatus().getRunState() == JobStatus.RUNNING) {
-                    remainingMapLoad += (job.desiredMaps() - job.finishedMaps());
-                    if (job.scheduleReduces()) {
-                        remainingReduceLoad += (job.desiredReduces() - job.finishedReduces());
-                    }
-                }
+          Task t = null;
+          
+          // Try to schedule a node-local or rack-local Map task
+          t = 
+            job.obtainNewLocalMapTask(taskTracker, numTaskTrackers,
+                                      taskTrackerManager.getNumberOfUniqueHosts());
+          if (t != null) {
+            assignedTasks.add(t);
+            ++numLocalMaps;
+            
+            // Don't assign map tasks to the hilt!
+            // Leave some free slots in the cluster for future task-failures,
+            // speculative tasks etc. beyond the highest priority job
+            if (exceededMapPadding) {
+              break scheduleMaps;
             }
+           
+            // Try all jobs again for the next Map task 
+            break;
+          }
+          
+          // Try to schedule a node-local or rack-local Map task
+          t = 
+            job.obtainNewNonLocalMapTask(taskTracker, numTaskTrackers,
+                                   taskTrackerManager.getNumberOfUniqueHosts());
+          
+          if (t != null) {
+            assignedTasks.add(t);
+            ++numNonLocalMaps;
+            
+            // We assign at most 1 off-switch or speculative task
+            // This is to prevent TaskTrackers from stealing local-tasks
+            // from other TaskTrackers.
+            break scheduleMaps;
+          }
         }
+      }
+    }
+    int assignedMaps = assignedTasks.size();
 
-        // Compute the 'load factor' for maps and reduces
-        double mapLoadFactor = 0.0;
-        if (clusterMapCapacity > 0) {
-            mapLoadFactor = (double)remainingMapLoad / clusterMapCapacity;
+    //
+    // Same thing, but for reduce tasks
+    // However we _never_ assign more than 1 reduce task per heartbeat
+    //
+    final int trackerCurrentReduceCapacity = 
+      Math.min((int)Math.ceil(reduceLoadFactor * trackerReduceCapacity), 
+               trackerReduceCapacity);
+    final int availableReduceSlots = 
+      Math.min((trackerCurrentReduceCapacity - trackerRunningReduces), 1);
+    boolean exceededReducePadding = false;
+    if (availableReduceSlots > 0) {
+      exceededReducePadding = exceededPadding(false, clusterStatus, 
+                                              trackerReduceCapacity);
+      synchronized (jobQueue) {
+        for (JobInProgress job : jobQueue) {
+          if (job.getStatus().getRunState() != JobStatus.RUNNING ||
+              job.numReduceTasks == 0) {
+            continue;
+          }
+
+          Task t = 
+            job.obtainNewReduceTask(taskTracker, numTaskTrackers, 
+                                    taskTrackerManager.getNumberOfUniqueHosts()
+                                    );
+          if (t != null) {
+            assignedTasks.add(t);
+            break;
+          }
+          
+          // Don't assign reduce tasks to the hilt!
+          // Leave some free slots in the cluster for future task-failures,
+          // speculative tasks etc. beyond the highest priority job
+          if (exceededReducePadding) {
+            break;
+          }
         }
-        double reduceLoadFactor = 0.0;
-        if (clusterReduceCapacity > 0) {
-            reduceLoadFactor = (double)remainingReduceLoad / clusterReduceCapacity;
-        }
-
-        //
-        // In the below steps, we allocate first map tasks (if appropriate),
-        // and then reduce tasks if appropriate.  We go through all jobs
-        // in order of job arrival; jobs only get serviced if their 
-        // predecessors are serviced, too.
-        //
-
-        //
-        // We assign tasks to the current taskTracker if the given machine 
-        // has a workload that's less than the maximum load of that kind of
-        // task.
-        // However, if the cluster is close to getting loaded i.e. we don't
-        // have enough _padding_ for speculative executions etc., we only 
-        // schedule the "highest priority" task i.e. the task from the job 
-        // with the highest priority.
-        //
-        final int trackerCurrentMapCapacity = Math.min((int)Math.ceil(mapLoadFactor * trackerMapCapacity), trackerMapCapacity);
-        int availableMapSlots = trackerCurrentMapCapacity - trackerRunningMaps;
-        boolean exceededMapPadding = false;
-        if (availableMapSlots > 0) {
-            exceededMapPadding = exceededPadding(true, clusterStatus, trackerMapCapacity);
-        }
-
-        int numLocalMaps = 0;
-        int numNonLocalMaps = 0;
-        scheduleMaps:
-            for (int i=0; i < availableMapSlots; ++i) {
-                synchronized (jobQueue) {
-                    for (JobInProgress job : jobQueue) {
-                        if (job.getStatus().getRunState() != JobStatus.RUNNING) {
-                            continue;
-                        }
-
-                        Task t = null;
-                        // Try to schedule a node-local or rack-local Map task
-                        t = job.obtainNewLocalMapTask(taskTracker, numTaskTrackers, taskTrackerManager.getNumberOfUniqueHosts());
-                        if (t != null) {
-                            assignedTasks.add(t);
-                            ++numLocalMaps;
-
-                            // Don't assign map tasks to the hilt!
-                            // Leave some free slots in the cluster for future task-failures,
-                            // speculative tasks etc. beyond the highest priority job
-                            if (exceededMapPadding) {
-                                break scheduleMaps;
-                            }
-
-                            // Try all jobs again for the next Map task
-                            break;
-                        }
-
-
-                        // Try to schedule a node-local or rack-local Map task
-                        t = job.obtainNewNonLocalMapTask(taskTracker, numTaskTrackers, taskTrackerManager.getNumberOfUniqueHosts());
-                        if (t != null) {
-                            assignedTasks.add(t);
-                            ++numNonLocalMaps;
-
-                            // We assign at most 1 off-switch or speculative task
-                            // This is to prevent TaskTrackers from stealing local-tasks
-                            // from other TaskTrackers.
-                            break scheduleMaps;
-                        }
-                    }
-                }
-            }
-
-        int assignedMaps = assignedTasks.size();
-
-        //
-        // Same thing, but for reduce tasks
-        // However we _never_ assign more than 1 reduce task per heartbeat
-        final int trackerCurrentReduceCapacity  = Math.min((int)Math.ceil(reduceLoadFactor * trackerReduceCapacity), trackerReduceCapacity);
-        final int availableReduceSlots          = Math.min((trackerCurrentReduceCapacity - trackerRunningReduces), 1);
-        boolean exceededReducePadding           = false;
-
-        // schedule reduces
-        {
-            if (availableReduceSlots > 0) {
-                exceededReducePadding = exceededPadding(false, clusterStatus, trackerReduceCapacity);
-
-                synchronized (jobQueue) {
-                    for (JobInProgress job : jobQueue) {
-                        if (job.getStatus().getRunState() != JobStatus.RUNNING || job.getNumReduceTasks() == 0)
-                            continue;
-
-                        Task t = job.obtainNewReduceTask(taskTracker, numTaskTrackers, taskTrackerManager.getNumberOfUniqueHosts());
-
-                        if (t != null) {
-                            assignedTasks.add(t);
-                            break;
-                        }
-
-                        // Don't assign reduce tasks to the hilt!
-                        // Leave some free slots in the cluster for future task-failures,
-                        // speculative tasks etc. beyond the highest priority job
-                        if (exceededReducePadding) {
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        LOG.debug("Task assignments for " + taskTracker.getTrackerName() 
-                + " [ " + mapLoadFactor + ", " + trackerMapCapacity + ", " + trackerCurrentMapCapacity + ", " + trackerRunningMaps + "] " 
-                + " [ " + (trackerCurrentMapCapacity - trackerRunningMaps)  + ", " + assignedMaps + " (" + numLocalMaps + ", " + numNonLocalMaps + ")] " 
-                + " [ " + reduceLoadFactor + ", " + trackerReduceCapacity   + ", " + trackerCurrentReduceCapacity + "," + trackerRunningReduces 
-                + (trackerCurrentReduceCapacity - trackerRunningReduces) + "]");
-
-        return assignedTasks;
+      }
+    }
+    
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Task assignments for " + taskTracker.getTrackerName() + " --> " +
+                "[" + mapLoadFactor + ", " + trackerMapCapacity + ", " + 
+                trackerCurrentMapCapacity + ", " + trackerRunningMaps + "] -> [" + 
+                (trackerCurrentMapCapacity - trackerRunningMaps) + ", " +
+                assignedMaps + " (" + numLocalMaps + ", " + numNonLocalMaps + 
+                ")] [" + reduceLoadFactor + ", " + trackerReduceCapacity + ", " + 
+                trackerCurrentReduceCapacity + "," + trackerRunningReduces + 
+                "] -> [" + (trackerCurrentReduceCapacity - trackerRunningReduces) + 
+                ", " + (assignedTasks.size()-assignedMaps) + "]");
     }
 
-    private boolean exceededPadding(boolean isMapTask, 
-            ClusterStatus clusterStatus, 
-            int maxTaskTrackerSlots) { 
-        int numTaskTrackers = clusterStatus.getTaskTrackers();
-        int totalTasks = 
-                (isMapTask) ? clusterStatus.getMapTasks() : 
-                    clusterStatus.getReduceTasks();
-                int totalTaskCapacity = 
-                        isMapTask ? clusterStatus.getMaxMapTasks() : 
-                            clusterStatus.getMaxReduceTasks();
+    return assignedTasks;
+  }
 
-                        Collection<JobInProgress> jobQueue =
-                                jobQueueJobInProgressListener.getJobQueue();
+  private boolean exceededPadding(boolean isMapTask, 
+                                  ClusterStatus clusterStatus, 
+                                  int maxTaskTrackerSlots) { 
+    int numTaskTrackers = clusterStatus.getTaskTrackers();
+    int totalTasks = 
+      (isMapTask) ? clusterStatus.getMapTasks() : 
+        clusterStatus.getReduceTasks();
+    int totalTaskCapacity = 
+      isMapTask ? clusterStatus.getMaxMapTasks() : 
+                  clusterStatus.getMaxReduceTasks();
 
-                        boolean exceededPadding = false;
-                        synchronized (jobQueue) {
-                            int totalNeededTasks = 0;
-                            for (JobInProgress job : jobQueue) {
-                                if (job.getStatus().getRunState() != JobStatus.RUNNING || job.getNumReduceTasks() == 0) {
-                                    continue;
-                                }
+    Collection<JobInProgress> jobQueue =
+      jobQueueJobInProgressListener.getJobQueue();
 
-                                //
-                                // Beyond the highest-priority task, reserve a little 
-                                // room for failures and speculative executions; don't 
-                                // schedule tasks to the hilt.
-                                //
-                                totalNeededTasks += 
-                                        isMapTask ? job.desiredMaps() : job.desiredReduces();
-                                        int padding = 0;
-                                        if (numTaskTrackers > MIN_CLUSTER_SIZE_FOR_PADDING) {
-                                            padding = 
-                                                    Math.min(maxTaskTrackerSlots,
-                                                            (int) (totalNeededTasks * padFraction));
-                                        }
-                                        if (totalTasks + padding >= totalTaskCapacity) {
-                                            exceededPadding = true;
-                                            break;
-                                        }
-                            }
-                        }
+    boolean exceededPadding = false;
+    synchronized (jobQueue) {
+      int totalNeededTasks = 0;
+      for (JobInProgress job : jobQueue) {
+        if (job.getStatus().getRunState() != JobStatus.RUNNING ||
+            job.numReduceTasks == 0) {
+          continue;
+        }
 
-                        return exceededPadding;
+        //
+        // Beyond the highest-priority task, reserve a little 
+        // room for failures and speculative executions; don't 
+        // schedule tasks to the hilt.
+        //
+        totalNeededTasks += 
+          isMapTask ? job.desiredMaps() : job.desiredReduces();
+        int padding = 0;
+        if (numTaskTrackers > MIN_CLUSTER_SIZE_FOR_PADDING) {
+          padding = 
+            Math.min(maxTaskTrackerSlots,
+                     (int) (totalNeededTasks * padFraction));
+        }
+        if (totalTasks + padding >= totalTaskCapacity) {
+          exceededPadding = true;
+          break;
+        }
+      }
     }
 
-    @Override
-    public synchronized Collection<JobInProgress> getJobs(String queueName) {
-        return jobQueueJobInProgressListener.getJobQueue();
-    }  
+    return exceededPadding;
+  }
+
+  @Override
+  public synchronized Collection<JobInProgress> getJobs(String queueName) {
+    return jobQueueJobInProgressListener.getJobQueue();
+  }  
 }

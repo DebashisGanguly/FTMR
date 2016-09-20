@@ -344,6 +344,7 @@ class SortedRanges implements Writable{
     
     private void doNext() {
       next++;
+      LOG.debug("currentIndex "+next +"   "+range);
       skipIfInRange();
       while(next>=range.getEndIndex() && rangeIterator.hasNext()) {
         range = rangeIterator.next();

@@ -23,7 +23,6 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 import org.apache.hadoop.io.WritableComparable;
-import org.apache.log4j.Logger;
 
 /**
  * A general identifier, which internally stores the id
@@ -35,59 +34,57 @@ import org.apache.log4j.Logger;
  * @see TaskAttemptID
  */
 public abstract class ID implements WritableComparable<ID> {
-	protected static final char SEPARATOR = '_';
-	protected int id;
-	
-	Logger log = Logger.getLogger(ID.class);
+  protected static final char SEPARATOR = '_';
+  protected int id;
 
-	/** constructs an ID object from the given int */
-	public ID(int id) {
-		this.id = id;
-	}
+  /** constructs an ID object from the given int */
+  public ID(int id) {
+    this.id = id;
+  }
 
-	protected ID() {
-	}
+  protected ID() {
+  }
 
-	/** returns the int which represents the identifier */
-	public int getId() {
-		return id;
-	}
+  /** returns the int which represents the identifier */
+  public int getId() {
+    return id;
+  }
 
-	@Override
-	public String toString() {
-		return String.valueOf(id);
-	}
+  @Override
+  public String toString() {
+    return String.valueOf(id);
+  }
 
-	@Override
-	public int hashCode() {
-		return Integer.valueOf(id).hashCode();
-	}
+  @Override
+  public int hashCode() {
+    return Integer.valueOf(id).hashCode();
+  }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if(o == null)
-			return false;
-		if (o.getClass() == this.getClass()) {
-			ID that = (ID) o;
-			return this.id == that.id;
-		}
-		else
-			return false;
-	}
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if(o == null)
+      return false;
+    if (o.getClass() == this.getClass()) {
+      ID that = (ID) o;
+      return this.id == that.id;
+    }
+    else
+      return false;
+  }
 
-	/** Compare IDs by associated numbers */
-	public int compareTo(ID that) {
-		return this.id - that.id;
-	}
+  /** Compare IDs by associated numbers */
+  public int compareTo(ID that) {
+    return this.id - that.id;
+  }
 
-	public void readFields(DataInput in) throws IOException {
-		this.id = in.readInt();
-	}
+  public void readFields(DataInput in) throws IOException {
+    this.id = in.readInt();
+  }
 
-	public void write(DataOutput out) throws IOException {
-		out.writeInt(id);
-	}
-
+  public void write(DataOutput out) throws IOException {
+    out.writeInt(id);
+  }
+  
 }

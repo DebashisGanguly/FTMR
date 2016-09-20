@@ -29,7 +29,6 @@
 %feature("director") Factory;
 #else
 #include <string>
-#include <stdint.h>
 #endif
 
 namespace HadoopPipes {

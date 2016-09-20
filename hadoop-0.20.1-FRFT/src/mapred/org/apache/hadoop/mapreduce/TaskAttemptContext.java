@@ -27,39 +27,40 @@ import org.apache.hadoop.util.Progressable;
  * The context for task attempts.
  */
 public class TaskAttemptContext extends JobContext implements Progressable {
-	private final TaskAttemptID taskId;
-	private String status = "";
+  private final TaskAttemptID taskId;
+  private String status = "";
+  
+  public TaskAttemptContext(Configuration conf, 
+                            TaskAttemptID taskId) {
+    super(conf, taskId.getJobID());
+    this.taskId = taskId;
+  }
 
-	public TaskAttemptContext(Configuration conf, TaskAttemptID taskId) {
-		super(conf, taskId.getJobID());
-		this.taskId = taskId;
-	}
+  /**
+   * Get the unique name for this task attempt.
+   */
+  public TaskAttemptID getTaskAttemptID() {
+    return taskId;
+  }
 
-	/**
-	 * Get the unique name for this task attempt.
-	 */
-	public TaskAttemptID getTaskAttemptID() {
-		return taskId;
-	}
+  /**
+   * Set the current status of the task to the given string.
+   */
+  public void setStatus(String msg) throws IOException {
+    status = msg;
+  }
 
-	/**
-	 * Set the current status of the task to the given string.
-	 */
-	public void setStatus(String msg) throws IOException {
-		status = msg;
-	}
+  /**
+   * Get the last set status message.
+   * @return the current status message
+   */
+  public String getStatus() {
+    return status;
+  }
 
-	/**
-	 * Get the last set status message.
-	 * @return the current status message
-	 */
-	public String getStatus() {
-		return status;
-	}
-
-	/**
-	 * Report progress. The subtypes actually do work in this method.
-	 */
-	public void progress() { 
-	}
+  /**
+   * Report progress. The subtypes actually do work in this method.
+   */
+  public void progress() { 
+  }
 }

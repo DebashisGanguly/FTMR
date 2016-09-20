@@ -17,30 +17,30 @@
  */
 package org.apache.hadoop.mapred;
 
-import java.io.IOException;
+import java.io.*;
 
 import org.apache.hadoop.mapred.TaskTracker.TaskInProgress;
 
 /** Runs a map task. */
 class MapTaskRunner extends TaskRunner {
 
-	public MapTaskRunner(TaskInProgress task, TaskTracker tracker, JobConf conf) {
-		super(task, tracker, conf, true);
-	}
+  public MapTaskRunner(TaskInProgress task, TaskTracker tracker, JobConf conf) {
+    super(task, tracker, conf);
+  }
+  
+  /** Delete any temporary files from previous failed attempts. */
+  public boolean prepare() throws IOException {
+    if (!super.prepare()) {
+      return false;
+    }
+    
+    mapOutputFile.removeAll(getTask().getTaskID());
+    return true;
+  }
 
-	/** Delete any temporary files from previous failed attempts. */
-	public boolean prepare() throws IOException {
-		if (!super.prepare()) {
-			return false;
-		}
-
-		mapOutputFile.removeAll(getTask().getTaskID());
-		return true;
-	}
-
-	/** Delete all of the temporary map output files. */
-	public void close() throws IOException {
-		LOG.info(getTask()+" done; removing files.");
-		mapOutputFile.removeAll(getTask().getTaskID());
-	}
+  /** Delete all of the temporary map output files. */
+  public void close() throws IOException {
+    LOG.info(getTask()+" done; removing files.");
+    mapOutputFile.removeAll(getTask().getTaskID());
+  }
 }

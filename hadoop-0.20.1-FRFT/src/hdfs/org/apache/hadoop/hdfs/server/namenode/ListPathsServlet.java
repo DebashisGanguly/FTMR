@@ -17,6 +17,15 @@
  */
 package org.apache.hadoop.hdfs.server.namenode;
 
+import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.hdfs.HftpFileSystem;
+import org.apache.hadoop.hdfs.protocol.ClientProtocol;
+import org.apache.hadoop.ipc.RemoteException;
+import org.apache.hadoop.security.UnixUserGroupInformation;
+import org.apache.hadoop.util.VersionInfo;
+
+import org.znerd.xmlenc.*;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
@@ -25,18 +34,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 import java.util.regex.Pattern;
-
+import java.util.regex.PatternSyntaxException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.hadoop.fs.FileStatus;
-import org.apache.hadoop.hdfs.HftpFileSystem;
-import org.apache.hadoop.hdfs.protocol.ClientProtocol;
-import org.apache.hadoop.ipc.RemoteException;
-import org.apache.hadoop.security.UnixUserGroupInformation;
-import org.apache.hadoop.util.VersionInfo;
-import org.znerd.xmlenc.XMLOutputter;
 
 /**
  * Obtain meta-information about a filesystem.

@@ -36,29 +36,21 @@ import org.apache.hadoop.mapreduce.RecordReader;
  * @see RecordReader
  */
 public abstract class InputSplit {
-	/**
-	 * Get the filename of the split
-	 * @return
-	 * @throws IOException
-	 * @throws InterruptedException
-	 */
-	public abstract String getName() throws IOException, InterruptedException;
+  /**
+   * Get the size of the split, so that the input splits can be sorted by size.
+   * @return the number of bytes in the split
+   * @throws IOException
+   * @throws InterruptedException
+   */
+  public abstract long getLength() throws IOException, InterruptedException;
 
-	/**
-	 * Get the size of the split, so that the input splits can be sorted by size.
-	 * @return the number of bytes in the split
-	 * @throws IOException
-	 * @throws InterruptedException
-	 */
-	public abstract long getLength() throws IOException, InterruptedException;
-
-	/**
-	 * Get the list of nodes by name where the data for the split would be local.
-	 * The locations do not need to be serialized.
-	 * @return a new array of the node nodes.
-	 * @throws IOException
-	 * @throws InterruptedException
-	 */
-	public abstract 
-	String[] getLocations() throws IOException, InterruptedException;
+  /**
+   * Get the list of nodes by name where the data for the split would be local.
+   * The locations do not need to be serialized.
+   * @return a new array of the node nodes.
+   * @throws IOException
+   * @throws InterruptedException
+   */
+  public abstract 
+    String[] getLocations() throws IOException, InterruptedException;
 }

@@ -17,7 +17,8 @@
  */
 package org.apache.hadoop.mapred;
 
-/** The states of a {@link TaskInProgress} as seen by the JobTracker. */
+/** The states of a {@link TaskInProgress} as seen by the JobTracker.
+ */
 public enum TIPStatus {
-	PENDING, RUNNING, COMPLETE, KILLED, FAILED;
+  PENDING, RUNNING, COMPLETE, KILLED, FAILED;
 }
