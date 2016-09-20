@@ -2318,21 +2318,6 @@ public class TaskTracker
       // Cleanup on the finished task
       cleanup(true);
     }
-      
-    public synchronized void kill() throws IOException {
-      if (taskStatus.getRunState() == TaskStatus.State.RUNNING ||
-          taskStatus.getRunState() == TaskStatus.State.COMMIT_PENDING ||
-          isCleaningup()) {
-          wasKilled = true;
-          // runner could be null if task-cleanup attempt is not localized yet
-          if (runner != null) {
-            runner.kill();
-          }
-       }
-          
-       removeFromMemoryManager(task.getTaskID());
-       releaseSlot();
-    }
 
     /**
      * Something went wrong and the task must be killed.

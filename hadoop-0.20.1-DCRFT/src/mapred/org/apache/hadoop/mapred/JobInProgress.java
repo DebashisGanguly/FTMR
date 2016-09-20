@@ -420,7 +420,7 @@ class JobInProgress {
     return 0;
   }
     
-  public int sendDigest(TaskInProgress tip, String digest) {
+  public void sendDigest(TaskInProgress tip, String digest) {
       votingSystem.addDigest(tip, digest);
   }
     
@@ -1109,11 +1109,8 @@ class JobInProgress {
       TaskInProgress tip = null;
       if (isMapSlot) {
         if (!mapCleanupTasks.isEmpty()) {
-          taskid = mapCleanupTasks.remove(0)
-            
-          int partitionId = taskid.getTaskID().getId();
-          int replicaId  = taskid.getTaskID().getReplicaNumber();
-          int idx = taskid.getTaskID().getId() * numberOfReplicas + taskid.getTaskID().getReplicaNumber();
+          taskid = mapCleanupTasks.remove(0);
+          int idx = taskid.getTaskID().getId() * numberOfReplicas + taskid.getTaskID().getReplicaId();
           tip = maps[idx];
         }
       } else {
