@@ -39,6 +39,7 @@ public class TaskCompletionEvent implements Writable{
   Status status; 
   boolean isMap = false;
   private int idWithinJob;
+  private int replicaId;
   public static final TaskCompletionEvent[] EMPTY_ARRAY = 
     new TaskCompletionEvent[0];
   /**
@@ -61,12 +62,14 @@ public class TaskCompletionEvent implements Writable{
   public TaskCompletionEvent(int eventId, 
                              TaskAttemptID taskId,
                              int idWithinJob,
+                             int replicaId,
                              boolean isMap,
                              Status status, 
                              String taskTrackerHttp){
       
     this.taskId = taskId;
     this.idWithinJob = idWithinJob;
+    this.replicaId = replicaId;
     this.isMap = isMap;
     this.eventId = eventId; 
     this.status =status; 
@@ -188,7 +191,8 @@ public class TaskCompletionEvent implements Writable{
       TaskCompletionEvent event = (TaskCompletionEvent) o;
       return this.isMap == event.isMapTask() 
              && this.eventId == event.getEventId()
-             && this.idWithinJob == event.idWithinJob() 
+             && this.idWithinJob == event.idWithinJob()
+             && this.replicaId == event.replicaId()
              && this.status.equals(event.getTaskStatus())
              && this.taskId.equals(event.getTaskAttemptId()) 
              && this.taskRunTime == event.getTaskRunTime()
@@ -209,12 +213,17 @@ public class TaskCompletionEvent implements Writable{
   public int idWithinJob() {
     return idWithinJob;
   }
+    
+  public int replicaId() {
+    return replicaId;
+  }
   //////////////////////////////////////////////
   // Writable
   //////////////////////////////////////////////
   public void write(DataOutput out) throws IOException {
     taskId.write(out); 
     WritableUtils.writeVInt(out, idWithinJob);
+    WritableUtils.writeVInt(out, replicaId);
     out.writeBoolean(isMap);
     WritableUtils.writeEnum(out, status); 
     WritableUtils.writeString(out, taskTrackerHttp);
@@ -225,6 +234,7 @@ public class TaskCompletionEvent implements Writable{
   public void readFields(DataInput in) throws IOException {
     taskId.readFields(in); 
     idWithinJob = WritableUtils.readVInt(in);
+    replicaId = WritableUtils.readVInt(in);
     isMap = in.readBoolean();
     status = WritableUtils.readEnum(in, Status.class);
     taskTrackerHttp = WritableUtils.readString(in);

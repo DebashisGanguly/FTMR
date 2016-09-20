@@ -29,6 +29,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.HashSet;
+import java.util.Collections;
+import java.util.Arrays;
 import java.util.TreeMap;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -229,9 +232,13 @@ class JobInProgress {
     
   private class VotingSystem {
     private String[][] digestCollection;
+    private int[] mapWinnerReplica;
+    private boolean votingCompleted;
       
     public VotingSystem() {
         this.digestCollection = new String[numMapTasks][numberOfReplicas];
+        this.mapWinnerReplica = new int[numMapTasks];
+        this.votingCompleted = false;
     }
         
     public void addDigest(TaskInProgress tip, String digest) {
@@ -239,9 +246,44 @@ class JobInProgress {
             digestCollection[tip.getIdWithinJob()][tip.getTIPId().getReplicaId()] = digest;
         }
     }
+      
+    private void findMajorityWinners() {
+        synchronized (digestCollection) {
+            for (int i = 0; i < numMapTasks; i++) {
+                Set<String> uniqueDigestPerSplit = new HashSet<String>(Arrays.asList(digestCollection[i]));
+                int occurrence = 0;
+                String majorityDigest = null;
+            
+                for(String uniqueDigest:uniqueDigestPerSplit) {
+                    if(Collections.frequency(Arrays.asList(digestCollection[i]), uniqueDigest) > occurrence) {
+                        occurrence = Collections.frequency(Arrays.asList(digestCollection[i]), uniqueDigest);
+                        majorityDigest = uniqueDigest;
+                    }
+                }
+            
+                for (int j = 0; j < numberOfReplicas; j++) {
+                    if (majorityDigest.equals(digestCollection[i][j])) {
+                        mapWinnerReplica[i] = j;
+                        break;
+                    }
+                }
+            }
+            
+            for(TaskCompletionEvent event:taskCompletionEvents) {
+                if(event.isMapTask() && mapWinnerReplica[event.idWithinJob()] != event.replicaId()) {
+                    event.setTaskStatus(TaskCompletionEvent.Status.OBSOLETE);
+                }
+            }
+            
+            this.votingCompleted = true;
+        }
+    }
         
     public boolean hasMajorityConsensus() {
         if(finishedMapTasks >= completedMapsForReduceSlowstart) {
+           if(!votingCompleted) {
+               findMajorityWinners();
+           }
            return true;
         }
         return false;
@@ -911,6 +953,7 @@ class JobInProgress {
                                             taskCompletionEventTracker, 
                                             taskid,
                                             tip.idWithinJob(),
+                                            tip.getTIPId().getReplicaId(),
                                             status.getIsMap() &&
                                             !tip.isJobCleanupTask() &&
                                             !tip.isJobSetupTask(),
@@ -967,6 +1010,7 @@ class JobInProgress {
         taskEvent = new TaskCompletionEvent(taskCompletionEventTracker, 
                                             taskid,
                                             tip.idWithinJob(),
+                                            tip.getTIPId().getReplicaId(),
                                             status.getIsMap() &&
                                             !tip.isJobCleanupTask() &&
                                             !tip.isJobSetupTask(),
