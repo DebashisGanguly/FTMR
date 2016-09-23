@@ -1426,8 +1426,7 @@ class JobInProgress {
       return true;
     }
     // Check if all maps and reducers have finished.
-    boolean launchCleanupTask = 
-        ((finishedMapTasks + failedMapTIPs) == (replicatedNumMapTasks));
+    boolean launchCleanupTask = votingSystem.hasMajorityConsensus();
     if (launchCleanupTask) {
       launchCleanupTask = 
         ((finishedReduceTasks + failedReduceTIPs) == numReduceTasks);
@@ -1913,7 +1912,7 @@ class JobInProgress {
         if (!tip.hasFailedOnMachine(ttStatus.getHost()) || 
              tip.getNumberOfFailedMachines() >= numUniqueHosts) {
           // check if the tip has failed on all the nodes
-          if (tip.isMapTask() && !tip.isJobCleanupTask() && !tip.isJobSetupTask() && votingSystem.shouldLaunchMapTask(tip)) {
+          if (tip.isMapTask() && !tip.isJobCleanupTask() && !tip.isJobSetupTask() && !votingSystem.shouldLaunchMapTask(tip)) {
             continue;
           }
           iter.remove();
