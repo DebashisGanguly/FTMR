@@ -248,35 +248,53 @@ class JobInProgress {
     }
       
     private void findMajorityWinners() {
-        synchronized (digestCollection) {
-            for (int i = 0; i < numMapTasks; i++) {
-                Set<String> uniqueDigestPerSplit = new HashSet<String>(Arrays.asList(digestCollection[i]));
-                int occurrence = 0;
-                String majorityDigest = null;
-            
-                for(String uniqueDigest:uniqueDigestPerSplit) {
-                    if(Collections.frequency(Arrays.asList(digestCollection[i]), uniqueDigest) > occurrence) {
-                        occurrence = Collections.frequency(Arrays.asList(digestCollection[i]), uniqueDigest);
-                        majorityDigest = uniqueDigest;
-                    }
+      synchronized (digestCollection) {
+        for (int i = 0; i < numMapTasks; i++) {
+          if (natureOfFaults == NatureOfFaults.FAIL_STOP) {
+            for (int j = 0; j < numberOfReplicas; j++) {
+              if (digestCollection[i][j] != null) {
+                this.mapWinnerReplica[i] = j;
+                break;
+              }
+            }
+          } else {
+              Set<String> uniqueDigestPerSplit = new HashSet<String>(Arrays.asList(digestCollection[i]));
+              
+              int occurrence = 0;
+              String majorityDigest = null;
+
+              for (int j = 0; j < numberOfReplicas; j++) {
+                if (digestCollection[i][j] != null) {
+                  uniqueDigestPerSplit.add(digestCollection[i][j]);
                 }
-            
+              }
+          
+              for(String uniqueDigest:uniqueDigestPerSplit) {
+                if(Collections.frequency(Arrays.asList(digestCollection[i]), uniqueDigest) > occurrence) {
+                  occurrence = Collections.frequency(Arrays.asList(digestCollection[i]), uniqueDigest);
+                  majorityDigest = uniqueDigest;
+                }
+              }
+          
+              if(occurrence == (numberOfFaults + 1)) {
                 for (int j = 0; j < numberOfReplicas; j++) {
-                    if (majorityDigest.equals(digestCollection[i][j])) {
-                        mapWinnerReplica[i] = j;
-                        break;
-                    }
+                  if (majorityDigest.equals(digestCollection[i][j])) {
+                    this.mapWinnerReplica[i] = j;
+                    break;
+                  }
                 }
-            }
-            
-            for(TaskCompletionEvent event:taskCompletionEvents) {
-                if(event.isMapTask() && mapWinnerReplica[event.idWithinJob()] != event.replicaId()) {
-                    event.setTaskStatus(TaskCompletionEvent.Status.OBSOLETE);
-                }
-            }
-            
-            this.votingCompleted = true;
+              }
+          } 
+        }  
+
+        for(TaskCompletionEvent event:taskCompletionEvents) {
+          if(event.isMapTask() && mapWinnerReplica[event.idWithinJob()] != event.replicaId()) {
+              event.setTaskStatus(TaskCompletionEvent.Status.OBSOLETE);
+          }
         }
+          
+        this.votingCompleted = true;
+      }
     }
         
     public boolean hasMajorityConsensus() {
@@ -2308,7 +2326,7 @@ class JobInProgress {
                                     1.0f, 1.0f, 1.0f, JobStatus.KILLED,
                                     status.getJobPriority());
         this.finishTime = System.currentTimeMillis();
-        JobHistory.JobInfo.logKilled(this.status.getJobID(), finishTime, 
+        JobHistory.JobInfo.logKilled(this.status.getJobID(), finishTime,
                                      this.finishedMapTasks, 
                                      this.finishedReduceTasks);
       }
