@@ -4,5 +4,13 @@
 <!-- Put site-specific property overrides in this file. -->
 
 <configuration>
-
+    <property>
+       <name>mapred.job.tracker</name>
+       <value>pet-cluster-1:54311</value>
+    </property>
+    
+    <property>
+        <name>mapred.map.tasks.fault.inject</name>
+        <value>false</value>
+    </property>
 </configuration>

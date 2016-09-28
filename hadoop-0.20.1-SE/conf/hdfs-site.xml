@@ -5,4 +5,20 @@
 
 <configuration>
 
+
+<property>
+  <name>fs.default.name</name>
+  <value>hdfs://pet-cluster-1:54310</value>
+</property>
+
+<property>
+  <name>dfs.replication</name>
+  <value>3</value>
+</property>
+<property>
+  <name>dfs.block.size</name>
+  <value>135266304</value>
+</property>
+
+
 </configuration>
