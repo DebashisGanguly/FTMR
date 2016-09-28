@@ -10,9 +10,11 @@ The framework can be configured by three parameteres:
 * mapred.map.tasks.fault.inject (true|false): Whether framework needs to emulate fault injection or not.
 * mapred.map.tasks.fault.tolerance: Number of faults that can be tolerated.
 * mapred.map.tasks.fault.nature: Nature of faults that can be tolerated.
-* 1 - fail-stop errors or crash faults,
-* 2 - silent-data errors or Byzantine faults.
+ * 1 - fail-stop errors or crash faults,
+ * 2 - silent-data errors or Byzantine faults.
 
 
 It is also important to note that users do not need to configure number of reduce tasks (mapred.reduce.tasks) as the code base transparently creates reduce tasks as the number of input splits.
 
+## Data-complementary Replication Fault Tolerance (DCRFT)
+This code repository is same as FRFT in terms of configuration and number of map tasks, but it follows a different algorithm to execute map tasks. Map tasks work on subsplits (which is chunked the bigger split of FRFT by the replication factor) in multiple phases. Framework initially launches majority of tasks and performs voting when all of the launched maps either finished successfully or failed. For example, in case of Byzantine fault mode with one fault to recover framework inititaes 3 replicas per map task and launches only 2 replicas per map (as majority is two third). Upon completion of these 2 replicas it performs voting on signtaure to determine whether majority consensus is reached or not. If majority is reached it moves forward to rhe reduce phase or else it launches remaining replicas to run. Whereas, in case of single crash fault, framework launches only one replica at a time per task. As soon as any one of the launched replicas oer map completes successfully framework does not launch any more replica for that task. This scheme essentially uses same hardware resources as full replication scheme, but as it works on subsplit granularity in common case (given failure is rare) it reduces job execution time significantly (50% in case of crash fault mode and 33% in case of silent data correuption mode for faults).
