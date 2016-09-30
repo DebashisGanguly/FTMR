@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+    <property>
+       <name>mapred.job.tracker</name>
+       <value>r653:54311</value>
+    </property>
+
+    <property>
+        <name>mapred.map.tasks.fault.tolerance</name>
+        <value>1</value>
+    </property>
+    <property>
+        <name>mapred.map.tasks.fault.nature</name>
+        <value>2</value>
+    </property>
+    <property>
+        <name>mapred.map.tasks.fault.inject</name>
+        <value>false</value>
+    </property>
+
+<property>
+   <name>io.sort.factor</name>
+  <value>32</value>
+</property>
+
+<property>
+   <name>io.sort.mb</name>
+  <value>320</value>
+</property>
+
+<property>
+   <name>io.file.buffer.size</name>
+  <value>65536</value>
+</property>
+
+<property>
+   <name>dfs.namenode.handler.count</name>
+  <value>64</value>
+</property>
+
+<property>
+   <name>mapred.job.tracker.handler.count</name>
+  <value>64</value>
+</property>
+
+<property>
+   <name>dfs.datanode.handler.count</name>
+  <value>10</value>
+</property>
+
+<property>
+   <name>mapred.tasktracker.map.tasks.maximum</name>
+  <value>20</value>
+</property>
+
+<property>
+   <name>mapred.child.java.opts</name>
+  <value>-Xmx2048m</value>
+</property>
+
+</configuration>
