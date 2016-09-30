@@ -22,8 +22,6 @@ fi
 
 for V in ${VERSION};
 do
-#     COPY="TRUE"
-
      VER=$HADOOP_V-${V}
      HADOOP=$BASE/$VER
 
@@ -88,21 +86,24 @@ do
                                   rm -rf $HADOOP/logs/*
                                   rm -rf $TMP/*
                                   ./hadoop namenode -format
+
                                    MASTER="r653"
                                    USERNAME="ganguly"
                                    HOSTS="r655 r656 r657 r659 r660 r661 r662 r676"
                                    #HOSTS="r655 r656 r657 r659 r660 r661 r662 r675 r676"
+
                                    SWEEP="rm -rf $HADOOP; if [ -d $TMP ]; then rm -rf $TMP/*; else mkdir $TMP; fi"
                                    SCP="scp -r $USERNAME@$MASTER:$HADOOP $HADOOP"
                                    SED="sed -i '/export JAVA_HOME/c\export JAVA_HOME='\$JAVA_HOME'' $HADOOP/conf/hadoop-env.sh"
+
                                    for HOSTNAME in ${HOSTS};
                                    do
                                        (ssh -l ${USERNAME} ${HOSTNAME} "hostname; pwd; ${SWEEP}; ${SCP}; hostname; ls; ${SED};") &
                                    done
                                    wait
 				   
-                                   ./start-all.sh && ./hadoop dfs -copyFromLocal ${DATA}/${FILE}/part-00000 /gridmix/data${FILE}/SortUncompressed/part-00000;
-	                           wait
+                                   ./start-dfs.sh && ./start-mapred.sh && ./hadoop dfs -copyFromLocal ${DATA}/${FILE}/part-00000 /gridmix/data${FILE}/SortUncompressed/part-00000;
+	                              wait
                                    echo "hadoop dfs -copyFromLocal ${DATA}/${FILE}/part-00000 /gridmix/data${FILE}/SortUncompressed/part-00000"
 
                                    GRIDMIX_HOME=$HADOOP/src/benchmarks/gridmix2
