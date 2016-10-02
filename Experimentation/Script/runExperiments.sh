@@ -9,14 +9,12 @@ NATURE="1 2"
 INJECT="F T"
 
 TMP=$BASE/tmp
-LOG=$BASE/logs
-CONF=$BASE/conf
+LOG="/pylon1/ci4s84p/ganguly/logs"
+CONF="/pylon1/ci4s84p/ganguly/conf"
 
 
-if [ -d $LOG ];
+if [ ! -d $LOG ];
 then
-     rm -rf $LOG/*;
-else
      mkdir $LOG;
 fi
 
@@ -49,15 +47,14 @@ do
                     continue;
                else
                     cp $CONF/mapred-site.xml_${V}_${N}${I} $HADOOP/conf/mapred-site.xml
-                    cp $CONF/slaves_${V} $HADOOP/conf/slaves
+                    cp $CONF/slaves_${V}_${N} $HADOOP/conf/slaves
 
                     if [ "$V" == "DCRFT" ];
                     then
-                         DATA_DIR="data/43"
+                         DATA="/pylon1/ci4s84p/ganguly/data/43"
                     else
-                         DATA_DIR="data/129"
+                         DATA="/pylon1/ci4s84p/ganguly/data/129"
                     fi
-                    DATA=$BASE/$DATA_DIR
 
                     FILES="50"
                     RUNS="1"
