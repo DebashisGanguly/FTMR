@@ -699,6 +699,8 @@ class JobInProgress {
     // log job info
     JobHistory.JobInfo.logSubmitted(getJobID(), conf, jobFile.toString(), 
                                     this.startTime, hasRestarted());
+    LOG.info("SUBMIT_TIME = " + this.startTime);
+      
     // log the job priority
     setPriority(this.priority);
     
@@ -812,6 +814,7 @@ class JobInProgress {
     tasksInited.set(true);
     JobHistory.JobInfo.logInited(profile.getJobID(), this.launchTime, 
                                  replicatedNumMapTasks, numReduceTasks);
+    LOG.info("LAUNCH_TIME = " + this.launchTime);
   }
 
   /////////////////////////////////////////////////////
@@ -2380,6 +2383,7 @@ class JobInProgress {
       // remove the completed map from the resp running caches
       retireMap(tip);
       if ((finishedMapTasks + failedMapTIPs) == (replicatedNumMapTasks)) {
+        LOG.info("MAP_PHASE_FINISH_TIME = " + System.currentTimeMillis());
         this.status.setMapProgress(1.0f);
       }
     } else {
@@ -2424,6 +2428,8 @@ class JobInProgress {
                                      this.finishedMapTasks, 
                                      this.finishedReduceTasks, failedMapTasks, 
                                      failedReduceTasks, getCounters());
+      LOG.info("FINISH_TIME = " + this.finishTime);
+        
       // Note that finalize will close the job history handles which garbage collect
       // might try to finalize
       garbageCollect();
