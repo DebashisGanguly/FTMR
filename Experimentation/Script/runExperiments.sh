@@ -2,16 +2,22 @@
 
 BASE=$PWD
 HADOOP_V=hadoop-0.20.1
+TMP=$BASE/tmp
+PERM_STORE=/pylon1/ci4s84p/ganguly/
+LOG=$PERM_STORE/logs
+CONF=$PERM_STORE/conf
+
 #VERSION="SE"
 VERSION="SE BFT FRFT DCRFT"
 # SE BFT FRFT DCRFT
 NATURE="1 2"
 INJECT="F T"
-
-TMP=$BASE/tmp
-LOG="/pylon1/ci4s84p/ganguly/logs"
-CONF="/pylon1/ci4s84p/ganguly/conf"
-
+FILES="10 50"
+#FILES="50 100 200 300 400 500 600 700 800 900 1000"
+RUNS="1"
+BENCHMARKS="streamSort"
+#BENCHMARKS="streamSort javaSort combiner"
+STATISTICS="SUBMIT_TIME LAUNCH_TIME MAP_PHASE_FINISH_TIME FINISH_TIME"
 
 if [ ! -d $LOG ];
 then
@@ -51,28 +57,23 @@ do
 
                     if [ "$V" == "DCRFT" ];
                     then
-                         DATA="/pylon1/ci4s84p/ganguly/data/43"
+                         DATA=$PERM_STORE/data/43
                     else
-                         DATA="/pylon1/ci4s84p/ganguly/data/129"
+                         DATA=$PERM_STORE/data/129
                     fi
-
-                    FILES="50"
-                    RUNS="1"
-                    BENCHMARKS="streamSort"
-                    #BENCHMARKS="streamSort javaSort combiner"
 
                     for BENCH in ${BENCHMARKS};
                     do
                          GRIDMIX_HOME=$HADOOP/src/benchmarks/gridmix2
                          cd $GRIDMIX_HOME
-                         echo "/<name>.*\.smallJobs.numOfJobs<\/name>/c\<name>'${BENCH}'.smallJobs.numOfJobs<\/name> gridmix_config.xml"
+                         #echo "/<name>.*\.smallJobs.numOfJobs<\/name>/c\<name>'${BENCH}'.smallJobs.numOfJobs<\/name> gridmix_config.xml"
                          sed -i '/<name>.*smallJobs\.numOfJobs<\/name>/c\<name>'${BENCH}'\.smallJobs\.numOfJobs<\/name>' gridmix_config.xml
 
                          for FILE in ${FILES};
                          do
                               GRIDMIX_HOME=$HADOOP/src/benchmarks/gridmix2
                               cd $GRIDMIX_HOME
-                              echo "/<value>\/gridmix\/data.*<\/value>/c\<value>\/gridmix\/${FILE}<\/value> gridmix_config.xml"
+                              #echo "/<value>\/gridmix\/data.*<\/value>/c\<value>\/gridmix\/${FILE}<\/value> gridmix_config.xml"
                               sed -i '/<value>\/gridmix\/data.*<\/value>/c\<value>\/gridmix\/data'${FILE}'<\/value>' gridmix_config.xml
 
                               for RUN in ${RUNS};
@@ -99,15 +100,30 @@ do
                                    done
                                    wait
 				   
-                                   ./start-dfs.sh && ./start-mapred.sh && ./hadoop dfs -copyFromLocal ${DATA}/${FILE}/part-00000 /gridmix/data${FILE}/SortUncompressed/part-00000;
-	                              wait
-                                   echo "hadoop dfs -copyFromLocal ${DATA}/${FILE}/part-00000 /gridmix/data${FILE}/SortUncompressed/part-00000"
+                                   ./start-dfs.sh;
+				   wait;
+				   ./start-mapred.sh;
+				   wait;
+				   ./hadoop dfs -copyFromLocal ${DATA}/${FILE}/part-00000 /gridmix/data${FILE}/SortUncompressed/part-00000;
+	                           wait;
+                                   #echo "hadoop dfs -copyFromLocal ${DATA}/${FILE}/part-00000 /gridmix/data${FILE}/SortUncompressed/part-00000"
 
                                    GRIDMIX_HOME=$HADOOP/src/benchmarks/gridmix2
                                    cd $GRIDMIX_HOME;
                                    ./rungridmix_2 | tee ${LOG}/${VER}_${BENCH}_${N}${I}_m${FILE}_r${RUN}
                                    TIME=`sed -n '/ExecutionTime:/p' ${LOG}/${VER}_${BENCH}_${N}${I}_m${FILE}_r${RUN} | sed -r 's/([^0-9]*([0-9]*)){1}.*/\2/'`
                                    echo "${TIME}_${VER}_${BENCH}_${N}${I}_m${FILE}_r${RUN}" >> ${LOG}/dump
+
+                                   STAT_LOG=`find ${HADOOP}/logs/hadoop-${USERNAME}-jobtracker-*.log`
+
+                                   for S in ${STATISTICS};
+                                   do
+                                        S_TIME=`sed -n "/\b${S} = \b/p" "${STAT_LOG}" | sed -r "s/^(.*)(\b${S} = \b)([0-9]*)$/\3/"`
+                                        echo "${S} = ${S_TIME}" >> ${LOG}/dump
+                                   done
+                                   ls ${STAT_LOG};
+                                   ls ${LOG}/${VER}_${BENCH}_${N}${I}_m${FILE}_r${RUN};
+                                   cp ${STAT_LOG} ${LOG}/${VER}_${BENCH}_${N}${I}_m${FILE}_r${RUN}_jobtracker;
 				   
                               done
                          done
