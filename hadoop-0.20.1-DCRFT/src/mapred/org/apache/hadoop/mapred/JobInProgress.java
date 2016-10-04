@@ -2379,7 +2379,7 @@ class JobInProgress {
       metrics.completeMap(taskid);
       // remove the completed map from the resp running caches
       retireMap(tip);
-      if ((finishedMapTasks + failedMapTIPs) == (numMapTasks)) {
+      if ((finishedMapTasks + failedMapTIPs) == (replicatedNumMapTasks)) {
         this.status.setMapProgress(1.0f);
       }
     } else {
@@ -2686,7 +2686,7 @@ class JobInProgress {
       //
       boolean killJob = tip.isJobCleanupTask() || tip.isJobSetupTask() ? true :
                         tip.isMapTask() ? 
-            ((++failedMapTIPs*100) > (mapFailuresPercent*numMapTasks)) :
+            ((++failedMapTIPs*100) > (mapFailuresPercent*replicatedNumMapTasks)) :
             ((++failedReduceTIPs*100) > (reduceFailuresPercent*numReduceTasks));
       
       if (killJob) {
