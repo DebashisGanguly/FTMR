@@ -230,6 +230,50 @@ class JobInProgress {
         return null;
     }
   }
+
+  private class FaultInjector {
+    private int[][] launchedMaps;
+
+    public FaultInjector () {
+        this.launchedMaps = new int[numMapTasks][numberOfFaults];
+
+        for (int i = 0; i < numMapTasks; i++) {
+            for (int j = 0; j < numberOfFaults; j++) {
+                this.launchedMaps[i][j] = -1;
+            }
+      }
+    }
+
+    public void addLaunchedMap (TaskInProgress tip) {
+        int pos = -1;
+        for (int i = 0; i < numberOfFaults; i++) {
+            if (this.launchedMaps[tip.getIdWithinJob()][i] != tip.getTIPId().getReplicaId() && this.launchedMaps[tip.getIdWithinJob()][i] == -1) {
+                pos = i;
+            }
+      }
+      if (pos != -1) {
+            this.launchedMaps[tip.getIdWithinJob()][pos] = tip.getTIPId().getReplicaId();
+        }
+    }
+    
+    public int shouldTamperMapDigest (TaskInProgress tip) {
+        int pos = -1;
+        for (int i = 0; i < numberOfFaults; i++) {
+            if (this.launchedMaps[tip.getIdWithinJob()][i] == tip.getTIPId().getReplicaId()) {
+                pos = i;
+            }
+        }
+        if (pos != -1 && injectFaults) {
+           if (natureOfFaults == NatureOfFaults.FAIL_STOP) {
+               return 1;
+           } else {
+               return 2;
+           }
+        } else {
+           return 0;
+        }
+    }
+  }
     
   private class VotingSystem {
     private String[][] digestCollection;
@@ -407,6 +451,7 @@ class JobInProgress {
   private boolean injectFaults;
     
   private VotingSystem votingSystem;
+  private FaultInjector faultInjector;
     
   /**
    * Create an almost empty JobInProgress, which can be used only for tests
@@ -429,6 +474,7 @@ class JobInProgress {
     this.injectFaults = conf.getMapFaultInjection();
       
     this.votingSystem = new VotingSystem();
+    this.faultInjector = new FaultInjector();
   }
   
   /**
@@ -484,6 +530,7 @@ class JobInProgress {
     this.injectFaults = conf.getMapFaultInjection();
       
     this.votingSystem = new VotingSystem();
+    this.faultInjector = new FaultInjector();
       
     this.taskCompletionEvents = new ArrayList<TaskCompletionEvent>
        (replicatedNumMapTasks + numReduceTasks + 10);
@@ -550,26 +597,7 @@ class JobInProgress {
   }
     
   public int shouldTamperMapDigest(TaskInProgress tip) {
-    if(injectFaults) {
-      int partitionId = tip.getIdWithinJob();
-      int replicaId = tip.getTIPId().getReplicaId();
-        
-      ArrayList<Integer> faultyReplicas = new ArrayList<Integer>(numberOfFaults);
-      for(int i = 0; i < numberOfFaults; i++) {
-        faultyReplicas.add((partitionId + i) % numberOfReplicas);
-      }
-        
-      if (faultyReplicas.contains(replicaId)) {
-        if (natureOfFaults == NatureOfFaults.FAIL_STOP) {
-            return 1;
-        } else if (natureOfFaults == NatureOfFaults.SILENT_ERROR) {
-            return 2;
-        }
-      } else {
-        return 0;
-      }
-    }
-    return 0;
+    return faultInjector.shouldTamperMapDigest(tip);;
   }
     
   public void sendDigest(TaskInProgress tip, String digest) {
@@ -1817,6 +1845,7 @@ class JobInProgress {
           runningMapCache.put(node, hostMaps);
         }
         hostMaps.add(tip);
+        faultInjector.addLaunchedMap(tip);
         node = node.getParent();
       }
     }

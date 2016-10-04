@@ -229,16 +229,64 @@ class JobInProgress {
         return null;
     }
   }
+
+  private class FaultInjector {
+    private int[][] launchedMaps;
+
+    public FaultInjector () {
+        this.launchedMaps = new int[numMapTasks][numberOfFaults];
+
+        for (int i = 0; i < numMapTasks; i++) {
+            for (int j = 0; j < numberOfFaults; j++) {
+                this.launchedMaps[i][j] = -1;
+            }
+      }
+    }
+
+    public void addLaunchedMap (TaskInProgress tip) {
+        int pos = -1;
+        for (int i = 0; i < numberOfFaults; i++) {
+            if (this.launchedMaps[tip.getIdWithinJob()][i] != tip.getTIPId().getReplicaId() && this.launchedMaps[tip.getIdWithinJob()][i] == -1) {
+                pos = i;
+            }
+      }
+      if (pos != -1) {
+            this.launchedMaps[tip.getIdWithinJob()][pos] = tip.getTIPId().getReplicaId();
+        }
+    }
+    
+    public int shouldTamperMapDigest (TaskInProgress tip) {
+        int pos = -1;
+        for (int i = 0; i < numberOfFaults; i++) {
+            if (this.launchedMaps[tip.getIdWithinJob()][i] == tip.getTIPId().getReplicaId()) {
+                pos = i;
+            }
+        }
+        if (pos != -1 && injectFaults) {
+           if (natureOfFaults == NatureOfFaults.FAIL_STOP) {
+               return 1;
+           } else {
+               return 2;
+           }
+        } else {
+           return 0;
+        }
+    }
+  }
     
   private class VotingSystem {
     private String[][] digestCollection;
     private int[] mapWinnerReplica;
-    private boolean votingCompleted;
+    private boolean majorityConsensusReached;
+    private int[] completedMapCounters;
+    private boolean[] mapMajorityConsensus;
       
     public VotingSystem() {
         this.digestCollection = new String[numMapTasks][numberOfReplicas];
         this.mapWinnerReplica = new int[numMapTasks];
-        this.votingCompleted = false;
+        this.majorityConsensusReached = false;
+        this.completedMapCounters = new int[numMapTasks];
+        this.mapMajorityConsensus = new boolean[numMapTasks];
     }
         
     public void addDigest(TaskInProgress tip, String digest) {
@@ -247,65 +295,78 @@ class JobInProgress {
         }
     }
       
+    public void incrementCompletedMapCounters(TaskInProgress tip) {
+        this.completedMapCounters[tip.getIdWithinJob()]++;
+    }
+      
     private void findMajorityWinners() {
-      synchronized (digestCollection) {
-        for (int i = 0; i < numMapTasks; i++) {
-          if (natureOfFaults == NatureOfFaults.FAIL_STOP) {
-            for (int j = 0; j < numberOfReplicas; j++) {
-              if (digestCollection[i][j] != null) {
-                this.mapWinnerReplica[i] = j;
-                break;
-              }
-            }
-          } else {
-              Set<String> uniqueDigestPerSplit = new HashSet<String>(Arrays.asList(digestCollection[i]));
-              
-              int occurrence = 0;
-              String majorityDigest = null;
-
-              for (int j = 0; j < numberOfReplicas; j++) {
-                if (digestCollection[i][j] != null) {
-                  uniqueDigestPerSplit.add(digestCollection[i][j]);
-                }
-              }
-          
-              for(String uniqueDigest:uniqueDigestPerSplit) {
-                if(Collections.frequency(Arrays.asList(digestCollection[i]), uniqueDigest) > occurrence) {
-                  occurrence = Collections.frequency(Arrays.asList(digestCollection[i]), uniqueDigest);
-                  majorityDigest = uniqueDigest;
-                }
-              }
-          
-              if(occurrence == (numberOfFaults + 1)) {
-                for (int j = 0; j < numberOfReplicas; j++) {
-                  if (majorityDigest.equals(digestCollection[i][j])) {
-                    this.mapWinnerReplica[i] = j;
-                    break;
+        synchronized (digestCollection) {
+          if (!this.majorityConsensusReached) {
+            this.majorityConsensusReached = true;
+            
+            for (int i = 0; i < numMapTasks; i++) {
+              if (!this.mapMajorityConsensus[i] && this.completedMapCounters[i] == numberOfReplicas) {
+                if (natureOfFaults == NatureOfFaults.FAIL_STOP) {
+                  for (int j = 0; j < numberOfReplicas; j++) {
+                    if (digestCollection[i][j] != null) {
+                      this.mapMajorityConsensus[i] = true;
+                      this.mapWinnerReplica[i] = j;
+                      break;
+                    }
+                  }
+                } else {
+                  Set<String> uniqueDigestPerSplit = new HashSet<String>();
+                  
+                  int occurrence = 0;
+                  String majorityDigest = null;
+                  
+                  for(int j = 0; j < numberOfReplicas; j++) {
+                    if (digestCollection[i][j] != null) {
+                      uniqueDigestPerSplit.add(digestCollection[i][j]);
+                    }
+                  }
+                  
+                  for(String uniqueDigest:uniqueDigestPerSplit) {
+                    if(Collections.frequency(Arrays.asList(digestCollection[i]), uniqueDigest) > occurrence) {
+                      occurrence = Collections.frequency(Arrays.asList(digestCollection[i]), uniqueDigest);
+                      majorityDigest = uniqueDigest;
+                    }
+                  }
+                  
+                  if(occurrence == (numberOfFaults + 1)) {
+                    for (int j = 0; j < numberOfReplicas; j++) {
+                      if (majorityDigest.equals(digestCollection[i][j])) {
+                        this.mapMajorityConsensus[i] = true;
+                        this.mapWinnerReplica[i] = j;
+                        break;
+                      }
+                    }
                   }
                 }
               }
-          } 
-        }  
-
-        for(TaskCompletionEvent event:taskCompletionEvents) {
-          if(event.isMapTask() && mapWinnerReplica[event.idWithinJob()] != event.replicaId()) {
-              event.setTaskStatus(TaskCompletionEvent.Status.OBSOLETE);
-          }
+                
+              if (!this.mapMajorityConsensus[i]) {
+                this.majorityConsensusReached = false;
+              }
+            }
+              
+            if (this.majorityConsensusReached) {
+              for(TaskCompletionEvent event:taskCompletionEvents) {
+                if(event.isMapTask() && mapWinnerReplica[event.idWithinJob()] != event.replicaId()) {
+                    event.setTaskStatus(TaskCompletionEvent.Status.OBSOLETE);
+                }
+              }
+            }
+          }   
         }
-          
-        this.votingCompleted = true;
       }
-    }
-        
-    public boolean hasMajorityConsensus() {
-        if(finishedMapTasks >= completedMapsForReduceSlowstart) {
-           if(!votingCompleted) {
-               findMajorityWinners();
-           }
-           return true;
+      
+      public boolean hasMajorityConsensus() {
+        if(!majorityConsensusReached) {
+            findMajorityWinners();
         }
-        return false;
-    }
+        return majorityConsensusReached;
+      }
   }
     
   private int numberOfFaults;
@@ -315,6 +376,7 @@ class JobInProgress {
   private boolean injectFaults;
     
   private VotingSystem votingSystem;
+  private FaultInjector faultInjector;
     
   /**
    * Create an almost empty JobInProgress, which can be used only for tests
@@ -337,6 +399,7 @@ class JobInProgress {
     this.injectFaults = conf.getMapFaultInjection();
       
     this.votingSystem = new VotingSystem();
+    this.faultInjector = new FaultInjector();
   }
   
   /**
@@ -392,6 +455,7 @@ class JobInProgress {
     this.injectFaults = conf.getMapFaultInjection();
       
     this.votingSystem = new VotingSystem();
+    this.faultInjector = new FaultInjector();
       
     this.taskCompletionEvents = new ArrayList<TaskCompletionEvent>
        (replicatedNumMapTasks + numReduceTasks + 10);
@@ -458,26 +522,7 @@ class JobInProgress {
   }
     
   public int shouldTamperMapDigest(TaskInProgress tip) {
-    if(injectFaults) {
-      int partitionId = tip.getIdWithinJob();
-      int replicaId = tip.getTIPId().getReplicaId();
-        
-      ArrayList<Integer> faultyReplicas = new ArrayList<Integer>(numberOfFaults);
-      for(int i = 0; i < numberOfFaults; i++) {
-        faultyReplicas.add((partitionId + i) % numberOfReplicas);
-      }
-        
-      if (faultyReplicas.contains(replicaId)) {
-        if (natureOfFaults == NatureOfFaults.FAIL_STOP) {
-            return 1;
-        } else if (natureOfFaults == NatureOfFaults.SILENT_ERROR) {
-            return 2;
-        }
-      } else {
-        return 0;
-      }
-    }
-    return 0;
+    return faultInjector.shouldTamperMapDigest(tip);
   }
     
   public void sendDigest(TaskInProgress tip, String digest) {
@@ -970,6 +1015,9 @@ class JobInProgress {
 
       TaskCompletionEvent taskEvent = null;
       if (state == TaskStatus.State.SUCCEEDED) {
+        if (tip.isMapTask() && !tip.isJobCleanupTask() && !tip.isJobSetupTask()) {
+            votingSystem.incrementCompletedMapCounters(tip);
+        }
         taskEvent = new TaskCompletionEvent(
                                             taskCompletionEventTracker, 
                                             taskid,
@@ -1027,6 +1075,9 @@ class JobInProgress {
               TaskCompletionEvent.Status.KILLED;
         if (tip.isFailed()) {
           taskCompletionStatus = TaskCompletionEvent.Status.TIPFAILED;
+        }
+        if (tip.isMapTask() && !tip.isJobCleanupTask() && !tip.isJobSetupTask()) {
+            votingSystem.incrementCompletedMapCounters(tip);
         }
         taskEvent = new TaskCompletionEvent(taskCompletionEventTracker, 
                                             taskid,
@@ -1698,6 +1749,7 @@ class JobInProgress {
           runningMapCache.put(node, hostMaps);
         }
         hostMaps.add(tip);
+        faultInjector.addLaunchedMap(tip);
         node = node.getParent();
       }
     }
