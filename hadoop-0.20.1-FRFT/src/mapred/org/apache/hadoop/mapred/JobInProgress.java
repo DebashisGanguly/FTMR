@@ -333,7 +333,7 @@ class JobInProgress {
                     }
                   }
                   
-                  if(occurrence == (numberOfFaults + 1)) {
+                  if(occurrence >= (numberOfFaults + 1)) {
                     for (int j = 0; j < numberOfReplicas; j++) {
                       if (majorityDigest.equals(digestCollection[i][j])) {
                         this.mapMajorityConsensus[i] = true;

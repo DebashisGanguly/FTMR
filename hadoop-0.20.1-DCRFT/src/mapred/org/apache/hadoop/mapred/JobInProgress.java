@@ -355,7 +355,7 @@ class JobInProgress {
                 }
               }
                           
-              if (occurrence == (numberOfFaults + 1)) {
+              if (occurrence >= (numberOfFaults + 1)) {
                 for (int i = 0; i < numberOfReplicas; i++) {
                   if (majorityDigest.equals(digestCollection[tip.getIdWithinJob()][i])) {
                     this.mapMajorityConsensus[tip.getIdWithinJob()] = true;
@@ -431,6 +431,7 @@ class JobInProgress {
                 event.setTaskStatus(TaskCompletionEvent.Status.OBSOLETE);
               }
             }
+            LOG.info("MAP_PHASE_FINISH_TIME = " + System.currentTimeMillis());  
           }
         }   
       }
@@ -597,7 +598,7 @@ class JobInProgress {
   }
     
   public int shouldTamperMapDigest(TaskInProgress tip) {
-    return faultInjector.shouldTamperMapDigest(tip);;
+    return faultInjector.shouldTamperMapDigest(tip);
   }
     
   public void sendDigest(TaskInProgress tip, String digest) {
@@ -2412,7 +2413,6 @@ class JobInProgress {
       // remove the completed map from the resp running caches
       retireMap(tip);
       if ((finishedMapTasks + failedMapTIPs) == (replicatedNumMapTasks)) {
-        LOG.info("MAP_PHASE_FINISH_TIME = " + System.currentTimeMillis());
         this.status.setMapProgress(1.0f);
       }
     } else {
