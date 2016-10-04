@@ -92,6 +92,10 @@ public class TaskAttemptID extends org.apache.hadoop.mapreduce.TaskAttemptID {
     return (JobID) super.getJobID();
   }
 
+  public int getAttemptId() {
+    return this.id;
+  }
+    
   @Deprecated
   public static TaskAttemptID read(DataInput in) throws IOException {
     TaskAttemptID taskId = new TaskAttemptID();

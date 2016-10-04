@@ -209,8 +209,6 @@ class JobInProgress {
     new TreeMap<TaskAttemptID, Integer>();
 
   private Object schedulingInfo;
-
-  private boolean injectFaults;
     
   /**
    * Create an almost empty JobInProgress, which can be used only for tests
@@ -224,8 +222,6 @@ class JobInProgress {
     this.anyCacheLevel = this.maxLevel+1;
     this.jobtracker = null;
     this.restartCount = 0;
-      
-    this.injectFaults = conf.getMapFaultInjection();
   }
   
   /**
@@ -294,8 +290,6 @@ class JobInProgress {
     this.nonRunningReduces = new LinkedList<TaskInProgress>();    
     this.runningReduces = new LinkedHashSet<TaskInProgress>();
     this.resourceEstimator = new ResourceEstimator(this);
-      
-    this.injectFaults = conf.getMapFaultInjection();
   }
 
   /**
@@ -471,11 +465,7 @@ class JobInProgress {
 
     // Calculate the minimum number of maps to be complete before 
     // we should start scheduling reduces
-    completedMapsForReduceSlowstart = 
-      (int)Math.ceil(
-          (conf.getFloat("mapred.reduce.slowstart.completed.maps", 
-                         DEFAULT_COMPLETED_MAPS_PERCENT_FOR_REDUCE_SLOWSTART) * 
-           numMapTasks));
+    completedMapsForReduceSlowstart = numMapTasks;
 
     // create cleanup two cleanup tips, one map and one reduce.
     cleanup = new TaskInProgress[2];
