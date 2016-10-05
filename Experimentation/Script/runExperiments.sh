@@ -3,7 +3,7 @@
 BASE=$PWD
 HADOOP_V=hadoop-0.20.1
 TMP=$BASE/tmp
-PERM_STORE=/pylon1/ci4s84p/ganguly/
+PERM_STORE=/pylon1/ci4s84p/ganguly
 LOG=$PERM_STORE/logs
 CONF=$PERM_STORE/conf
 
@@ -101,11 +101,11 @@ do
                                    wait
 				   
                                    ./start-dfs.sh;
-				   wait;
-				   ./start-mapred.sh;
-				   wait;
-				   ./hadoop dfs -copyFromLocal ${DATA}/${FILE}/part-00000 /gridmix/data${FILE}/SortUncompressed/part-00000;
-	                           wait;
+				                   wait;
+                                   ./start-mapred.sh;
+                                   wait;
+                                   ./hadoop dfs -copyFromLocal ${DATA}/${FILE}/part-00000 /gridmix/data${FILE}/SortUncompressed/part-00000;
+	                               wait;
                                    #echo "hadoop dfs -copyFromLocal ${DATA}/${FILE}/part-00000 /gridmix/data${FILE}/SortUncompressed/part-00000"
 
                                    GRIDMIX_HOME=$HADOOP/src/benchmarks/gridmix2

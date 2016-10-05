@@ -18,7 +18,7 @@
 <property>
   <name>dfs.block.size</name>
   <value>45088768</value> <!-- for DCRFT -->
-  <!-- value>135266304</value> <!-- for BFT -->
+  <!-- value>135266304</value> for BFT -->
 </property>
 
 
