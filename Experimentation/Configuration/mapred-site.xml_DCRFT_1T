@@ -21,6 +21,10 @@
         <name>mapred.map.tasks.fault.inject</name>
         <value>true</value>
     </property>
+    <property>
+        <name>mapred.map.tasks.fault.percent</name>
+        <value>100</value>
+    </property>
 
     <property>
        <name>io.sort.factor</name>

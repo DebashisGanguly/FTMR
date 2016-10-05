@@ -1396,7 +1396,13 @@ class MapTask extends Task {
     private void mergeParts() throws IOException, InterruptedException, 
                                      ClassNotFoundException {
       if (conf.getMapFaultInjection() && getTaskID().getAttemptId() == 0) {
-          throw new IOException("Don't panic. Injecting fault at the very end in attempt 0 of taskid " + getTaskID() + ".");
+          int mapFaultPercent = conf.getMapFaultPercent() > 100 ? 100 : (conf.getMapFaultPercent() < 0 ? 0 : conf.getMapFaultPercent());
+          if (mapFaultPercent != 0) {
+              int faultFactor = (int)Math.ceil(100 / mapFaultPercent);
+              if ((getTaskID().getTaskID().getId() % faultFactor) == 0) {
+                  throw new IOException("Don't panic. Injecting fault at the very end in attempt 0 of taskid " + getTaskID() + ".");
+              }
+          }
       }
       // get the approximate size of the final output/index files
       long finalOutFileSize = 0;

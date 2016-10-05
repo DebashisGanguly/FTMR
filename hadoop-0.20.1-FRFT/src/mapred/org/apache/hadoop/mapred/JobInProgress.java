@@ -262,14 +262,19 @@ class JobInProgress {
                 pos = i;
             }
         }
-        if (pos != -1 && injectFaults) {
-           if (natureOfFaults == NatureOfFaults.FAIL_STOP) {
-               return 1;
-           } else {
-               return 2;
-           }
+        if (mapFaultPercent == 0) {
+            return 0;
         } else {
-           return 0;
+            int faultFactor = (int)Math.ceil(100 / mapFaultPercent);
+            if (pos != -1 && injectFaults && ((tip.getIdWithinJob() % faultFactor) == 0)) {
+                if (natureOfFaults == NatureOfFaults.FAIL_STOP) {
+                    return 1;
+                } else {
+                    return 2;
+                }
+            } else {
+                return 0;
+            }
         }
     }
   }
@@ -374,6 +379,7 @@ class JobInProgress {
   private int numberOfReplicas;
   private int replicatedNumMapTasks;
   private boolean injectFaults;
+  private int mapFaultPercent;
     
   private VotingSystem votingSystem;
   private FaultInjector faultInjector;
@@ -397,6 +403,7 @@ class JobInProgress {
     this.numberOfReplicas = this.natureOfFaults == NatureOfFaults.FAIL_STOP ? numberOfFaults + 1 : 2 * numberOfFaults +1;
     this.replicatedNumMapTasks = this.numberOfReplicas * numMapTasks;
     this.injectFaults = conf.getMapFaultInjection();
+    this.mapFaultPercent = conf.getMapFaultPercent() > 100 ? 100 : (conf.getMapFaultPercent() < 0 ? 0 : conf.getMapFaultPercent());
       
     this.votingSystem = new VotingSystem();
     this.faultInjector = new FaultInjector();
@@ -453,6 +460,7 @@ class JobInProgress {
     this.numberOfReplicas = this.natureOfFaults == NatureOfFaults.FAIL_STOP ? numberOfFaults + 1 : 2 * numberOfFaults +1;
     this.replicatedNumMapTasks = this.numberOfReplicas * numMapTasks;
     this.injectFaults = conf.getMapFaultInjection();
+    this.mapFaultPercent = conf.getMapFaultPercent() > 100 ? 100 : (conf.getMapFaultPercent() < 0 ? 0 : conf.getMapFaultPercent());
       
     this.votingSystem = new VotingSystem();
     this.faultInjector = new FaultInjector();

@@ -947,7 +947,8 @@ public class JobConf extends Configuration {
     setBoolean("mapred.reduce.tasks.speculative.execution", 
                speculativeExecution);
   }
-   /**
+    
+  /**
    * Get whether to emulate faults in mappers or not.
    * Defaults to <code>false</code>.
    *
@@ -955,13 +956,37 @@ public class JobConf extends Configuration {
    */
    public boolean getMapFaultInjection() { return getBoolean("mapred.map.tasks.fault.inject", false); }
     
-   /**
+  /**
    * Set whether to emulate faults in mappers or not.
    *
    * @param inject denotes whether faults to be injected in mappers.
    */
    public void setMapFaultInjection(boolean inject) {
      setBoolean("mapred.map.tasks.fault.inject", false);
+   }
+    
+  /**
+   * Get the percentage of map tasks for that fault will
+   * be emulated.
+   *
+   * Defaults to <code>zero</code>.
+   *
+   * @return the percentage of map tasks for that will
+   *         be affected by fault injection.
+   */
+   public int getMapFaultPercent() {
+       return getInt("mapred.map.tasks.fault.percent", 0);
+   }
+    
+  /**
+   * Set the percentage of map tasks for that fault will
+   * be emulated.
+   *
+   * @param the percentage of map tasks for that fault injection
+   *                will be emulated.
+   */
+   public void setMapFaultPercent(int percent) {
+       setInt("mapred.map.tasks.fault.percent", percent);
    }
     
   /**

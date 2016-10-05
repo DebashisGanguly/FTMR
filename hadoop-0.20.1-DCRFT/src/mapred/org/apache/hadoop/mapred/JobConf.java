@@ -1002,6 +1002,30 @@ public class JobConf extends Configuration {
    }
     
   /**
+   * Get the percentage of map tasks for that fault will
+   * be emulated.
+   *
+   * Defaults to <code>zero</code>.
+   *
+   * @return the percentage of map tasks for that will
+   *         be affected by fault injection.
+   */
+   public int getMapFaultPercent() {
+       return getInt("mapred.map.tasks.fault.percent", 0);
+   }
+    
+  /**
+   * Set the percentage of map tasks for that fault will
+   * be emulated.
+   *
+   * @param the percentage of map tasks for that fault injection
+   *                will be emulated.
+   */
+   public void setMapFaultPercent(int percent) {
+       setInt("mapred.map.tasks.fault.percent", percent);
+   }
+    
+  /**
    * Get configured the number of reduce tasks for this job.
    * Defaults to <code>1</code>.
    * 
