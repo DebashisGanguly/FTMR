@@ -12,12 +12,13 @@ VERSION="SE BFT FRFT DCRFT"
 # SE BFT FRFT DCRFT
 NATURE="1 2"
 INJECT="F T"
-FILES="10 50"
-#FILES="50 100 200 300 400 500 600 700 800 900 1000"
+FILES="50"
+#FILES="50 100 200 300 400 500"
 RUNS="1"
 BENCHMARKS="streamSort"
 #BENCHMARKS="streamSort javaSort combiner"
 STATISTICS="SUBMIT_TIME LAUNCH_TIME MAP_PHASE_FINISH_TIME FINISH_TIME"
+FAULT="6 12 25 50 100"
 
 if [ ! -d $LOG ];
 then
@@ -30,7 +31,6 @@ do
      HADOOP=$BASE/$VER
 
      cd $HADOOP/bin
-     ./stop-all.sh
 
      if [ -d $TMP ];
      then
@@ -90,13 +90,14 @@ do
                                    HOSTS="r655 r656 r657 r659 r660 r661 r662 r676"
                                    #HOSTS="r655 r656 r657 r659 r660 r661 r662 r675 r676"
 
-                                   SWEEP="rm -rf $HADOOP; if [ -d $TMP ]; then rm -rf $TMP/*; else mkdir $TMP; fi"
+                                   SWEEP="if [ -d $TMP ]; then rm -rf $TMP/*; else mkdir $TMP; fi"
                                    SCP="scp -r $USERNAME@$MASTER:$HADOOP $HADOOP"
+                                   SCP_CONF="scp -r $USERNAME@$MASTER:$HADOOP/conf/\{mapred-site.xml,slaves} $HADOOP/conf/"
                                    SED="sed -i '/export JAVA_HOME/c\export JAVA_HOME='\$JAVA_HOME'' $HADOOP/conf/hadoop-env.sh"
 
                                    for HOSTNAME in ${HOSTS};
                                    do
-                                       (ssh -l ${USERNAME} ${HOSTNAME} "hostname; pwd; ${SWEEP}; ${SCP}; hostname; ls; ${SED};") &
+                                       (ssh -l ${USERNAME} ${HOSTNAME} "hostname; pwd; ${SWEEP}; if [ -d $HADOOP ]; then ${SCP_CONF}; else ${SCP}; fi; hostname; ls; ${SED};") &
                                    done
                                    wait
 				   

@@ -29,11 +29,13 @@ do
           then 
                B_SIZE=45088768
                B_DIR=43
+               UNCOMPRESSED_DATA_BYTES=$((${B_SIZE} * ${N} * 3))
           else
                B_SIZE=135266304
                B_DIR=129
+               UNCOMPRESSED_DATA_BYTES=$((${B_SIZE} * ${N}))
           fi
-     
+
           if [ -d $DATA/$B_DIR ];
           then
                echo "Folder exists $DATA/$B_DIR";
@@ -48,8 +50,7 @@ do
                mkdir $DATA/$B_DIR/${N};
           fi
 
-          echo "Blokc size $B_SIZE"
-          UNCOMPRESSED_DATA_BYTES=$((${B_SIZE} * ${N}))
+          echo "Block size $B_SIZE"
           echo "File size ${UNCOMPRESSED_DATA_BYTES}"
 
           # Data sources
