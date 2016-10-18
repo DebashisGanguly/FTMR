@@ -7,18 +7,25 @@ PERM_STORE=/pylon1/ci4s84p/ganguly
 LOG=$PERM_STORE/logs
 CONF=$PERM_STORE/conf
 
-#VERSION="SE"
 VERSION="SE BFT FRFT DCRFT"
-# SE BFT FRFT DCRFT
+
 NATURE="1 2"
-INJECT="F T"
-FILES="50"
-#FILES="50 100 200 300 400 500"
-RUNS="1"
-BENCHMARKS="streamSort"
-#BENCHMARKS="streamSort javaSort combiner"
+
+#INJECT="T"
+INJECT="F"
+
+#FILES="100 300 500"
+FILES="50 100 200 300 400 500"
+
+RUNS="1 2 3 4 5"
+
+#BENCHMARKS="streamSort"
+BENCHMARKS="streamSort javaSort combiner"
+
 STATISTICS="SUBMIT_TIME LAUNCH_TIME MAP_PHASE_FINISH_TIME FINISH_TIME"
-FAULT="6 12 25 50 100"
+
+#FAULT="6 12 25 50 100"
+FAULT="100"
 
 if [ ! -d $LOG ];
 then
@@ -43,8 +50,6 @@ do
      do
           for I in ${INJECT};
           do
-               echo "VERSION: $V, NATURE: $N, INJECT: $I"
-
                if [ "$V" == "SE" ] && [ "$N" == "2" ];
                then
                     continue;
@@ -91,27 +96,44 @@ do
 
                                         MASTER="r653"
                                         USERNAME="ganguly"
-                                        HOSTS="r655 r656 r657 r659 r660 r661 r662 r676"
-                                        #HOSTS="r655 r656 r657 r659 r660 r661 r662 r675 r676"
+
+                                        HOSTS0="r654 r655 r656 r657 r658 r659 r660 r661 r662 r663"
+                                        HOSTS1="r664 r665 r666 r667 r668 r670 r671 r672 r673 r675"
+                                        HOSTS2="r676 r677 r678 r679 r680 r681 r682 r683 r684 r685"
 
                                         SWEEP="if [ -d $TMP ]; then rm -rf $TMP/*; else mkdir $TMP; fi"
                                         SCP="scp -r $USERNAME@$MASTER:$HADOOP $HADOOP"
                                         SCP_CONF="scp -r $USERNAME@$MASTER:$HADOOP/conf/\{mapred-site.xml,slaves} $HADOOP/conf/"
                                         SED="sed -i '/export JAVA_HOME/c\export JAVA_HOME='\$JAVA_HOME'' $HADOOP/conf/hadoop-env.sh"
 
-                                        for HOSTNAME in ${HOSTS};
+                                        for HOSTNAME in ${HOSTS0};
+                                        do
+                                            (ssh -l ${USERNAME} ${HOSTNAME} "hostname; pwd; ${SWEEP}; if [ -d $HADOOP ]; then ${SCP_CONF}; else ${SCP}; fi; hostname; ls; ${SED};") &
+                                        done
+                                        wait
+
+                                        for HOSTNAME in ${HOSTS1};
+                                        do
+                                            (ssh -l ${USERNAME} ${HOSTNAME} "hostname; pwd; ${SWEEP}; if [ -d $HADOOP ]; then ${SCP_CONF}; else ${SCP}; fi; hostname; ls; ${SED};") &
+                                        done
+                                        wait
+
+                                        for HOSTNAME in ${HOSTS2};
                                         do
                                             (ssh -l ${USERNAME} ${HOSTNAME} "hostname; pwd; ${SWEEP}; if [ -d $HADOOP ]; then ${SCP_CONF}; else ${SCP}; fi; hostname; ls; ${SED};") &
                                         done
                                         wait
      				   
                                         ./start-dfs.sh;
-     				                   wait;
+     				               wait;
                                         ./start-mapred.sh;
                                         wait;
+
+                                        echo "hadoop dfs -copyFromLocal ${DATA}/${FILE}/part-00000 /gridmix/data${FILE}/SortUncompressed/part-00000"					
                                         ./hadoop dfs -copyFromLocal ${DATA}/${FILE}/part-00000 /gridmix/data${FILE}/SortUncompressed/part-00000;
-     	                               wait;
-                                        #echo "hadoop dfs -copyFromLocal ${DATA}/${FILE}/part-00000 /gridmix/data${FILE}/SortUncompressed/part-00000"
+     	                              wait;
+
+			                         echo "VERSION: $V, NATURE: $N, INJECT: $I, BENCHMARK: $BENCH, FAULT: $F, SPLIT SIZE: $FILE"
 
                                         GRIDMIX_HOME=$HADOOP/src/benchmarks/gridmix2
                                         cd $GRIDMIX_HOME;

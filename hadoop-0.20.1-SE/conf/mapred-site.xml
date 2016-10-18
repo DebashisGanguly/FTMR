@@ -6,7 +6,7 @@
 <configuration>
     <property>
        <name>mapred.job.tracker</name>
-       <value>pet-cluster-1:54311</value>
+       <value>r653:54311</value>
     </property>
     
     <property>

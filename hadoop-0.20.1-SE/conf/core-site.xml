@@ -12,7 +12,7 @@
 
 <property>
   <name>fs.default.name</name>
-  <value>hdfs://pet-cluster-1:54310</value>
+  <value>hdfs://r653:54310</value>
 </property>
 
 
