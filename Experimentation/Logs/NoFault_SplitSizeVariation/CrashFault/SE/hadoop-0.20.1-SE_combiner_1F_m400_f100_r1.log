@@ -1,0 +1,274 @@
+total 1 jobs
+Jobs in waiting state: 1
+Jobs in ready state: 0
+Jobs in running state: 0
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+1 jobs succeeded
+JobId	job_201610061345_0001
+JobName	GridmixCombinerJob.small
+job_201610061345_0001.GridmixCombinerJob.small.FileSystemCounters.FILE_BYTES_READ	24184586020
+job_201610061345_0001.GridmixCombinerJob.small.FileSystemCounters.FILE_BYTES_WRITTEN	140372663
+job_201610061345_0001.GridmixCombinerJob.small.FileSystemCounters.HDFS_BYTES_READ	54229916317
+job_201610061345_0001.GridmixCombinerJob.small.FileSystemCounters.HDFS_BYTES_WRITTEN	18655
+job_201610061345_0001.GridmixCombinerJob.small.mapEndTime	1475776443551
+job_201610061345_0001.GridmixCombinerJob.small.mapExecutionTimeStats.avg	199301
+job_201610061345_0001.GridmixCombinerJob.small.mapExecutionTimeStats.max	203995
+job_201610061345_0001.GridmixCombinerJob.small.mapExecutionTimeStats.medium	199886
+job_201610061345_0001.GridmixCombinerJob.small.mapExecutionTimeStats.min	195514
+job_201610061345_0001.GridmixCombinerJob.small.mapExecutionTimeStats.numOfItems	401
+job_201610061345_0001.GridmixCombinerJob.small.mapStartTime	1475776235356
+job_201610061345_0001.GridmixCombinerJob.small.numOfMapTasks	401
+job_201610061345_0001.GridmixCombinerJob.small.numOfReduceTasks	401
+job_201610061345_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.JobInProgress$Counter.DATA_LOCAL_MAPS	427
+job_201610061345_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.JobInProgress$Counter.RACK_LOCAL_MAPS	19
+job_201610061345_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.JobInProgress$Counter.TOTAL_LAUNCHED_MAPS	446
+job_201610061345_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.JobInProgress$Counter.TOTAL_LAUNCHED_REDUCES	418
+job_201610061345_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.COMBINE_INPUT_RECORDS	5084498349
+job_201610061345_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.COMBINE_OUTPUT_RECORDS	6811139
+job_201610061345_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.MAP_INPUT_BYTES	54203701517
+job_201610061345_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.MAP_INPUT_RECORDS	48589462
+job_201610061345_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.MAP_OUTPUT_BYTES	74418875433
+job_201610061345_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.MAP_OUTPUT_RECORDS	5078088210
+job_201610061345_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.REDUCE_INPUT_GROUPS	1000
+job_201610061345_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.REDUCE_INPUT_RECORDS	401000
+job_201610061345_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.REDUCE_OUTPUT_RECORDS	1000
+job_201610061345_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.REDUCE_SHUFFLE_BYTES	7625287
+job_201610061345_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.SPILLED_RECORDS	7212139
+job_201610061345_0001.GridmixCombinerJob.small.reduceEndTime	1475776559665
+job_201610061345_0001.GridmixCombinerJob.small.reduceExecutionTimeStats.avg	109352
+job_201610061345_0001.GridmixCombinerJob.small.reduceExecutionTimeStats.max	111908
+job_201610061345_0001.GridmixCombinerJob.small.reduceExecutionTimeStats.medium	109925
+job_201610061345_0001.GridmixCombinerJob.small.reduceExecutionTimeStats.min	107486
+job_201610061345_0001.GridmixCombinerJob.small.reduceExecutionTimeStats.numOfItems	401
+job_201610061345_0001.GridmixCombinerJob.small.reduceStartTime	1475776235356
+job_201610061345_0001.jobStatus	successful
+GridMix results:
+Total num of Jobs: 1
+ExecutionTime: 340

@@ -1,0 +1,113 @@
+total 1 jobs
+Jobs in waiting state: 1
+Jobs in ready state: 0
+Jobs in running state: 0
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+1 jobs succeeded
+JobId	job_201610110149_0001
+JobName	GridmixJavaSorter.small
+job_201610110149_0001.GridmixJavaSorter.small.FileSystemCounters.FILE_BYTES_READ	13619349813
+job_201610110149_0001.GridmixJavaSorter.small.FileSystemCounters.FILE_BYTES_WRITTEN	40858661903
+job_201610110149_0001.GridmixJavaSorter.small.FileSystemCounters.HDFS_BYTES_READ	27114969362
+job_201610110149_0001.GridmixJavaSorter.small.FileSystemCounters.HDFS_BYTES_WRITTEN	13550930981
+job_201610110149_0001.GridmixJavaSorter.small.mapEndTime	1476165336085
+job_201610110149_0001.GridmixJavaSorter.small.mapExecutionTimeStats.avg	73733
+job_201610110149_0001.GridmixJavaSorter.small.mapExecutionTimeStats.max	78223
+job_201610110149_0001.GridmixJavaSorter.small.mapExecutionTimeStats.medium	74025
+job_201610110149_0001.GridmixJavaSorter.small.mapExecutionTimeStats.min	69797
+job_201610110149_0001.GridmixJavaSorter.small.mapExecutionTimeStats.numOfItems	202
+job_201610110149_0001.GridmixJavaSorter.small.mapStartTime	1476165253666
+job_201610110149_0001.GridmixJavaSorter.small.numOfMapTasks	202
+job_201610110149_0001.GridmixJavaSorter.small.numOfReduceTasks	101
+job_201610110149_0001.GridmixJavaSorter.small.org.apache.hadoop.mapred.JobInProgress$Counter.DATA_LOCAL_MAPS	139
+job_201610110149_0001.GridmixJavaSorter.small.org.apache.hadoop.mapred.JobInProgress$Counter.RACK_LOCAL_MAPS	63
+job_201610110149_0001.GridmixJavaSorter.small.org.apache.hadoop.mapred.JobInProgress$Counter.TOTAL_LAUNCHED_MAPS	202
+job_201610110149_0001.GridmixJavaSorter.small.org.apache.hadoop.mapred.JobInProgress$Counter.TOTAL_LAUNCHED_REDUCES	125
+job_201610110149_0001.GridmixJavaSorter.small.org.apache.hadoop.mapred.Task$Counter.COMBINE_INPUT_RECORDS	0
+job_201610110149_0001.GridmixJavaSorter.small.org.apache.hadoop.mapred.Task$Counter.COMBINE_OUTPUT_RECORDS	0
+job_201610110149_0001.GridmixJavaSorter.small.org.apache.hadoop.mapred.Task$Counter.MAP_INPUT_BYTES	27101861962
+job_201610110149_0001.GridmixJavaSorter.small.org.apache.hadoop.mapred.Task$Counter.MAP_INPUT_RECORDS	24300252
+job_201610110149_0001.GridmixJavaSorter.small.org.apache.hadoop.mapred.Task$Counter.MAP_OUTPUT_BYTES	27145962584
+job_201610110149_0001.GridmixJavaSorter.small.org.apache.hadoop.mapred.Task$Counter.MAP_OUTPUT_RECORDS	24300252
+job_201610110149_0001.GridmixJavaSorter.small.org.apache.hadoop.mapred.Task$Counter.REDUCE_INPUT_GROUPS	10192610
+job_201610110149_0001.GridmixJavaSorter.small.org.apache.hadoop.mapred.Task$Counter.REDUCE_INPUT_RECORDS	12150126
+job_201610110149_0001.GridmixJavaSorter.small.org.apache.hadoop.mapred.Task$Counter.REDUCE_OUTPUT_RECORDS	12150126
+job_201610110149_0001.GridmixJavaSorter.small.org.apache.hadoop.mapred.Task$Counter.REDUCE_SHUFFLE_BYTES	13485110880
+job_201610110149_0001.GridmixJavaSorter.small.org.apache.hadoop.mapred.Task$Counter.SPILLED_RECORDS	36450378
+job_201610110149_0001.GridmixJavaSorter.small.reduceEndTime	1476165348737
+job_201610110149_0001.GridmixJavaSorter.small.reduceExecutionTimeStats.avg	6036
+job_201610110149_0001.GridmixJavaSorter.small.reduceExecutionTimeStats.max	8352
+job_201610110149_0001.GridmixJavaSorter.small.reduceExecutionTimeStats.medium	6362
+job_201610110149_0001.GridmixJavaSorter.small.reduceExecutionTimeStats.min	3877
+job_201610110149_0001.GridmixJavaSorter.small.reduceExecutionTimeStats.numOfItems	101
+job_201610110149_0001.GridmixJavaSorter.small.reduceStartTime	1476165253666
+job_201610110149_0001.jobStatus	successful
+GridMix results:
+Total num of Jobs: 1
+ExecutionTime: 110

@@ -1,0 +1,92 @@
+total 1 jobs
+Jobs in waiting state: 1
+Jobs in ready state: 0
+Jobs in running state: 0
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+1 jobs succeeded
+JobId	job_201610101455_0001
+JobName	GridmixCombinerJob.small
+job_201610101455_0001.GridmixCombinerJob.small.FileSystemCounters.FILE_BYTES_READ	697305754
+job_201610101455_0001.GridmixCombinerJob.small.FileSystemCounters.FILE_BYTES_WRITTEN	29811260
+job_201610101455_0001.GridmixCombinerJob.small.FileSystemCounters.HDFS_BYTES_READ	13557347882
+job_201610101455_0001.GridmixCombinerJob.small.FileSystemCounters.HDFS_BYTES_WRITTEN	17655
+job_201610101455_0001.GridmixCombinerJob.small.mapEndTime	1476125897728
+job_201610101455_0001.GridmixCombinerJob.small.mapExecutionTimeStats.avg	32179
+job_201610101455_0001.GridmixCombinerJob.small.mapExecutionTimeStats.max	36781
+job_201610101455_0001.GridmixCombinerJob.small.mapExecutionTimeStats.medium	32767
+job_201610101455_0001.GridmixCombinerJob.small.mapExecutionTimeStats.min	28145
+job_201610101455_0001.GridmixCombinerJob.small.mapExecutionTimeStats.numOfItems	150
+job_201610101455_0001.GridmixCombinerJob.small.mapStartTime	1476125856722
+job_201610101455_0001.GridmixCombinerJob.small.numOfMapTasks	150
+job_201610101455_0001.GridmixCombinerJob.small.numOfReduceTasks	50
+job_201610101455_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.JobInProgress$Counter.DATA_LOCAL_MAPS	68
+job_201610101455_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.JobInProgress$Counter.RACK_LOCAL_MAPS	32
+job_201610101455_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.JobInProgress$Counter.TOTAL_LAUNCHED_MAPS	100
+job_201610101455_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.JobInProgress$Counter.TOTAL_LAUNCHED_REDUCES	50
+job_201610101455_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.COMBINE_INPUT_RECORDS	1271095962
+job_201610101455_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.COMBINE_OUTPUT_RECORDS	1702000
+job_201610101455_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.MAP_INPUT_BYTES	13550925256
+job_201610101455_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.MAP_INPUT_RECORDS	12146536
+job_201610101455_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.MAP_OUTPUT_BYTES	18604608032
+job_201610101455_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.MAP_OUTPUT_RECORDS	1269493962
+job_201610101455_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.REDUCE_INPUT_GROUPS	1000
+job_201610101455_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.REDUCE_INPUT_RECORDS	50000
+job_201610101455_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.REDUCE_OUTPUT_RECORDS	1000
+job_201610101455_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.REDUCE_SHUFFLE_BYTES	833162
+job_201610101455_0001.GridmixCombinerJob.small.org.apache.hadoop.mapred.Task$Counter.SPILLED_RECORDS	1752000
+job_201610101455_0001.GridmixCombinerJob.small.reduceEndTime	1476125927046
+job_201610101455_0001.GridmixCombinerJob.small.reduceExecutionTimeStats.avg	22668
+job_201610101455_0001.GridmixCombinerJob.small.reduceExecutionTimeStats.max	24973
+job_201610101455_0001.GridmixCombinerJob.small.reduceExecutionTimeStats.medium	22927
+job_201610101455_0001.GridmixCombinerJob.small.reduceExecutionTimeStats.min	20429
+job_201610101455_0001.GridmixCombinerJob.small.reduceExecutionTimeStats.numOfItems	50
+job_201610101455_0001.GridmixCombinerJob.small.reduceStartTime	1476125856722
+job_201610101455_0001.jobStatus	successful
+GridMix results:
+Total num of Jobs: 1
+ExecutionTime: 80

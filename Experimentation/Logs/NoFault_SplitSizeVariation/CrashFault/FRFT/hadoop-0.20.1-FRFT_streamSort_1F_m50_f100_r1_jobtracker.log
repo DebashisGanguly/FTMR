@@ -1,0 +1,1021 @@
+2016-10-10 23:32:25,784 INFO org.apache.hadoop.mapred.JobTracker: STARTUP_MSG: 
+/************************************************************
+STARTUP_MSG: Starting JobTracker
+STARTUP_MSG:   host = r068.pvt.bridges.psc.edu/10.4.216.69
+STARTUP_MSG:   args = []
+STARTUP_MSG:   version = 0.20.2-dev
+STARTUP_MSG:   build =  -r ; compiled by 'DebashisGanguly' on Wed Oct  5 00:00:49 EDT 2016
+************************************************************/
+2016-10-10 23:32:25,846 INFO org.apache.hadoop.mapred.JobTracker: Scheduler configured with (memSizeForMapSlotOnJT, memSizeForReduceSlotOnJT, limitMaxMemForMapTasks, limitMaxMemForReduceTasks) (-1, -1, -1, -1)
+2016-10-10 23:32:25,887 INFO org.apache.hadoop.ipc.metrics.RpcMetrics: Initializing RPC Metrics with hostName=JobTracker, port=54311
+2016-10-10 23:32:25,937 INFO org.mortbay.log: Logging to org.slf4j.impl.Log4jLoggerAdapter(org.mortbay.log) via org.mortbay.log.Slf4jLog
+2016-10-10 23:32:26,069 INFO org.apache.hadoop.http.HttpServer: Port returned by webServer.getConnectors()[0].getLocalPort() before open() is -1. Opening the listener on 50030
+2016-10-10 23:32:26,071 INFO org.apache.hadoop.http.HttpServer: listener.getLocalPort() returned 50030 webServer.getConnectors()[0].getLocalPort() returned 50030
+2016-10-10 23:32:26,071 INFO org.apache.hadoop.http.HttpServer: Jetty bound to port 50030
+2016-10-10 23:32:26,071 INFO org.mortbay.log: jetty-6.1.14
+2016-10-10 23:32:29,157 INFO org.mortbay.log: Started SelectChannelConnector@0.0.0.0:50030
+2016-10-10 23:32:29,158 INFO org.apache.hadoop.metrics.jvm.JvmMetrics: Initializing JVM Metrics with processName=JobTracker, sessionId=
+2016-10-10 23:32:29,158 INFO org.apache.hadoop.mapred.JobTracker: JobTracker up at: 54311
+2016-10-10 23:32:29,158 INFO org.apache.hadoop.mapred.JobTracker: JobTracker webserver: 50030
+2016-10-10 23:32:29,330 INFO org.apache.hadoop.mapred.JobTracker: Cleaning up the system directory
+2016-10-10 23:32:29,396 INFO org.apache.hadoop.mapred.CompletedJobStatusStore: Completed job store is inactive
+2016-10-10 23:32:29,959 INFO org.apache.hadoop.ipc.Server: IPC Server Responder: starting
+2016-10-10 23:32:29,959 INFO org.apache.hadoop.ipc.Server: IPC Server listener on 54311: starting
+2016-10-10 23:32:29,961 INFO org.apache.hadoop.ipc.Server: IPC Server handler 0 on 54311: starting
+2016-10-10 23:32:29,962 INFO org.apache.hadoop.ipc.Server: IPC Server handler 1 on 54311: starting
+2016-10-10 23:32:29,963 INFO org.apache.hadoop.ipc.Server: IPC Server handler 2 on 54311: starting
+2016-10-10 23:32:29,965 INFO org.apache.hadoop.ipc.Server: IPC Server handler 3 on 54311: starting
+2016-10-10 23:32:29,966 INFO org.apache.hadoop.ipc.Server: IPC Server handler 4 on 54311: starting
+2016-10-10 23:32:29,967 INFO org.apache.hadoop.ipc.Server: IPC Server handler 5 on 54311: starting
+2016-10-10 23:32:29,968 INFO org.apache.hadoop.ipc.Server: IPC Server handler 6 on 54311: starting
+2016-10-10 23:32:29,969 INFO org.apache.hadoop.ipc.Server: IPC Server handler 7 on 54311: starting
+2016-10-10 23:32:29,970 INFO org.apache.hadoop.ipc.Server: IPC Server handler 8 on 54311: starting
+2016-10-10 23:32:29,971 INFO org.apache.hadoop.ipc.Server: IPC Server handler 9 on 54311: starting
+2016-10-10 23:32:29,972 INFO org.apache.hadoop.ipc.Server: IPC Server handler 10 on 54311: starting
+2016-10-10 23:32:29,974 INFO org.apache.hadoop.ipc.Server: IPC Server handler 11 on 54311: starting
+2016-10-10 23:32:29,974 INFO org.apache.hadoop.ipc.Server: IPC Server handler 12 on 54311: starting
+2016-10-10 23:32:29,975 INFO org.apache.hadoop.ipc.Server: IPC Server handler 13 on 54311: starting
+2016-10-10 23:32:29,976 INFO org.apache.hadoop.ipc.Server: IPC Server handler 14 on 54311: starting
+2016-10-10 23:32:29,977 INFO org.apache.hadoop.ipc.Server: IPC Server handler 15 on 54311: starting
+2016-10-10 23:32:29,978 INFO org.apache.hadoop.ipc.Server: IPC Server handler 16 on 54311: starting
+2016-10-10 23:32:29,979 INFO org.apache.hadoop.ipc.Server: IPC Server handler 17 on 54311: starting
+2016-10-10 23:32:29,980 INFO org.apache.hadoop.ipc.Server: IPC Server handler 18 on 54311: starting
+2016-10-10 23:32:29,981 INFO org.apache.hadoop.ipc.Server: IPC Server handler 19 on 54311: starting
+2016-10-10 23:32:29,982 INFO org.apache.hadoop.ipc.Server: IPC Server handler 20 on 54311: starting
+2016-10-10 23:32:29,983 INFO org.apache.hadoop.ipc.Server: IPC Server handler 21 on 54311: starting
+2016-10-10 23:32:29,984 INFO org.apache.hadoop.ipc.Server: IPC Server handler 22 on 54311: starting
+2016-10-10 23:32:29,985 INFO org.apache.hadoop.ipc.Server: IPC Server handler 23 on 54311: starting
+2016-10-10 23:32:30,010 INFO org.apache.hadoop.ipc.Server: IPC Server handler 27 on 54311: starting
+2016-10-10 23:32:30,010 INFO org.apache.hadoop.ipc.Server: IPC Server handler 28 on 54311: starting
+2016-10-10 23:32:30,010 INFO org.apache.hadoop.ipc.Server: IPC Server handler 24 on 54311: starting
+2016-10-10 23:32:30,012 INFO org.apache.hadoop.ipc.Server: IPC Server handler 25 on 54311: starting
+2016-10-10 23:32:30,011 INFO org.apache.hadoop.ipc.Server: IPC Server handler 29 on 54311: starting
+2016-10-10 23:32:30,011 INFO org.apache.hadoop.ipc.Server: IPC Server handler 26 on 54311: starting
+2016-10-10 23:32:30,013 INFO org.apache.hadoop.ipc.Server: IPC Server handler 31 on 54311: starting
+2016-10-10 23:32:30,013 INFO org.apache.hadoop.ipc.Server: IPC Server handler 32 on 54311: starting
+2016-10-10 23:32:30,012 INFO org.apache.hadoop.ipc.Server: IPC Server handler 30 on 54311: starting
+2016-10-10 23:32:30,013 INFO org.apache.hadoop.ipc.Server: IPC Server handler 33 on 54311: starting
+2016-10-10 23:32:30,014 INFO org.apache.hadoop.ipc.Server: IPC Server handler 34 on 54311: starting
+2016-10-10 23:32:30,014 INFO org.apache.hadoop.ipc.Server: IPC Server handler 35 on 54311: starting
+2016-10-10 23:32:30,014 INFO org.apache.hadoop.ipc.Server: IPC Server handler 36 on 54311: starting
+2016-10-10 23:32:30,015 INFO org.apache.hadoop.ipc.Server: IPC Server handler 37 on 54311: starting
+2016-10-10 23:32:30,015 INFO org.apache.hadoop.ipc.Server: IPC Server handler 38 on 54311: starting
+2016-10-10 23:32:30,015 INFO org.apache.hadoop.ipc.Server: IPC Server handler 39 on 54311: starting
+2016-10-10 23:32:30,015 INFO org.apache.hadoop.ipc.Server: IPC Server handler 40 on 54311: starting
+2016-10-10 23:32:30,015 INFO org.apache.hadoop.ipc.Server: IPC Server handler 41 on 54311: starting
+2016-10-10 23:32:30,015 INFO org.apache.hadoop.ipc.Server: IPC Server handler 42 on 54311: starting
+2016-10-10 23:32:30,016 INFO org.apache.hadoop.ipc.Server: IPC Server handler 43 on 54311: starting
+2016-10-10 23:32:30,016 INFO org.apache.hadoop.ipc.Server: IPC Server handler 44 on 54311: starting
+2016-10-10 23:32:30,016 INFO org.apache.hadoop.ipc.Server: IPC Server handler 45 on 54311: starting
+2016-10-10 23:32:30,016 INFO org.apache.hadoop.ipc.Server: IPC Server handler 47 on 54311: starting
+2016-10-10 23:32:30,016 INFO org.apache.hadoop.ipc.Server: IPC Server handler 46 on 54311: starting
+2016-10-10 23:32:30,016 INFO org.apache.hadoop.ipc.Server: IPC Server handler 48 on 54311: starting
+2016-10-10 23:32:30,017 INFO org.apache.hadoop.ipc.Server: IPC Server handler 49 on 54311: starting
+2016-10-10 23:32:30,017 INFO org.apache.hadoop.ipc.Server: IPC Server handler 50 on 54311: starting
+2016-10-10 23:32:30,017 INFO org.apache.hadoop.ipc.Server: IPC Server handler 51 on 54311: starting
+2016-10-10 23:32:30,017 INFO org.apache.hadoop.ipc.Server: IPC Server handler 52 on 54311: starting
+2016-10-10 23:32:30,017 INFO org.apache.hadoop.ipc.Server: IPC Server handler 53 on 54311: starting
+2016-10-10 23:32:30,018 INFO org.apache.hadoop.ipc.Server: IPC Server handler 54 on 54311: starting
+2016-10-10 23:32:30,018 INFO org.apache.hadoop.ipc.Server: IPC Server handler 55 on 54311: starting
+2016-10-10 23:32:30,018 INFO org.apache.hadoop.ipc.Server: IPC Server handler 56 on 54311: starting
+2016-10-10 23:32:30,018 INFO org.apache.hadoop.ipc.Server: IPC Server handler 57 on 54311: starting
+2016-10-10 23:32:30,018 INFO org.apache.hadoop.ipc.Server: IPC Server handler 58 on 54311: starting
+2016-10-10 23:32:30,018 INFO org.apache.hadoop.ipc.Server: IPC Server handler 59 on 54311: starting
+2016-10-10 23:32:30,019 INFO org.apache.hadoop.ipc.Server: IPC Server handler 60 on 54311: starting
+2016-10-10 23:32:30,019 INFO org.apache.hadoop.ipc.Server: IPC Server handler 61 on 54311: starting
+2016-10-10 23:32:30,020 INFO org.apache.hadoop.ipc.Server: IPC Server handler 62 on 54311: starting
+2016-10-10 23:32:30,019 INFO org.apache.hadoop.mapred.JobTracker: Starting RUNNING
+2016-10-10 23:32:30,020 INFO org.apache.hadoop.ipc.Server: IPC Server handler 63 on 54311: starting
+2016-10-10 23:32:30,524 INFO org.apache.hadoop.net.NetworkTopology: Adding a new node: /default-rack/r151.pvt.bridges.psc.edu
+2016-10-10 23:32:30,675 INFO org.apache.hadoop.net.NetworkTopology: Adding a new node: /default-rack/r127.pvt.bridges.psc.edu
+2016-10-10 23:32:31,097 INFO org.apache.hadoop.net.NetworkTopology: Adding a new node: /default-rack/r154.pvt.bridges.psc.edu
+2016-10-10 23:32:31,649 INFO org.apache.hadoop.net.NetworkTopology: Adding a new node: /default-rack/r152.pvt.bridges.psc.edu
+2016-10-10 23:32:31,873 INFO org.apache.hadoop.net.NetworkTopology: Adding a new node: /default-rack/r141.pvt.bridges.psc.edu
+2016-10-10 23:32:32,137 INFO org.apache.hadoop.net.NetworkTopology: Adding a new node: /default-rack/r120.pvt.bridges.psc.edu
+2016-10-10 23:32:32,413 INFO org.apache.hadoop.net.NetworkTopology: Adding a new node: /default-rack/r155.pvt.bridges.psc.edu
+2016-10-10 23:32:32,730 INFO org.apache.hadoop.net.NetworkTopology: Adding a new node: /default-rack/r147.pvt.bridges.psc.edu
+2016-10-10 23:32:32,830 INFO org.apache.hadoop.net.NetworkTopology: Adding a new node: /default-rack/r333.pvt.bridges.psc.edu
+2016-10-10 23:32:33,000 INFO org.apache.hadoop.net.NetworkTopology: Adding a new node: /default-rack/r371.pvt.bridges.psc.edu
+2016-10-10 23:32:33,149 INFO org.apache.hadoop.net.NetworkTopology: Adding a new node: /default-rack/r121.pvt.bridges.psc.edu
+2016-10-10 23:32:34,114 INFO org.apache.hadoop.net.NetworkTopology: Adding a new node: /default-rack/r362.pvt.bridges.psc.edu
+2016-10-10 23:32:35,089 INFO org.apache.hadoop.net.NetworkTopology: Adding a new node: /default-rack/r370.pvt.bridges.psc.edu
+2016-10-10 23:32:35,203 INFO org.apache.hadoop.net.NetworkTopology: Adding a new node: /default-rack/r156.pvt.bridges.psc.edu
+2016-10-10 23:32:35,779 INFO org.apache.hadoop.net.NetworkTopology: Adding a new node: /default-rack/r366.pvt.bridges.psc.edu
+2016-10-10 23:32:37,532 INFO org.apache.hadoop.net.NetworkTopology: Adding a new node: /default-rack/r157.pvt.bridges.psc.edu
+2016-10-10 23:32:38,141 INFO org.apache.hadoop.net.NetworkTopology: Adding a new node: /default-rack/r344.pvt.bridges.psc.edu
+2016-10-10 23:32:38,380 INFO org.apache.hadoop.net.NetworkTopology: Adding a new node: /default-rack/r339.pvt.bridges.psc.edu
+2016-10-10 23:32:38,536 INFO org.apache.hadoop.net.NetworkTopology: Adding a new node: /default-rack/r163.pvt.bridges.psc.edu
+2016-10-10 23:32:40,684 INFO org.apache.hadoop.net.NetworkTopology: Adding a new node: /default-rack/r171.pvt.bridges.psc.edu
+2016-10-10 23:33:55,352 INFO org.apache.hadoop.mapred.JobTracker: Initializing job_201610102332_0001
+2016-10-10 23:33:55,370 INFO org.apache.hadoop.mapred.JobInProgress: Initializing job_201610102332_0001
+2016-10-10 23:33:55,603 INFO org.apache.hadoop.mapred.JobInProgress: SUBMIT_TIME = 1476156834905
+2016-10-10 23:33:56,264 INFO org.apache.hadoop.mapred.JobInProgress: Input size for job job_201610102332_0001 = 6775462628. Number of splits = 50
+2016-10-10 23:33:56,265 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000000_0 has split on node:/default-rack/r141.pvt.bridges.psc.edu
+2016-10-10 23:33:56,266 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000000_0 has split on node:/default-rack
+2016-10-10 23:33:56,266 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000000_1 has split on node:/default-rack/r121.pvt.bridges.psc.edu
+2016-10-10 23:33:56,266 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000000_1 has split on node:/default-rack
+2016-10-10 23:33:56,266 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000001_0 has split on node:/default-rack/r154.pvt.bridges.psc.edu
+2016-10-10 23:33:56,266 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000001_0 has split on node:/default-rack
+2016-10-10 23:33:56,266 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000001_1 has split on node:/default-rack/r127.pvt.bridges.psc.edu
+2016-10-10 23:33:56,266 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000001_1 has split on node:/default-rack
+2016-10-10 23:33:56,267 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000002_0 has split on node:/default-rack/r120.pvt.bridges.psc.edu
+2016-10-10 23:33:56,267 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000002_0 has split on node:/default-rack
+2016-10-10 23:33:56,267 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000002_1 has split on node:/default-rack/r141.pvt.bridges.psc.edu
+2016-10-10 23:33:56,267 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000002_1 has split on node:/default-rack
+2016-10-10 23:33:56,267 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000003_0 has split on node:/default-rack/r147.pvt.bridges.psc.edu
+2016-10-10 23:33:56,267 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000003_0 has split on node:/default-rack
+2016-10-10 23:33:56,267 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000003_1 has split on node:/default-rack/r371.pvt.bridges.psc.edu
+2016-10-10 23:33:56,267 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000003_1 has split on node:/default-rack
+2016-10-10 23:33:56,267 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000004_0 has split on node:/default-rack/r362.pvt.bridges.psc.edu
+2016-10-10 23:33:56,267 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000004_0 has split on node:/default-rack
+2016-10-10 23:33:56,267 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000004_1 has split on node:/default-rack/r121.pvt.bridges.psc.edu
+2016-10-10 23:33:56,268 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000004_1 has split on node:/default-rack
+2016-10-10 23:33:56,268 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000005_0 has split on node:/default-rack/r141.pvt.bridges.psc.edu
+2016-10-10 23:33:56,268 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000005_0 has split on node:/default-rack
+2016-10-10 23:33:56,268 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000005_1 has split on node:/default-rack/r154.pvt.bridges.psc.edu
+2016-10-10 23:33:56,269 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000005_1 has split on node:/default-rack
+2016-10-10 23:33:56,269 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000006_0 has split on node:/default-rack/r156.pvt.bridges.psc.edu
+2016-10-10 23:33:56,269 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000006_0 has split on node:/default-rack
+2016-10-10 23:33:56,269 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000006_1 has split on node:/default-rack/r370.pvt.bridges.psc.edu
+2016-10-10 23:33:56,269 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000006_1 has split on node:/default-rack
+2016-10-10 23:33:56,269 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000007_0 has split on node:/default-rack/r156.pvt.bridges.psc.edu
+2016-10-10 23:33:56,269 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000007_0 has split on node:/default-rack
+2016-10-10 23:33:56,269 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000007_1 has split on node:/default-rack/r127.pvt.bridges.psc.edu
+2016-10-10 23:33:56,270 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000007_1 has split on node:/default-rack
+2016-10-10 23:33:56,270 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000008_0 has split on node:/default-rack/r120.pvt.bridges.psc.edu
+2016-10-10 23:33:56,270 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000008_0 has split on node:/default-rack
+2016-10-10 23:33:56,270 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000008_1 has split on node:/default-rack/r339.pvt.bridges.psc.edu
+2016-10-10 23:33:56,271 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000008_1 has split on node:/default-rack
+2016-10-10 23:33:56,271 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000009_0 has split on node:/default-rack/r163.pvt.bridges.psc.edu
+2016-10-10 23:33:56,271 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000009_0 has split on node:/default-rack
+2016-10-10 23:33:56,271 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000009_1 has split on node:/default-rack/r147.pvt.bridges.psc.edu
+2016-10-10 23:33:56,271 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000009_1 has split on node:/default-rack
+2016-10-10 23:33:56,271 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000010_0 has split on node:/default-rack/r157.pvt.bridges.psc.edu
+2016-10-10 23:33:56,271 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000010_0 has split on node:/default-rack
+2016-10-10 23:33:56,271 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000010_1 has split on node:/default-rack/r127.pvt.bridges.psc.edu
+2016-10-10 23:33:56,271 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000010_1 has split on node:/default-rack
+2016-10-10 23:33:56,272 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000011_0 has split on node:/default-rack/r151.pvt.bridges.psc.edu
+2016-10-10 23:33:56,272 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000011_0 has split on node:/default-rack
+2016-10-10 23:33:56,272 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000011_1 has split on node:/default-rack/r127.pvt.bridges.psc.edu
+2016-10-10 23:33:56,272 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000011_1 has split on node:/default-rack
+2016-10-10 23:33:56,272 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000012_0 has split on node:/default-rack/r156.pvt.bridges.psc.edu
+2016-10-10 23:33:56,273 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000012_0 has split on node:/default-rack
+2016-10-10 23:33:56,273 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000012_1 has split on node:/default-rack/r171.pvt.bridges.psc.edu
+2016-10-10 23:33:56,273 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000012_1 has split on node:/default-rack
+2016-10-10 23:33:56,273 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000013_0 has split on node:/default-rack/r147.pvt.bridges.psc.edu
+2016-10-10 23:33:56,273 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000013_0 has split on node:/default-rack
+2016-10-10 23:33:56,274 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000013_1 has split on node:/default-rack/r152.pvt.bridges.psc.edu
+2016-10-10 23:33:56,274 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000013_1 has split on node:/default-rack
+2016-10-10 23:33:56,274 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000014_0 has split on node:/default-rack/r339.pvt.bridges.psc.edu
+2016-10-10 23:33:56,274 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000014_0 has split on node:/default-rack
+2016-10-10 23:33:56,274 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000014_1 has split on node:/default-rack/r155.pvt.bridges.psc.edu
+2016-10-10 23:33:56,274 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000014_1 has split on node:/default-rack
+2016-10-10 23:33:56,274 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000015_0 has split on node:/default-rack/r155.pvt.bridges.psc.edu
+2016-10-10 23:33:56,274 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000015_0 has split on node:/default-rack
+2016-10-10 23:33:56,274 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000015_1 has split on node:/default-rack/r120.pvt.bridges.psc.edu
+2016-10-10 23:33:56,275 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000015_1 has split on node:/default-rack
+2016-10-10 23:33:56,275 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000016_0 has split on node:/default-rack/r120.pvt.bridges.psc.edu
+2016-10-10 23:33:56,275 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000016_0 has split on node:/default-rack
+2016-10-10 23:33:56,275 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000016_1 has split on node:/default-rack/r163.pvt.bridges.psc.edu
+2016-10-10 23:33:56,275 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000016_1 has split on node:/default-rack
+2016-10-10 23:33:56,275 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000017_0 has split on node:/default-rack/r156.pvt.bridges.psc.edu
+2016-10-10 23:33:56,275 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000017_0 has split on node:/default-rack
+2016-10-10 23:33:56,275 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000017_1 has split on node:/default-rack/r157.pvt.bridges.psc.edu
+2016-10-10 23:33:56,275 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000017_1 has split on node:/default-rack
+2016-10-10 23:33:56,275 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000018_0 has split on node:/default-rack/r333.pvt.bridges.psc.edu
+2016-10-10 23:33:56,275 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000018_0 has split on node:/default-rack
+2016-10-10 23:33:56,275 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000018_1 has split on node:/default-rack/r344.pvt.bridges.psc.edu
+2016-10-10 23:33:56,275 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000018_1 has split on node:/default-rack
+2016-10-10 23:33:56,276 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000019_0 has split on node:/default-rack/r151.pvt.bridges.psc.edu
+2016-10-10 23:33:56,276 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000019_0 has split on node:/default-rack
+2016-10-10 23:33:56,276 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000019_1 has split on node:/default-rack/r152.pvt.bridges.psc.edu
+2016-10-10 23:33:56,276 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000019_1 has split on node:/default-rack
+2016-10-10 23:33:56,276 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000020_0 has split on node:/default-rack/r155.pvt.bridges.psc.edu
+2016-10-10 23:33:56,276 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000020_0 has split on node:/default-rack
+2016-10-10 23:33:56,276 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000020_1 has split on node:/default-rack/r141.pvt.bridges.psc.edu
+2016-10-10 23:33:56,276 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000020_1 has split on node:/default-rack
+2016-10-10 23:33:56,276 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000021_0 has split on node:/default-rack/r151.pvt.bridges.psc.edu
+2016-10-10 23:33:56,276 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000021_0 has split on node:/default-rack
+2016-10-10 23:33:56,276 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000021_1 has split on node:/default-rack/r371.pvt.bridges.psc.edu
+2016-10-10 23:33:56,276 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000021_1 has split on node:/default-rack
+2016-10-10 23:33:56,276 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000022_0 has split on node:/default-rack/r171.pvt.bridges.psc.edu
+2016-10-10 23:33:56,277 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000022_0 has split on node:/default-rack
+2016-10-10 23:33:56,277 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000022_1 has split on node:/default-rack/r370.pvt.bridges.psc.edu
+2016-10-10 23:33:56,277 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000022_1 has split on node:/default-rack
+2016-10-10 23:33:56,277 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000023_0 has split on node:/default-rack/r344.pvt.bridges.psc.edu
+2016-10-10 23:33:56,277 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000023_0 has split on node:/default-rack
+2016-10-10 23:33:56,277 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000023_1 has split on node:/default-rack/r147.pvt.bridges.psc.edu
+2016-10-10 23:33:56,277 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000023_1 has split on node:/default-rack
+2016-10-10 23:33:56,277 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000024_0 has split on node:/default-rack/r171.pvt.bridges.psc.edu
+2016-10-10 23:33:56,277 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000024_0 has split on node:/default-rack
+2016-10-10 23:33:56,277 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000024_1 has split on node:/default-rack/r333.pvt.bridges.psc.edu
+2016-10-10 23:33:56,278 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000024_1 has split on node:/default-rack
+2016-10-10 23:33:56,278 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000025_0 has split on node:/default-rack/r154.pvt.bridges.psc.edu
+2016-10-10 23:33:56,278 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000025_0 has split on node:/default-rack
+2016-10-10 23:33:56,278 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000025_1 has split on node:/default-rack/r151.pvt.bridges.psc.edu
+2016-10-10 23:33:56,278 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000025_1 has split on node:/default-rack
+2016-10-10 23:33:56,278 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000026_0 has split on node:/default-rack/r120.pvt.bridges.psc.edu
+2016-10-10 23:33:56,278 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000026_0 has split on node:/default-rack
+2016-10-10 23:33:56,278 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000026_1 has split on node:/default-rack/r362.pvt.bridges.psc.edu
+2016-10-10 23:33:56,278 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000026_1 has split on node:/default-rack
+2016-10-10 23:33:56,278 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000027_0 has split on node:/default-rack/r120.pvt.bridges.psc.edu
+2016-10-10 23:33:56,278 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000027_0 has split on node:/default-rack
+2016-10-10 23:33:56,278 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000027_1 has split on node:/default-rack/r155.pvt.bridges.psc.edu
+2016-10-10 23:33:56,278 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000027_1 has split on node:/default-rack
+2016-10-10 23:33:56,279 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000028_0 has split on node:/default-rack/r121.pvt.bridges.psc.edu
+2016-10-10 23:33:56,279 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000028_0 has split on node:/default-rack
+2016-10-10 23:33:56,279 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000028_1 has split on node:/default-rack/r333.pvt.bridges.psc.edu
+2016-10-10 23:33:56,279 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000028_1 has split on node:/default-rack
+2016-10-10 23:33:56,280 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000029_0 has split on node:/default-rack/r339.pvt.bridges.psc.edu
+2016-10-10 23:33:56,280 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000029_0 has split on node:/default-rack
+2016-10-10 23:33:56,280 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000029_1 has split on node:/default-rack/r163.pvt.bridges.psc.edu
+2016-10-10 23:33:56,280 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000029_1 has split on node:/default-rack
+2016-10-10 23:33:56,280 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000030_0 has split on node:/default-rack/r151.pvt.bridges.psc.edu
+2016-10-10 23:33:56,280 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000030_0 has split on node:/default-rack
+2016-10-10 23:33:56,281 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000030_1 has split on node:/default-rack/r156.pvt.bridges.psc.edu
+2016-10-10 23:33:56,281 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000030_1 has split on node:/default-rack
+2016-10-10 23:33:56,281 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000031_0 has split on node:/default-rack/r344.pvt.bridges.psc.edu
+2016-10-10 23:33:56,281 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000031_0 has split on node:/default-rack
+2016-10-10 23:33:56,281 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000031_1 has split on node:/default-rack/r121.pvt.bridges.psc.edu
+2016-10-10 23:33:56,281 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000031_1 has split on node:/default-rack
+2016-10-10 23:33:56,281 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000032_0 has split on node:/default-rack/r147.pvt.bridges.psc.edu
+2016-10-10 23:33:56,281 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000032_0 has split on node:/default-rack
+2016-10-10 23:33:56,281 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000032_1 has split on node:/default-rack/r127.pvt.bridges.psc.edu
+2016-10-10 23:33:56,281 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000032_1 has split on node:/default-rack
+2016-10-10 23:33:56,282 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000033_0 has split on node:/default-rack/r120.pvt.bridges.psc.edu
+2016-10-10 23:33:56,282 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000033_0 has split on node:/default-rack
+2016-10-10 23:33:56,282 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000033_1 has split on node:/default-rack/r151.pvt.bridges.psc.edu
+2016-10-10 23:33:56,282 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000033_1 has split on node:/default-rack
+2016-10-10 23:33:56,282 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000034_0 has split on node:/default-rack/r155.pvt.bridges.psc.edu
+2016-10-10 23:33:56,282 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000034_0 has split on node:/default-rack
+2016-10-10 23:33:56,282 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000034_1 has split on node:/default-rack/r127.pvt.bridges.psc.edu
+2016-10-10 23:33:56,282 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000034_1 has split on node:/default-rack
+2016-10-10 23:33:56,282 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000035_0 has split on node:/default-rack/r366.pvt.bridges.psc.edu
+2016-10-10 23:33:56,282 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000035_0 has split on node:/default-rack
+2016-10-10 23:33:56,282 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000035_1 has split on node:/default-rack/r155.pvt.bridges.psc.edu
+2016-10-10 23:33:56,283 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000035_1 has split on node:/default-rack
+2016-10-10 23:33:56,283 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000036_0 has split on node:/default-rack/r362.pvt.bridges.psc.edu
+2016-10-10 23:33:56,283 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000036_0 has split on node:/default-rack
+2016-10-10 23:33:56,283 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000036_1 has split on node:/default-rack/r120.pvt.bridges.psc.edu
+2016-10-10 23:33:56,283 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000036_1 has split on node:/default-rack
+2016-10-10 23:33:56,283 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000037_0 has split on node:/default-rack/r157.pvt.bridges.psc.edu
+2016-10-10 23:33:56,283 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000037_0 has split on node:/default-rack
+2016-10-10 23:33:56,283 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000037_1 has split on node:/default-rack/r154.pvt.bridges.psc.edu
+2016-10-10 23:33:56,284 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000037_1 has split on node:/default-rack
+2016-10-10 23:33:56,284 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000038_0 has split on node:/default-rack/r121.pvt.bridges.psc.edu
+2016-10-10 23:33:56,284 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000038_0 has split on node:/default-rack
+2016-10-10 23:33:56,284 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000038_1 has split on node:/default-rack/r371.pvt.bridges.psc.edu
+2016-10-10 23:33:56,284 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000038_1 has split on node:/default-rack
+2016-10-10 23:33:56,284 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000039_0 has split on node:/default-rack/r120.pvt.bridges.psc.edu
+2016-10-10 23:33:56,284 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000039_0 has split on node:/default-rack
+2016-10-10 23:33:56,284 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000039_1 has split on node:/default-rack/r127.pvt.bridges.psc.edu
+2016-10-10 23:33:56,284 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000039_1 has split on node:/default-rack
+2016-10-10 23:33:56,284 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000040_0 has split on node:/default-rack/r371.pvt.bridges.psc.edu
+2016-10-10 23:33:56,285 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000040_0 has split on node:/default-rack
+2016-10-10 23:33:56,285 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000040_1 has split on node:/default-rack/r154.pvt.bridges.psc.edu
+2016-10-10 23:33:56,285 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000040_1 has split on node:/default-rack
+2016-10-10 23:33:56,285 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000041_0 has split on node:/default-rack/r152.pvt.bridges.psc.edu
+2016-10-10 23:33:56,285 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000041_0 has split on node:/default-rack
+2016-10-10 23:33:56,285 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000041_1 has split on node:/default-rack/r163.pvt.bridges.psc.edu
+2016-10-10 23:33:56,285 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000041_1 has split on node:/default-rack
+2016-10-10 23:33:56,285 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000042_0 has split on node:/default-rack/r171.pvt.bridges.psc.edu
+2016-10-10 23:33:56,285 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000042_0 has split on node:/default-rack
+2016-10-10 23:33:56,285 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000042_1 has split on node:/default-rack/r371.pvt.bridges.psc.edu
+2016-10-10 23:33:56,285 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000042_1 has split on node:/default-rack
+2016-10-10 23:33:56,285 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000043_0 has split on node:/default-rack/r371.pvt.bridges.psc.edu
+2016-10-10 23:33:56,285 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000043_0 has split on node:/default-rack
+2016-10-10 23:33:56,286 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000043_1 has split on node:/default-rack/r370.pvt.bridges.psc.edu
+2016-10-10 23:33:56,286 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000043_1 has split on node:/default-rack
+2016-10-10 23:33:56,286 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000044_0 has split on node:/default-rack/r141.pvt.bridges.psc.edu
+2016-10-10 23:33:56,286 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000044_0 has split on node:/default-rack
+2016-10-10 23:33:56,286 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000044_1 has split on node:/default-rack/r157.pvt.bridges.psc.edu
+2016-10-10 23:33:56,286 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000044_1 has split on node:/default-rack
+2016-10-10 23:33:56,286 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000045_0 has split on node:/default-rack/r171.pvt.bridges.psc.edu
+2016-10-10 23:33:56,286 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000045_0 has split on node:/default-rack
+2016-10-10 23:33:56,286 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000045_1 has split on node:/default-rack/r339.pvt.bridges.psc.edu
+2016-10-10 23:33:56,286 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000045_1 has split on node:/default-rack
+2016-10-10 23:33:56,286 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000046_0 has split on node:/default-rack/r339.pvt.bridges.psc.edu
+2016-10-10 23:33:56,286 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000046_0 has split on node:/default-rack
+2016-10-10 23:33:56,286 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000046_1 has split on node:/default-rack/r152.pvt.bridges.psc.edu
+2016-10-10 23:33:56,286 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000046_1 has split on node:/default-rack
+2016-10-10 23:33:56,287 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000047_0 has split on node:/default-rack/r151.pvt.bridges.psc.edu
+2016-10-10 23:33:56,287 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000047_0 has split on node:/default-rack
+2016-10-10 23:33:56,287 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000047_1 has split on node:/default-rack/r362.pvt.bridges.psc.edu
+2016-10-10 23:33:56,287 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000047_1 has split on node:/default-rack
+2016-10-10 23:33:56,287 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000048_0 has split on node:/default-rack/r121.pvt.bridges.psc.edu
+2016-10-10 23:33:56,287 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000048_0 has split on node:/default-rack
+2016-10-10 23:33:56,287 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000048_1 has split on node:/default-rack/r344.pvt.bridges.psc.edu
+2016-10-10 23:33:56,287 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000048_1 has split on node:/default-rack
+2016-10-10 23:33:56,287 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000049_0 has split on node:/default-rack/r152.pvt.bridges.psc.edu
+2016-10-10 23:33:56,287 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000049_0 has split on node:/default-rack
+2016-10-10 23:33:56,287 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000049_1 has split on node:/default-rack/r154.pvt.bridges.psc.edu
+2016-10-10 23:33:56,287 INFO org.apache.hadoop.mapred.JobInProgress: tip:task_201610102332_0001_m_000049_1 has split on node:/default-rack
+2016-10-10 23:33:56,288 INFO org.apache.hadoop.mapred.JobInProgress: LAUNCH_TIME = 1476156836287
+2016-10-10 23:33:56,322 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000101_0_0' to tip task_201610102332_0001_m_000101_0, for tracker 'tracker_r156.pvt.bridges.psc.edu:localhost/127.0.0.1:15267'
+2016-10-10 23:33:59,476 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000101_0_0' has completed task_201610102332_0001_m_000101_0 successfully.
+2016-10-10 23:33:59,480 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000006_0_0' to tip task_201610102332_0001_m_000006_0, for tracker 'tracker_r156.pvt.bridges.psc.edu:localhost/127.0.0.1:15267'
+2016-10-10 23:33:59,483 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000006_0
+2016-10-10 23:33:59,483 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000007_0_0' to tip task_201610102332_0001_m_000007_0, for tracker 'tracker_r156.pvt.bridges.psc.edu:localhost/127.0.0.1:15267'
+2016-10-10 23:33:59,483 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000007_0
+2016-10-10 23:33:59,483 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000012_0_0' to tip task_201610102332_0001_m_000012_0, for tracker 'tracker_r156.pvt.bridges.psc.edu:localhost/127.0.0.1:15267'
+2016-10-10 23:33:59,483 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000012_0
+2016-10-10 23:33:59,483 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000017_0_0' to tip task_201610102332_0001_m_000017_0, for tracker 'tracker_r156.pvt.bridges.psc.edu:localhost/127.0.0.1:15267'
+2016-10-10 23:33:59,484 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000017_0
+2016-10-10 23:33:59,484 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000030_1_0' to tip task_201610102332_0001_m_000030_1, for tracker 'tracker_r156.pvt.bridges.psc.edu:localhost/127.0.0.1:15267'
+2016-10-10 23:33:59,484 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000030_1
+2016-10-10 23:33:59,609 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000009_0_0' to tip task_201610102332_0001_m_000009_0, for tracker 'tracker_r163.pvt.bridges.psc.edu:localhost/127.0.0.1:15911'
+2016-10-10 23:33:59,610 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000009_0
+2016-10-10 23:33:59,610 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000016_1_0' to tip task_201610102332_0001_m_000016_1, for tracker 'tracker_r163.pvt.bridges.psc.edu:localhost/127.0.0.1:15911'
+2016-10-10 23:33:59,611 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000016_1
+2016-10-10 23:33:59,611 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000029_1_0' to tip task_201610102332_0001_m_000029_1, for tracker 'tracker_r163.pvt.bridges.psc.edu:localhost/127.0.0.1:15911'
+2016-10-10 23:33:59,611 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000029_1
+2016-10-10 23:33:59,611 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000041_1_0' to tip task_201610102332_0001_m_000041_1, for tracker 'tracker_r163.pvt.bridges.psc.edu:localhost/127.0.0.1:15911'
+2016-10-10 23:33:59,612 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000041_1
+2016-10-10 23:33:59,612 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000000_0_0' to tip task_201610102332_0001_m_000000_0, for tracker 'tracker_r163.pvt.bridges.psc.edu:localhost/127.0.0.1:15911'
+2016-10-10 23:33:59,612 INFO org.apache.hadoop.mapred.JobInProgress: Choosing rack-local task task_201610102332_0001_m_000000_0
+2016-10-10 23:33:59,799 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000003_0_0' to tip task_201610102332_0001_m_000003_0, for tracker 'tracker_r147.pvt.bridges.psc.edu:localhost/127.0.0.1:15576'
+2016-10-10 23:33:59,799 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000003_0
+2016-10-10 23:33:59,799 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000009_1_0' to tip task_201610102332_0001_m_000009_1, for tracker 'tracker_r147.pvt.bridges.psc.edu:localhost/127.0.0.1:15576'
+2016-10-10 23:33:59,799 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000009_1
+2016-10-10 23:33:59,800 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000013_0_0' to tip task_201610102332_0001_m_000013_0, for tracker 'tracker_r147.pvt.bridges.psc.edu:localhost/127.0.0.1:15576'
+2016-10-10 23:33:59,800 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000013_0
+2016-10-10 23:33:59,800 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000023_1_0' to tip task_201610102332_0001_m_000023_1, for tracker 'tracker_r147.pvt.bridges.psc.edu:localhost/127.0.0.1:15576'
+2016-10-10 23:33:59,800 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000023_1
+2016-10-10 23:33:59,801 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000032_0_0' to tip task_201610102332_0001_m_000032_0, for tracker 'tracker_r147.pvt.bridges.psc.edu:localhost/127.0.0.1:15576'
+2016-10-10 23:33:59,801 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000032_0
+2016-10-10 23:33:59,854 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000035_0_0' to tip task_201610102332_0001_m_000035_0, for tracker 'tracker_r366.pvt.bridges.psc.edu:localhost/127.0.0.1:15025'
+2016-10-10 23:33:59,854 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000035_0
+2016-10-10 23:33:59,854 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000000_1_0' to tip task_201610102332_0001_m_000000_1, for tracker 'tracker_r366.pvt.bridges.psc.edu:localhost/127.0.0.1:15025'
+2016-10-10 23:33:59,854 INFO org.apache.hadoop.mapred.JobInProgress: Choosing rack-local task task_201610102332_0001_m_000000_1
+2016-10-10 23:33:59,855 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000001_0_0' to tip task_201610102332_0001_m_000001_0, for tracker 'tracker_r366.pvt.bridges.psc.edu:localhost/127.0.0.1:15025'
+2016-10-10 23:33:59,855 INFO org.apache.hadoop.mapred.JobInProgress: Choosing rack-local task task_201610102332_0001_m_000001_0
+2016-10-10 23:33:59,856 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000001_1_0' to tip task_201610102332_0001_m_000001_1, for tracker 'tracker_r366.pvt.bridges.psc.edu:localhost/127.0.0.1:15025'
+2016-10-10 23:33:59,856 INFO org.apache.hadoop.mapred.JobInProgress: Choosing rack-local task task_201610102332_0001_m_000001_1
+2016-10-10 23:33:59,857 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000002_0_0' to tip task_201610102332_0001_m_000002_0, for tracker 'tracker_r366.pvt.bridges.psc.edu:localhost/127.0.0.1:15025'
+2016-10-10 23:33:59,857 INFO org.apache.hadoop.mapred.JobInProgress: Choosing rack-local task task_201610102332_0001_m_000002_0
+2016-10-10 23:33:59,913 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000018_0_0' to tip task_201610102332_0001_m_000018_0, for tracker 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:33:59,913 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000018_0
+2016-10-10 23:33:59,914 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000024_1_0' to tip task_201610102332_0001_m_000024_1, for tracker 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:33:59,914 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000024_1
+2016-10-10 23:33:59,914 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000028_1_0' to tip task_201610102332_0001_m_000028_1, for tracker 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:33:59,914 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000028_1
+2016-10-10 23:33:59,915 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000002_1_0' to tip task_201610102332_0001_m_000002_1, for tracker 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:33:59,915 INFO org.apache.hadoop.mapred.JobInProgress: Choosing rack-local task task_201610102332_0001_m_000002_1
+2016-10-10 23:33:59,915 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000003_1_0' to tip task_201610102332_0001_m_000003_1, for tracker 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:33:59,915 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000003_1
+2016-10-10 23:34:00,100 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000021_1_0' to tip task_201610102332_0001_m_000021_1, for tracker 'tracker_r371.pvt.bridges.psc.edu:localhost/127.0.0.1:15014'
+2016-10-10 23:34:00,101 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000021_1
+2016-10-10 23:34:00,101 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000038_1_0' to tip task_201610102332_0001_m_000038_1, for tracker 'tracker_r371.pvt.bridges.psc.edu:localhost/127.0.0.1:15014'
+2016-10-10 23:34:00,102 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000038_1
+2016-10-10 23:34:00,102 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000040_0_0' to tip task_201610102332_0001_m_000040_0, for tracker 'tracker_r371.pvt.bridges.psc.edu:localhost/127.0.0.1:15014'
+2016-10-10 23:34:00,102 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000040_0
+2016-10-10 23:34:00,102 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000042_1_0' to tip task_201610102332_0001_m_000042_1, for tracker 'tracker_r371.pvt.bridges.psc.edu:localhost/127.0.0.1:15014'
+2016-10-10 23:34:00,102 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000042_1
+2016-10-10 23:34:00,103 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000043_0_0' to tip task_201610102332_0001_m_000043_0, for tracker 'tracker_r371.pvt.bridges.psc.edu:localhost/127.0.0.1:15014'
+2016-10-10 23:34:00,103 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000043_0
+2016-10-10 23:34:00,239 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000004_1_0' to tip task_201610102332_0001_m_000004_1, for tracker 'tracker_r121.pvt.bridges.psc.edu:localhost/127.0.0.1:15132'
+2016-10-10 23:34:00,239 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000004_1
+2016-10-10 23:34:00,240 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000028_0_0' to tip task_201610102332_0001_m_000028_0, for tracker 'tracker_r121.pvt.bridges.psc.edu:localhost/127.0.0.1:15132'
+2016-10-10 23:34:00,240 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000028_0
+2016-10-10 23:34:00,240 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000031_1_0' to tip task_201610102332_0001_m_000031_1, for tracker 'tracker_r121.pvt.bridges.psc.edu:localhost/127.0.0.1:15132'
+2016-10-10 23:34:00,240 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000031_1
+2016-10-10 23:34:00,241 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000038_0_0' to tip task_201610102332_0001_m_000038_0, for tracker 'tracker_r121.pvt.bridges.psc.edu:localhost/127.0.0.1:15132'
+2016-10-10 23:34:00,241 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000038_0
+2016-10-10 23:34:00,241 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000048_0_0' to tip task_201610102332_0001_m_000048_0, for tracker 'tracker_r121.pvt.bridges.psc.edu:localhost/127.0.0.1:15132'
+2016-10-10 23:34:00,241 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000048_0
+2016-10-10 23:34:00,667 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000011_0_0' to tip task_201610102332_0001_m_000011_0, for tracker 'tracker_r151.pvt.bridges.psc.edu:localhost/127.0.0.1:15962'
+2016-10-10 23:34:00,667 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000011_0
+2016-10-10 23:34:00,667 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000019_0_0' to tip task_201610102332_0001_m_000019_0, for tracker 'tracker_r151.pvt.bridges.psc.edu:localhost/127.0.0.1:15962'
+2016-10-10 23:34:00,667 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000019_0
+2016-10-10 23:34:00,668 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000021_0_0' to tip task_201610102332_0001_m_000021_0, for tracker 'tracker_r151.pvt.bridges.psc.edu:localhost/127.0.0.1:15962'
+2016-10-10 23:34:00,668 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000021_0
+2016-10-10 23:34:00,668 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000025_1_0' to tip task_201610102332_0001_m_000025_1, for tracker 'tracker_r151.pvt.bridges.psc.edu:localhost/127.0.0.1:15962'
+2016-10-10 23:34:00,669 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000025_1
+2016-10-10 23:34:00,669 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000030_0_0' to tip task_201610102332_0001_m_000030_0, for tracker 'tracker_r151.pvt.bridges.psc.edu:localhost/127.0.0.1:15962'
+2016-10-10 23:34:00,669 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000030_0
+2016-10-10 23:34:00,758 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000007_1_0' to tip task_201610102332_0001_m_000007_1, for tracker 'tracker_r127.pvt.bridges.psc.edu:localhost/127.0.0.1:15733'
+2016-10-10 23:34:00,758 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000007_1
+2016-10-10 23:34:00,758 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000010_1_0' to tip task_201610102332_0001_m_000010_1, for tracker 'tracker_r127.pvt.bridges.psc.edu:localhost/127.0.0.1:15733'
+2016-10-10 23:34:00,759 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000010_1
+2016-10-10 23:34:00,759 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000011_1_0' to tip task_201610102332_0001_m_000011_1, for tracker 'tracker_r127.pvt.bridges.psc.edu:localhost/127.0.0.1:15733'
+2016-10-10 23:34:00,759 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000011_1
+2016-10-10 23:34:00,760 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000032_1_0' to tip task_201610102332_0001_m_000032_1, for tracker 'tracker_r127.pvt.bridges.psc.edu:localhost/127.0.0.1:15733'
+2016-10-10 23:34:00,760 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000032_1
+2016-10-10 23:34:00,760 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000034_1_0' to tip task_201610102332_0001_m_000034_1, for tracker 'tracker_r127.pvt.bridges.psc.edu:localhost/127.0.0.1:15733'
+2016-10-10 23:34:00,761 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000034_1
+2016-10-10 23:34:01,354 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000005_1_0' to tip task_201610102332_0001_m_000005_1, for tracker 'tracker_r154.pvt.bridges.psc.edu:localhost/127.0.0.1:15404'
+2016-10-10 23:34:01,354 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000005_1
+2016-10-10 23:34:01,354 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000025_0_0' to tip task_201610102332_0001_m_000025_0, for tracker 'tracker_r154.pvt.bridges.psc.edu:localhost/127.0.0.1:15404'
+2016-10-10 23:34:01,355 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000025_0
+2016-10-10 23:34:01,355 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000037_1_0' to tip task_201610102332_0001_m_000037_1, for tracker 'tracker_r154.pvt.bridges.psc.edu:localhost/127.0.0.1:15404'
+2016-10-10 23:34:01,355 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000037_1
+2016-10-10 23:34:01,355 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000040_1_0' to tip task_201610102332_0001_m_000040_1, for tracker 'tracker_r154.pvt.bridges.psc.edu:localhost/127.0.0.1:15404'
+2016-10-10 23:34:01,355 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000040_1
+2016-10-10 23:34:01,355 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000049_1_0' to tip task_201610102332_0001_m_000049_1, for tracker 'tracker_r154.pvt.bridges.psc.edu:localhost/127.0.0.1:15404'
+2016-10-10 23:34:01,356 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000049_1
+2016-10-10 23:34:01,357 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000004_0_0' to tip task_201610102332_0001_m_000004_0, for tracker 'tracker_r362.pvt.bridges.psc.edu:localhost/127.0.0.1:15702'
+2016-10-10 23:34:01,358 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000004_0
+2016-10-10 23:34:01,358 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000026_1_0' to tip task_201610102332_0001_m_000026_1, for tracker 'tracker_r362.pvt.bridges.psc.edu:localhost/127.0.0.1:15702'
+2016-10-10 23:34:01,358 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000026_1
+2016-10-10 23:34:01,358 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000036_0_0' to tip task_201610102332_0001_m_000036_0, for tracker 'tracker_r362.pvt.bridges.psc.edu:localhost/127.0.0.1:15702'
+2016-10-10 23:34:01,358 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000036_0
+2016-10-10 23:34:01,359 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000047_1_0' to tip task_201610102332_0001_m_000047_1, for tracker 'tracker_r362.pvt.bridges.psc.edu:localhost/127.0.0.1:15702'
+2016-10-10 23:34:01,359 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000047_1
+2016-10-10 23:34:01,359 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000005_0_0' to tip task_201610102332_0001_m_000005_0, for tracker 'tracker_r362.pvt.bridges.psc.edu:localhost/127.0.0.1:15702'
+2016-10-10 23:34:01,359 INFO org.apache.hadoop.mapred.JobInProgress: Choosing rack-local task task_201610102332_0001_m_000005_0
+2016-10-10 23:34:01,658 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000010_0_0' to tip task_201610102332_0001_m_000010_0, for tracker 'tracker_r157.pvt.bridges.psc.edu:localhost/127.0.0.1:15666'
+2016-10-10 23:34:01,659 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000010_0
+2016-10-10 23:34:01,659 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000017_1_0' to tip task_201610102332_0001_m_000017_1, for tracker 'tracker_r157.pvt.bridges.psc.edu:localhost/127.0.0.1:15666'
+2016-10-10 23:34:01,659 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000017_1
+2016-10-10 23:34:01,659 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000037_0_0' to tip task_201610102332_0001_m_000037_0, for tracker 'tracker_r157.pvt.bridges.psc.edu:localhost/127.0.0.1:15666'
+2016-10-10 23:34:01,659 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000037_0
+2016-10-10 23:34:01,660 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000044_1_0' to tip task_201610102332_0001_m_000044_1, for tracker 'tracker_r157.pvt.bridges.psc.edu:localhost/127.0.0.1:15666'
+2016-10-10 23:34:01,660 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000044_1
+2016-10-10 23:34:01,660 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000006_1_0' to tip task_201610102332_0001_m_000006_1, for tracker 'tracker_r157.pvt.bridges.psc.edu:localhost/127.0.0.1:15666'
+2016-10-10 23:34:01,660 INFO org.apache.hadoop.mapred.JobInProgress: Choosing rack-local task task_201610102332_0001_m_000006_1
+2016-10-10 23:34:01,716 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000013_1_0' to tip task_201610102332_0001_m_000013_1, for tracker 'tracker_r152.pvt.bridges.psc.edu:localhost/127.0.0.1:15380'
+2016-10-10 23:34:01,716 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000013_1
+2016-10-10 23:34:01,716 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000019_1_0' to tip task_201610102332_0001_m_000019_1, for tracker 'tracker_r152.pvt.bridges.psc.edu:localhost/127.0.0.1:15380'
+2016-10-10 23:34:01,716 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000019_1
+2016-10-10 23:34:01,716 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000041_0_0' to tip task_201610102332_0001_m_000041_0, for tracker 'tracker_r152.pvt.bridges.psc.edu:localhost/127.0.0.1:15380'
+2016-10-10 23:34:01,717 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000041_0
+2016-10-10 23:34:01,717 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000046_1_0' to tip task_201610102332_0001_m_000046_1, for tracker 'tracker_r152.pvt.bridges.psc.edu:localhost/127.0.0.1:15380'
+2016-10-10 23:34:01,717 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000046_1
+2016-10-10 23:34:01,717 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000049_0_0' to tip task_201610102332_0001_m_000049_0, for tracker 'tracker_r152.pvt.bridges.psc.edu:localhost/127.0.0.1:15380'
+2016-10-10 23:34:01,719 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000049_0
+2016-10-10 23:34:01,764 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000012_1_0' to tip task_201610102332_0001_m_000012_1, for tracker 'tracker_r171.pvt.bridges.psc.edu:localhost/127.0.0.1:15262'
+2016-10-10 23:34:01,764 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000012_1
+2016-10-10 23:34:01,765 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000022_0_0' to tip task_201610102332_0001_m_000022_0, for tracker 'tracker_r171.pvt.bridges.psc.edu:localhost/127.0.0.1:15262'
+2016-10-10 23:34:01,765 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000022_0
+2016-10-10 23:34:01,765 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000024_0_0' to tip task_201610102332_0001_m_000024_0, for tracker 'tracker_r171.pvt.bridges.psc.edu:localhost/127.0.0.1:15262'
+2016-10-10 23:34:01,765 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000024_0
+2016-10-10 23:34:01,765 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000042_0_0' to tip task_201610102332_0001_m_000042_0, for tracker 'tracker_r171.pvt.bridges.psc.edu:localhost/127.0.0.1:15262'
+2016-10-10 23:34:01,765 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000042_0
+2016-10-10 23:34:01,766 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000045_0_0' to tip task_201610102332_0001_m_000045_0, for tracker 'tracker_r171.pvt.bridges.psc.edu:localhost/127.0.0.1:15262'
+2016-10-10 23:34:01,766 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000045_0
+2016-10-10 23:34:01,952 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000020_1_0' to tip task_201610102332_0001_m_000020_1, for tracker 'tracker_r141.pvt.bridges.psc.edu:localhost/127.0.0.1:15658'
+2016-10-10 23:34:01,953 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000020_1
+2016-10-10 23:34:01,953 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000044_0_0' to tip task_201610102332_0001_m_000044_0, for tracker 'tracker_r141.pvt.bridges.psc.edu:localhost/127.0.0.1:15658'
+2016-10-10 23:34:01,953 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000044_0
+2016-10-10 23:34:01,954 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000008_0_0' to tip task_201610102332_0001_m_000008_0, for tracker 'tracker_r141.pvt.bridges.psc.edu:localhost/127.0.0.1:15658'
+2016-10-10 23:34:01,954 INFO org.apache.hadoop.mapred.JobInProgress: Choosing rack-local task task_201610102332_0001_m_000008_0
+2016-10-10 23:34:01,954 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000008_1_0' to tip task_201610102332_0001_m_000008_1, for tracker 'tracker_r141.pvt.bridges.psc.edu:localhost/127.0.0.1:15658'
+2016-10-10 23:34:01,954 INFO org.apache.hadoop.mapred.JobInProgress: Choosing rack-local task task_201610102332_0001_m_000008_1
+2016-10-10 23:34:01,954 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000014_0_0' to tip task_201610102332_0001_m_000014_0, for tracker 'tracker_r141.pvt.bridges.psc.edu:localhost/127.0.0.1:15658'
+2016-10-10 23:34:01,954 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000014_0
+2016-10-10 23:34:02,170 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000022_1_0' to tip task_201610102332_0001_m_000022_1, for tracker 'tracker_r370.pvt.bridges.psc.edu:localhost/127.0.0.1:15829'
+2016-10-10 23:34:02,171 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000022_1
+2016-10-10 23:34:02,171 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000043_1_0' to tip task_201610102332_0001_m_000043_1, for tracker 'tracker_r370.pvt.bridges.psc.edu:localhost/127.0.0.1:15829'
+2016-10-10 23:34:02,171 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000043_1
+2016-10-10 23:34:02,171 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000014_1_0' to tip task_201610102332_0001_m_000014_1, for tracker 'tracker_r370.pvt.bridges.psc.edu:localhost/127.0.0.1:15829'
+2016-10-10 23:34:02,171 INFO org.apache.hadoop.mapred.JobInProgress: Choosing rack-local task task_201610102332_0001_m_000014_1
+2016-10-10 23:34:02,171 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000015_0_0' to tip task_201610102332_0001_m_000015_0, for tracker 'tracker_r370.pvt.bridges.psc.edu:localhost/127.0.0.1:15829'
+2016-10-10 23:34:02,171 INFO org.apache.hadoop.mapred.JobInProgress: Choosing rack-local task task_201610102332_0001_m_000015_0
+2016-10-10 23:34:02,172 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000015_1_0' to tip task_201610102332_0001_m_000015_1, for tracker 'tracker_r370.pvt.bridges.psc.edu:localhost/127.0.0.1:15829'
+2016-10-10 23:34:02,172 INFO org.apache.hadoop.mapred.JobInProgress: Choosing rack-local task task_201610102332_0001_m_000015_1
+2016-10-10 23:34:02,206 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000016_0_0' to tip task_201610102332_0001_m_000016_0, for tracker 'tracker_r120.pvt.bridges.psc.edu:localhost/127.0.0.1:15478'
+2016-10-10 23:34:02,206 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000016_0
+2016-10-10 23:34:02,206 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000026_0_0' to tip task_201610102332_0001_m_000026_0, for tracker 'tracker_r120.pvt.bridges.psc.edu:localhost/127.0.0.1:15478'
+2016-10-10 23:34:02,206 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000026_0
+2016-10-10 23:34:02,207 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000027_0_0' to tip task_201610102332_0001_m_000027_0, for tracker 'tracker_r120.pvt.bridges.psc.edu:localhost/127.0.0.1:15478'
+2016-10-10 23:34:02,207 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000027_0
+2016-10-10 23:34:02,207 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000033_0_0' to tip task_201610102332_0001_m_000033_0, for tracker 'tracker_r120.pvt.bridges.psc.edu:localhost/127.0.0.1:15478'
+2016-10-10 23:34:02,207 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000033_0
+2016-10-10 23:34:02,207 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000036_1_0' to tip task_201610102332_0001_m_000036_1, for tracker 'tracker_r120.pvt.bridges.psc.edu:localhost/127.0.0.1:15478'
+2016-10-10 23:34:02,208 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000036_1
+2016-10-10 23:34:02,390 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000018_1_0' to tip task_201610102332_0001_m_000018_1, for tracker 'tracker_r344.pvt.bridges.psc.edu:localhost/127.0.0.1:15831'
+2016-10-10 23:34:02,391 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000018_1
+2016-10-10 23:34:02,391 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000023_0_0' to tip task_201610102332_0001_m_000023_0, for tracker 'tracker_r344.pvt.bridges.psc.edu:localhost/127.0.0.1:15831'
+2016-10-10 23:34:02,391 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000023_0
+2016-10-10 23:34:02,391 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000031_0_0' to tip task_201610102332_0001_m_000031_0, for tracker 'tracker_r344.pvt.bridges.psc.edu:localhost/127.0.0.1:15831'
+2016-10-10 23:34:02,391 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000031_0
+2016-10-10 23:34:02,391 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000048_1_0' to tip task_201610102332_0001_m_000048_1, for tracker 'tracker_r344.pvt.bridges.psc.edu:localhost/127.0.0.1:15831'
+2016-10-10 23:34:02,392 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000048_1
+2016-10-10 23:34:02,392 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000020_0_0' to tip task_201610102332_0001_m_000020_0, for tracker 'tracker_r344.pvt.bridges.psc.edu:localhost/127.0.0.1:15831'
+2016-10-10 23:34:02,392 INFO org.apache.hadoop.mapred.JobInProgress: Choosing rack-local task task_201610102332_0001_m_000020_0
+2016-10-10 23:34:02,463 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000029_0_0' to tip task_201610102332_0001_m_000029_0, for tracker 'tracker_r339.pvt.bridges.psc.edu:localhost/127.0.0.1:15940'
+2016-10-10 23:34:02,464 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000029_0
+2016-10-10 23:34:02,464 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000045_1_0' to tip task_201610102332_0001_m_000045_1, for tracker 'tracker_r339.pvt.bridges.psc.edu:localhost/127.0.0.1:15940'
+2016-10-10 23:34:02,464 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000045_1
+2016-10-10 23:34:02,464 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000046_0_0' to tip task_201610102332_0001_m_000046_0, for tracker 'tracker_r339.pvt.bridges.psc.edu:localhost/127.0.0.1:15940'
+2016-10-10 23:34:02,464 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000046_0
+2016-10-10 23:34:02,465 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000027_1_0' to tip task_201610102332_0001_m_000027_1, for tracker 'tracker_r339.pvt.bridges.psc.edu:localhost/127.0.0.1:15940'
+2016-10-10 23:34:02,465 INFO org.apache.hadoop.mapred.JobInProgress: Choosing rack-local task task_201610102332_0001_m_000027_1
+2016-10-10 23:34:02,465 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000033_1_0' to tip task_201610102332_0001_m_000033_1, for tracker 'tracker_r339.pvt.bridges.psc.edu:localhost/127.0.0.1:15940'
+2016-10-10 23:34:02,465 INFO org.apache.hadoop.mapred.JobInProgress: Choosing rack-local task task_201610102332_0001_m_000033_1
+2016-10-10 23:34:02,468 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000034_0_0' to tip task_201610102332_0001_m_000034_0, for tracker 'tracker_r155.pvt.bridges.psc.edu:localhost/127.0.0.1:15869'
+2016-10-10 23:34:02,468 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000034_0
+2016-10-10 23:34:02,468 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000035_1_0' to tip task_201610102332_0001_m_000035_1, for tracker 'tracker_r155.pvt.bridges.psc.edu:localhost/127.0.0.1:15869'
+2016-10-10 23:34:02,468 INFO org.apache.hadoop.mapred.JobInProgress: Choosing data-local task task_201610102332_0001_m_000035_1
+2016-10-10 23:34:02,469 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000039_0_0' to tip task_201610102332_0001_m_000039_0, for tracker 'tracker_r155.pvt.bridges.psc.edu:localhost/127.0.0.1:15869'
+2016-10-10 23:34:02,469 INFO org.apache.hadoop.mapred.JobInProgress: Choosing rack-local task task_201610102332_0001_m_000039_0
+2016-10-10 23:34:02,469 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000039_1_0' to tip task_201610102332_0001_m_000039_1, for tracker 'tracker_r155.pvt.bridges.psc.edu:localhost/127.0.0.1:15869'
+2016-10-10 23:34:02,469 INFO org.apache.hadoop.mapred.JobInProgress: Choosing rack-local task task_201610102332_0001_m_000039_1
+2016-10-10 23:34:02,469 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000047_0_0' to tip task_201610102332_0001_m_000047_0, for tracker 'tracker_r155.pvt.bridges.psc.edu:localhost/127.0.0.1:15869'
+2016-10-10 23:34:02,470 INFO org.apache.hadoop.mapred.JobInProgress: Choosing rack-local task task_201610102332_0001_m_000047_0
+2016-10-10 23:34:05,840 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000041_1_0' has completed task_201610102332_0001_m_000041_1 successfully.
+2016-10-10 23:34:05,840 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:1  completedMapsInputSize:135266305  completedMapsOutputSize:135949707
+2016-10-10 23:34:05,845 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000000_0_0' has completed task_201610102332_0001_m_000000_0 successfully.
+2016-10-10 23:34:05,845 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:2  completedMapsInputSize:282680038  completedMapsOutputSize:284108759
+2016-10-10 23:34:07,831 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000017_1_0' has completed task_201610102332_0001_m_000017_1 successfully.
+2016-10-10 23:34:07,831 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:3  completedMapsInputSize:417946343  completedMapsOutputSize:420059941
+2016-10-10 23:34:07,834 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000037_0_0' has completed task_201610102332_0001_m_000037_0 successfully.
+2016-10-10 23:34:07,834 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:4  completedMapsInputSize:553212648  completedMapsOutputSize:556008049
+2016-10-10 23:34:07,836 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000044_1_0' has completed task_201610102332_0001_m_000044_1 successfully.
+2016-10-10 23:34:07,836 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:5  completedMapsInputSize:688478953  completedMapsOutputSize:691955643
+2016-10-10 23:34:08,373 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000022_1_0' has completed task_201610102332_0001_m_000022_1 successfully.
+2016-10-10 23:34:08,373 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:6  completedMapsInputSize:823745258  completedMapsOutputSize:827904343
+2016-10-10 23:34:08,374 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000043_1_0' has completed task_201610102332_0001_m_000043_1 successfully.
+2016-10-10 23:34:08,374 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:7  completedMapsInputSize:959011563  completedMapsOutputSize:963854060
+2016-10-10 23:34:08,857 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000009_0_0' has completed task_201610102332_0001_m_000009_0 successfully.
+2016-10-10 23:34:08,857 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:8  completedMapsInputSize:1094277868  completedMapsOutputSize:1099802460
+2016-10-10 23:34:08,859 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000016_1_0' has completed task_201610102332_0001_m_000016_1 successfully.
+2016-10-10 23:34:08,859 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:9  completedMapsInputSize:1229544173  completedMapsOutputSize:1235750246
+2016-10-10 23:34:08,860 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000029_1_0' has completed task_201610102332_0001_m_000029_1 successfully.
+2016-10-10 23:34:08,860 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:10  completedMapsInputSize:1364810478  completedMapsOutputSize:1371698343
+2016-10-10 23:34:09,081 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000018_0_0' has completed task_201610102332_0001_m_000018_0 successfully.
+2016-10-10 23:34:09,081 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:11  completedMapsInputSize:1500076783  completedMapsOutputSize:1507646409
+2016-10-10 23:34:09,082 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000024_1_0' has completed task_201610102332_0001_m_000024_1 successfully.
+2016-10-10 23:34:09,082 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:12  completedMapsInputSize:1635343088  completedMapsOutputSize:1643594037
+2016-10-10 23:34:09,083 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000028_1_0' has completed task_201610102332_0001_m_000028_1 successfully.
+2016-10-10 23:34:09,083 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:13  completedMapsInputSize:1770609393  completedMapsOutputSize:1779542969
+2016-10-10 23:34:09,083 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000002_1_0' has completed task_201610102332_0001_m_000002_1 successfully.
+2016-10-10 23:34:09,083 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:14  completedMapsInputSize:1905875698  completedMapsOutputSize:1915493633
+2016-10-10 23:34:09,084 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000003_1_0' has completed task_201610102332_0001_m_000003_1 successfully.
+2016-10-10 23:34:09,084 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:15  completedMapsInputSize:2041142003  completedMapsOutputSize:2051444306
+2016-10-10 23:34:09,535 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000035_0_0' has completed task_201610102332_0001_m_000035_0 successfully.
+2016-10-10 23:34:09,535 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:16  completedMapsInputSize:2176408308  completedMapsOutputSize:2187393846
+2016-10-10 23:34:09,536 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000000_1_0' has completed task_201610102332_0001_m_000000_1 successfully.
+2016-10-10 23:34:09,536 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:17  completedMapsInputSize:2323822041  completedMapsOutputSize:2335552898
+2016-10-10 23:34:10,845 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000010_0_0' has completed task_201610102332_0001_m_000010_0 successfully.
+2016-10-10 23:34:10,845 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:18  completedMapsInputSize:2459088346  completedMapsOutputSize:2471501787
+2016-10-10 23:34:10,928 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000004_0_0' has completed task_201610102332_0001_m_000004_0 successfully.
+2016-10-10 23:34:10,928 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:19  completedMapsInputSize:2594354651  completedMapsOutputSize:2607451366
+2016-10-10 23:34:10,930 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000026_1_0' has completed task_201610102332_0001_m_000026_1 successfully.
+2016-10-10 23:34:10,930 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:20  completedMapsInputSize:2729620956  completedMapsOutputSize:2743401356
+2016-10-10 23:34:10,930 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000036_0_0' has completed task_201610102332_0001_m_000036_0 successfully.
+2016-10-10 23:34:10,930 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:21  completedMapsInputSize:2864887261  completedMapsOutputSize:2879351361
+2016-10-10 23:34:10,931 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000047_1_0' has completed task_201610102332_0001_m_000047_1 successfully.
+2016-10-10 23:34:10,931 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:22  completedMapsInputSize:3000153566  completedMapsOutputSize:3015300261
+2016-10-10 23:34:10,932 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000005_0_0' has completed task_201610102332_0001_m_000005_0 successfully.
+2016-10-10 23:34:10,932 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:23  completedMapsInputSize:3135419871  completedMapsOutputSize:3151249848
+2016-10-10 23:34:10,934 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000013_1_0' has completed task_201610102332_0001_m_000013_1 successfully.
+2016-10-10 23:34:10,934 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:24  completedMapsInputSize:3270686176  completedMapsOutputSize:3287198044
+2016-10-10 23:34:10,935 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000019_1_0' has completed task_201610102332_0001_m_000019_1 successfully.
+2016-10-10 23:34:10,935 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:25  completedMapsInputSize:3405952481  completedMapsOutputSize:3423149434
+2016-10-10 23:34:10,935 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000041_0_0' has completed task_201610102332_0001_m_000041_0 successfully.
+2016-10-10 23:34:10,936 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:26  completedMapsInputSize:3541218786  completedMapsOutputSize:3559099141
+2016-10-10 23:34:10,936 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000046_1_0' has completed task_201610102332_0001_m_000046_1 successfully.
+2016-10-10 23:34:10,936 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:27  completedMapsInputSize:3676485091  completedMapsOutputSize:3695045624
+2016-10-10 23:34:10,937 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000049_0_0' has completed task_201610102332_0001_m_000049_0 successfully.
+2016-10-10 23:34:10,937 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:28  completedMapsInputSize:3811751396  completedMapsOutputSize:3830994781
+2016-10-10 23:34:10,954 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000012_1_0' has completed task_201610102332_0001_m_000012_1 successfully.
+2016-10-10 23:34:10,954 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:29  completedMapsInputSize:3947017701  completedMapsOutputSize:3966944276
+2016-10-10 23:34:10,955 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000022_0_0' has completed task_201610102332_0001_m_000022_0 successfully.
+2016-10-10 23:34:10,955 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:30  completedMapsInputSize:4082284006  completedMapsOutputSize:4102892976
+2016-10-10 23:34:10,956 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000042_0_0' has completed task_201610102332_0001_m_000042_0 successfully.
+2016-10-10 23:34:10,956 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:31  completedMapsInputSize:4217550311  completedMapsOutputSize:4238842198
+2016-10-10 23:34:10,956 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000045_0_0' has completed task_201610102332_0001_m_000045_0 successfully.
+2016-10-10 23:34:10,956 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:32  completedMapsInputSize:4352816616  completedMapsOutputSize:4374791960
+2016-10-10 23:34:11,143 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000008_0_0' has completed task_201610102332_0001_m_000008_0 successfully.
+2016-10-10 23:34:11,143 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:33  completedMapsInputSize:4488082921  completedMapsOutputSize:4510742821
+2016-10-10 23:34:11,144 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000008_1_0' has completed task_201610102332_0001_m_000008_1 successfully.
+2016-10-10 23:34:11,144 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:34  completedMapsInputSize:4623349226  completedMapsOutputSize:4646693682
+2016-10-10 23:34:11,386 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000014_1_0' has completed task_201610102332_0001_m_000014_1 successfully.
+2016-10-10 23:34:11,386 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:35  completedMapsInputSize:4758615531  completedMapsOutputSize:4782641114
+2016-10-10 23:34:11,387 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000015_0_0' has completed task_201610102332_0001_m_000015_0 successfully.
+2016-10-10 23:34:11,387 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:36  completedMapsInputSize:4893881836  completedMapsOutputSize:4918591675
+2016-10-10 23:34:11,388 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000015_1_0' has completed task_201610102332_0001_m_000015_1 successfully.
+2016-10-10 23:34:11,388 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:37  completedMapsInputSize:5029148141  completedMapsOutputSize:5054542236
+2016-10-10 23:34:11,504 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000006_0_0' has completed task_201610102332_0001_m_000006_0 successfully.
+2016-10-10 23:34:11,504 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:38  completedMapsInputSize:5164414446  completedMapsOutputSize:5190491457
+2016-10-10 23:34:11,505 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000007_0_0' has completed task_201610102332_0001_m_000007_0 successfully.
+2016-10-10 23:34:11,505 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:39  completedMapsInputSize:5299680751  completedMapsOutputSize:5326441105
+2016-10-10 23:34:11,505 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000012_0_0' has completed task_201610102332_0001_m_000012_0 successfully.
+2016-10-10 23:34:11,506 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:40  completedMapsInputSize:5434947056  completedMapsOutputSize:5462390600
+2016-10-10 23:34:11,506 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000017_0_0' has completed task_201610102332_0001_m_000017_0 successfully.
+2016-10-10 23:34:11,506 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:41  completedMapsInputSize:5570213361  completedMapsOutputSize:5598341782
+2016-10-10 23:34:11,506 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000030_1_0' has completed task_201610102332_0001_m_000030_1 successfully.
+2016-10-10 23:34:11,506 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:42  completedMapsInputSize:5705479666  completedMapsOutputSize:5734291478
+2016-10-10 23:34:11,621 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000029_0_0' has completed task_201610102332_0001_m_000029_0 successfully.
+2016-10-10 23:34:11,621 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:43  completedMapsInputSize:5840745971  completedMapsOutputSize:5870239575
+2016-10-10 23:34:11,621 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000045_1_0' has completed task_201610102332_0001_m_000045_1 successfully.
+2016-10-10 23:34:11,621 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:44  completedMapsInputSize:5976012276  completedMapsOutputSize:6006189337
+2016-10-10 23:34:11,622 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000046_0_0' has completed task_201610102332_0001_m_000046_0 successfully.
+2016-10-10 23:34:11,622 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:45  completedMapsInputSize:6111278581  completedMapsOutputSize:6142135820
+2016-10-10 23:34:11,622 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000033_1_0' has completed task_201610102332_0001_m_000033_1 successfully.
+2016-10-10 23:34:11,622 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:46  completedMapsInputSize:6246544886  completedMapsOutputSize:6278083254
+2016-10-10 23:34:11,631 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000033_0_0' has completed task_201610102332_0001_m_000033_0 successfully.
+2016-10-10 23:34:11,631 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:47  completedMapsInputSize:6381811191  completedMapsOutputSize:6414030688
+2016-10-10 23:34:11,631 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000036_1_0' has completed task_201610102332_0001_m_000036_1 successfully.
+2016-10-10 23:34:11,631 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:48  completedMapsInputSize:6517077496  completedMapsOutputSize:6549980693
+2016-10-10 23:34:12,033 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000003_0_0' has completed task_201610102332_0001_m_000003_0 successfully.
+2016-10-10 23:34:12,033 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:49  completedMapsInputSize:6652343801  completedMapsOutputSize:6685931366
+2016-10-10 23:34:12,033 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000009_1_0' has completed task_201610102332_0001_m_000009_1 successfully.
+2016-10-10 23:34:12,033 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:50  completedMapsInputSize:6787610106  completedMapsOutputSize:6821879766
+2016-10-10 23:34:12,034 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000013_0_0' has completed task_201610102332_0001_m_000013_0 successfully.
+2016-10-10 23:34:12,034 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:51  completedMapsInputSize:6922876411  completedMapsOutputSize:6957827962
+2016-10-10 23:34:12,034 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000023_1_0' has completed task_201610102332_0001_m_000023_1 successfully.
+2016-10-10 23:34:12,034 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:52  completedMapsInputSize:7058142716  completedMapsOutputSize:7093776920
+2016-10-10 23:34:12,035 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000032_0_0' has completed task_201610102332_0001_m_000032_0 successfully.
+2016-10-10 23:34:12,035 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:53  completedMapsInputSize:7193409021  completedMapsOutputSize:7229727388
+2016-10-10 23:34:12,544 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000001_0_0' has completed task_201610102332_0001_m_000001_0 successfully.
+2016-10-10 23:34:12,544 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:54  completedMapsInputSize:7328675326  completedMapsOutputSize:7365676124
+2016-10-10 23:34:12,545 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000001_1_0' has completed task_201610102332_0001_m_000001_1 successfully.
+2016-10-10 23:34:12,545 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:55  completedMapsInputSize:7463941631  completedMapsOutputSize:7501624860
+2016-10-10 23:34:12,879 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000011_0_0' has completed task_201610102332_0001_m_000011_0 successfully.
+2016-10-10 23:34:12,880 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:56  completedMapsInputSize:7599207936  completedMapsOutputSize:7637576881
+2016-10-10 23:34:12,880 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000019_0_0' has completed task_201610102332_0001_m_000019_0 successfully.
+2016-10-10 23:34:12,880 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:57  completedMapsInputSize:7734474241  completedMapsOutputSize:7773528271
+2016-10-10 23:34:12,880 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000021_0_0' has completed task_201610102332_0001_m_000021_0 successfully.
+2016-10-10 23:34:12,881 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:58  completedMapsInputSize:7869740546  completedMapsOutputSize:7909481213
+2016-10-10 23:34:12,881 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000025_1_0' has completed task_201610102332_0001_m_000025_1 successfully.
+2016-10-10 23:34:12,881 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:59  completedMapsInputSize:8005006851  completedMapsOutputSize:8045431085
+2016-10-10 23:34:12,881 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000030_0_0' has completed task_201610102332_0001_m_000030_0 successfully.
+2016-10-10 23:34:12,881 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:60  completedMapsInputSize:8140273156  completedMapsOutputSize:8181380781
+2016-10-10 23:34:12,946 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000007_1_0' has completed task_201610102332_0001_m_000007_1 successfully.
+2016-10-10 23:34:12,946 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:61  completedMapsInputSize:8275539461  completedMapsOutputSize:8317330429
+2016-10-10 23:34:12,947 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000010_1_0' has completed task_201610102332_0001_m_000010_1 successfully.
+2016-10-10 23:34:12,947 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:62  completedMapsInputSize:8410805766  completedMapsOutputSize:8453279318
+2016-10-10 23:34:12,947 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000011_1_0' has completed task_201610102332_0001_m_000011_1 successfully.
+2016-10-10 23:34:12,947 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:63  completedMapsInputSize:8546072071  completedMapsOutputSize:8589231339
+2016-10-10 23:34:12,947 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000032_1_0' has completed task_201610102332_0001_m_000032_1 successfully.
+2016-10-10 23:34:12,947 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:64  completedMapsInputSize:8681338376  completedMapsOutputSize:8725181807
+2016-10-10 23:34:12,948 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000034_1_0' has completed task_201610102332_0001_m_000034_1 successfully.
+2016-10-10 23:34:12,948 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:65  completedMapsInputSize:8816604681  completedMapsOutputSize:8861129886
+2016-10-10 23:34:13,854 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000006_1_0' has completed task_201610102332_0001_m_000006_1 successfully.
+2016-10-10 23:34:13,854 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:66  completedMapsInputSize:8951870986  completedMapsOutputSize:8997079107
+2016-10-10 23:34:13,963 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000024_0_0' has completed task_201610102332_0001_m_000024_0 successfully.
+2016-10-10 23:34:13,963 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:67  completedMapsInputSize:9087137291  completedMapsOutputSize:9133026735
+2016-10-10 23:34:14,156 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000020_1_0' has completed task_201610102332_0001_m_000020_1 successfully.
+2016-10-10 23:34:14,156 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:68  completedMapsInputSize:9222403596  completedMapsOutputSize:9268977958
+2016-10-10 23:34:14,157 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000044_0_0' has completed task_201610102332_0001_m_000044_0 successfully.
+2016-10-10 23:34:14,157 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:69  completedMapsInputSize:9357669901  completedMapsOutputSize:9404925552
+2016-10-10 23:34:14,157 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000014_0_0' has completed task_201610102332_0001_m_000014_0 successfully.
+2016-10-10 23:34:14,157 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:70  completedMapsInputSize:9492936206  completedMapsOutputSize:9540872984
+2016-10-10 23:34:14,510 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000005_1_0' has completed task_201610102332_0001_m_000005_1 successfully.
+2016-10-10 23:34:14,511 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:71  completedMapsInputSize:9628202511  completedMapsOutputSize:9676822571
+2016-10-10 23:34:14,511 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000025_0_0' has completed task_201610102332_0001_m_000025_0 successfully.
+2016-10-10 23:34:14,511 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:72  completedMapsInputSize:9763468816  completedMapsOutputSize:9812772443
+2016-10-10 23:34:14,511 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000037_1_0' has completed task_201610102332_0001_m_000037_1 successfully.
+2016-10-10 23:34:14,511 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:73  completedMapsInputSize:9898735121  completedMapsOutputSize:9948720551
+2016-10-10 23:34:14,512 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000040_1_0' has completed task_201610102332_0001_m_000040_1 successfully.
+2016-10-10 23:34:14,512 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:74  completedMapsInputSize:10034001426  completedMapsOutputSize:10084673032
+2016-10-10 23:34:14,512 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000049_1_0' has completed task_201610102332_0001_m_000049_1 successfully.
+2016-10-10 23:34:14,512 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:75  completedMapsInputSize:10169267731  completedMapsOutputSize:10220622189
+2016-10-10 23:34:14,554 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000031_0_0' has completed task_201610102332_0001_m_000031_0 successfully.
+2016-10-10 23:34:14,554 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:76  completedMapsInputSize:10304534036  completedMapsOutputSize:10356569461
+2016-10-10 23:34:14,554 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000048_1_0' has completed task_201610102332_0001_m_000048_1 successfully.
+2016-10-10 23:34:14,554 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:77  completedMapsInputSize:10439800341  completedMapsOutputSize:10492517535
+2016-10-10 23:34:14,554 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000020_0_0' has completed task_201610102332_0001_m_000020_0 successfully.
+2016-10-10 23:34:14,554 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:78  completedMapsInputSize:10575066646  completedMapsOutputSize:10628468758
+2016-10-10 23:34:14,627 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000027_1_0' has completed task_201610102332_0001_m_000027_1 successfully.
+2016-10-10 23:34:14,627 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:79  completedMapsInputSize:10710332951  completedMapsOutputSize:10764416996
+2016-10-10 23:34:14,640 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000016_0_0' has completed task_201610102332_0001_m_000016_0 successfully.
+2016-10-10 23:34:14,640 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:80  completedMapsInputSize:10845599256  completedMapsOutputSize:10900364782
+2016-10-10 23:34:14,641 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000026_0_0' has completed task_201610102332_0001_m_000026_0 successfully.
+2016-10-10 23:34:14,641 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:81  completedMapsInputSize:10980865561  completedMapsOutputSize:11036314772
+2016-10-10 23:34:14,641 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000027_0_0' has completed task_201610102332_0001_m_000027_0 successfully.
+2016-10-10 23:34:14,641 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:82  completedMapsInputSize:11116131866  completedMapsOutputSize:11172263010
+2016-10-10 23:34:15,549 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000002_0_0' has completed task_201610102332_0001_m_000002_0 successfully.
+2016-10-10 23:34:15,549 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:83  completedMapsInputSize:11251398171  completedMapsOutputSize:11308213674
+2016-10-10 23:34:15,583 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000021_1_0' has completed task_201610102332_0001_m_000021_1 successfully.
+2016-10-10 23:34:15,583 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:84  completedMapsInputSize:11386664476  completedMapsOutputSize:11444166616
+2016-10-10 23:34:15,583 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000038_1_0' has completed task_201610102332_0001_m_000038_1 successfully.
+2016-10-10 23:34:15,583 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:85  completedMapsInputSize:11521930781  completedMapsOutputSize:11580117030
+2016-10-10 23:34:15,584 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000040_0_0' has completed task_201610102332_0001_m_000040_0 successfully.
+2016-10-10 23:34:15,584 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:86  completedMapsInputSize:11657197086  completedMapsOutputSize:11716069511
+2016-10-10 23:34:15,584 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000042_1_0' has completed task_201610102332_0001_m_000042_1 successfully.
+2016-10-10 23:34:15,584 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:87  completedMapsInputSize:11792463391  completedMapsOutputSize:11852018733
+2016-10-10 23:34:15,584 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000043_0_0' has completed task_201610102332_0001_m_000043_0 successfully.
+2016-10-10 23:34:15,584 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:88  completedMapsInputSize:11927729696  completedMapsOutputSize:11987968450
+2016-10-10 23:34:17,558 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000018_1_0' has completed task_201610102332_0001_m_000018_1 successfully.
+2016-10-10 23:34:17,558 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:89  completedMapsInputSize:12062996001  completedMapsOutputSize:12123916516
+2016-10-10 23:34:17,558 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000023_0_0' has completed task_201610102332_0001_m_000023_0 successfully.
+2016-10-10 23:34:17,558 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:90  completedMapsInputSize:12198262306  completedMapsOutputSize:12259865474
+2016-10-10 23:34:17,960 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000034_0_0' has completed task_201610102332_0001_m_000034_0 successfully.
+2016-10-10 23:34:17,960 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:91  completedMapsInputSize:12333528611  completedMapsOutputSize:12395813553
+2016-10-10 23:34:17,961 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000035_1_0' has completed task_201610102332_0001_m_000035_1 successfully.
+2016-10-10 23:34:17,961 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:92  completedMapsInputSize:12468794916  completedMapsOutputSize:12531763093
+2016-10-10 23:34:17,961 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000039_0_0' has completed task_201610102332_0001_m_000039_0 successfully.
+2016-10-10 23:34:17,961 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:93  completedMapsInputSize:12604061221  completedMapsOutputSize:12667712613
+2016-10-10 23:34:17,961 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000039_1_0' has completed task_201610102332_0001_m_000039_1 successfully.
+2016-10-10 23:34:17,961 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:94  completedMapsInputSize:12739327526  completedMapsOutputSize:12803662133
+2016-10-10 23:34:17,962 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000047_0_0' has completed task_201610102332_0001_m_000047_0 successfully.
+2016-10-10 23:34:17,962 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:95  completedMapsInputSize:12874593831  completedMapsOutputSize:12939611033
+2016-10-10 23:34:54,716 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000004_1_0' has completed task_201610102332_0001_m_000004_1 successfully.
+2016-10-10 23:34:54,717 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:96  completedMapsInputSize:13009860136  completedMapsOutputSize:13075560612
+2016-10-10 23:34:54,717 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000028_0_0' has completed task_201610102332_0001_m_000028_0 successfully.
+2016-10-10 23:34:54,717 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:97  completedMapsInputSize:13145126441  completedMapsOutputSize:13211509544
+2016-10-10 23:34:54,717 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000031_1_0' has completed task_201610102332_0001_m_000031_1 successfully.
+2016-10-10 23:34:54,717 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:98  completedMapsInputSize:13280392746  completedMapsOutputSize:13347456816
+2016-10-10 23:34:54,718 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000038_0_0' has completed task_201610102332_0001_m_000038_0 successfully.
+2016-10-10 23:34:54,718 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:99  completedMapsInputSize:13415659051  completedMapsOutputSize:13483407230
+2016-10-10 23:34:54,718 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000048_0_0' has completed task_201610102332_0001_m_000048_0 successfully.
+2016-10-10 23:34:54,718 INFO org.apache.hadoop.mapred.ResourceEstimator: completedMapsUpdates:100  completedMapsInputSize:13550925356  completedMapsOutputSize:13619355304
+2016-10-10 23:34:54,718 INFO org.apache.hadoop.mapred.JobInProgress: MAP_PHASE_FINISH_TIME = 1476156884423
+2016-10-10 23:34:55,061 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000000_0_0' to tip task_201610102332_0001_r_000000_0, for tracker 'tracker_r121.pvt.bridges.psc.edu:localhost/127.0.0.1:15132'
+2016-10-10 23:34:55,062 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000001_0_0' to tip task_201610102332_0001_r_000001_0, for tracker 'tracker_r151.pvt.bridges.psc.edu:localhost/127.0.0.1:15962'
+2016-10-10 23:34:55,063 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000002_0_0' to tip task_201610102332_0001_r_000002_0, for tracker 'tracker_r127.pvt.bridges.psc.edu:localhost/127.0.0.1:15733'
+2016-10-10 23:34:55,956 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000003_0_0' to tip task_201610102332_0001_r_000003_0, for tracker 'tracker_r157.pvt.bridges.psc.edu:localhost/127.0.0.1:15666'
+2016-10-10 23:34:55,964 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000004_0_0' to tip task_201610102332_0001_r_000004_0, for tracker 'tracker_r152.pvt.bridges.psc.edu:localhost/127.0.0.1:15380'
+2016-10-10 23:34:55,998 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000005_0_0' to tip task_201610102332_0001_r_000005_0, for tracker 'tracker_r171.pvt.bridges.psc.edu:localhost/127.0.0.1:15262'
+2016-10-10 23:34:56,007 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000006_0_0' to tip task_201610102332_0001_r_000006_0, for tracker 'tracker_r362.pvt.bridges.psc.edu:localhost/127.0.0.1:15702'
+2016-10-10 23:34:56,196 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000007_0_0' to tip task_201610102332_0001_r_000007_0, for tracker 'tracker_r141.pvt.bridges.psc.edu:localhost/127.0.0.1:15658'
+2016-10-10 23:34:56,479 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000008_0_0' to tip task_201610102332_0001_r_000008_0, for tracker 'tracker_r370.pvt.bridges.psc.edu:localhost/127.0.0.1:15829'
+2016-10-10 23:34:56,544 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000009_0_0' to tip task_201610102332_0001_r_000009_0, for tracker 'tracker_r154.pvt.bridges.psc.edu:localhost/127.0.0.1:15404'
+2016-10-10 23:34:56,557 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000010_0_0' to tip task_201610102332_0001_r_000010_0, for tracker 'tracker_r156.pvt.bridges.psc.edu:localhost/127.0.0.1:15267'
+2016-10-10 23:34:56,658 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000011_0_0' to tip task_201610102332_0001_r_000011_0, for tracker 'tracker_r339.pvt.bridges.psc.edu:localhost/127.0.0.1:15940'
+2016-10-10 23:34:56,673 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000012_0_0' to tip task_201610102332_0001_r_000012_0, for tracker 'tracker_r120.pvt.bridges.psc.edu:localhost/127.0.0.1:15478'
+2016-10-10 23:34:56,780 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000013_0_0' to tip task_201610102332_0001_r_000013_0, for tracker 'tracker_r344.pvt.bridges.psc.edu:localhost/127.0.0.1:15831'
+2016-10-10 23:34:56,923 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000014_0_0' to tip task_201610102332_0001_r_000014_0, for tracker 'tracker_r163.pvt.bridges.psc.edu:localhost/127.0.0.1:15911'
+2016-10-10 23:34:56,987 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000015_0_0' to tip task_201610102332_0001_r_000015_0, for tracker 'tracker_r155.pvt.bridges.psc.edu:localhost/127.0.0.1:15869'
+2016-10-10 23:34:57,092 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000016_0_0' to tip task_201610102332_0001_r_000016_0, for tracker 'tracker_r147.pvt.bridges.psc.edu:localhost/127.0.0.1:15576'
+2016-10-10 23:34:57,136 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000017_0_0' to tip task_201610102332_0001_r_000017_0, for tracker 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:34:57,577 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000018_0_0' to tip task_201610102332_0001_r_000018_0, for tracker 'tracker_r366.pvt.bridges.psc.edu:localhost/127.0.0.1:15025'
+2016-10-10 23:34:57,615 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000019_0_0' to tip task_201610102332_0001_r_000019_0, for tracker 'tracker_r371.pvt.bridges.psc.edu:localhost/127.0.0.1:15014'
+2016-10-10 23:34:58,071 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000020_0_0' to tip task_201610102332_0001_r_000020_0, for tracker 'tracker_r121.pvt.bridges.psc.edu:localhost/127.0.0.1:15132'
+2016-10-10 23:34:58,217 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000021_0_0' to tip task_201610102332_0001_r_000021_0, for tracker 'tracker_r151.pvt.bridges.psc.edu:localhost/127.0.0.1:15962'
+2016-10-10 23:34:58,257 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000022_0_0' to tip task_201610102332_0001_r_000022_0, for tracker 'tracker_r127.pvt.bridges.psc.edu:localhost/127.0.0.1:15733'
+2016-10-10 23:34:59,045 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000023_0_0' to tip task_201610102332_0001_r_000023_0, for tracker 'tracker_r152.pvt.bridges.psc.edu:localhost/127.0.0.1:15380'
+2016-10-10 23:34:59,109 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000024_0_0' to tip task_201610102332_0001_r_000024_0, for tracker 'tracker_r362.pvt.bridges.psc.edu:localhost/127.0.0.1:15702'
+2016-10-10 23:34:59,120 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000025_0_0' to tip task_201610102332_0001_r_000025_0, for tracker 'tracker_r171.pvt.bridges.psc.edu:localhost/127.0.0.1:15262'
+2016-10-10 23:34:59,131 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000026_0_0' to tip task_201610102332_0001_r_000026_0, for tracker 'tracker_r157.pvt.bridges.psc.edu:localhost/127.0.0.1:15666'
+2016-10-10 23:34:59,384 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000027_0_0' to tip task_201610102332_0001_r_000027_0, for tracker 'tracker_r141.pvt.bridges.psc.edu:localhost/127.0.0.1:15658'
+2016-10-10 23:34:59,579 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000028_0_0' to tip task_201610102332_0001_r_000028_0, for tracker 'tracker_r370.pvt.bridges.psc.edu:localhost/127.0.0.1:15829'
+2016-10-10 23:34:59,720 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000029_0_0' to tip task_201610102332_0001_r_000029_0, for tracker 'tracker_r156.pvt.bridges.psc.edu:localhost/127.0.0.1:15267'
+2016-10-10 23:34:59,732 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000030_0_0' to tip task_201610102332_0001_r_000030_0, for tracker 'tracker_r154.pvt.bridges.psc.edu:localhost/127.0.0.1:15404'
+2016-10-10 23:34:59,807 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000031_0_0' to tip task_201610102332_0001_r_000031_0, for tracker 'tracker_r339.pvt.bridges.psc.edu:localhost/127.0.0.1:15940'
+2016-10-10 23:34:59,932 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000032_0_0' to tip task_201610102332_0001_r_000032_0, for tracker 'tracker_r120.pvt.bridges.psc.edu:localhost/127.0.0.1:15478'
+2016-10-10 23:34:59,975 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000033_0_0' to tip task_201610102332_0001_r_000033_0, for tracker 'tracker_r344.pvt.bridges.psc.edu:localhost/127.0.0.1:15831'
+2016-10-10 23:35:00,030 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000034_0_0' to tip task_201610102332_0001_r_000034_0, for tracker 'tracker_r163.pvt.bridges.psc.edu:localhost/127.0.0.1:15911'
+2016-10-10 23:35:00,303 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000035_0_0' to tip task_201610102332_0001_r_000035_0, for tracker 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:35:00,667 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000036_0_0' to tip task_201610102332_0001_r_000036_0, for tracker 'tracker_r371.pvt.bridges.psc.edu:localhost/127.0.0.1:15014'
+2016-10-10 23:35:00,702 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000037_0_0' to tip task_201610102332_0001_r_000037_0, for tracker 'tracker_r366.pvt.bridges.psc.edu:localhost/127.0.0.1:15025'
+2016-10-10 23:35:01,537 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000038_0_0' to tip task_201610102332_0001_r_000038_0, for tracker 'tracker_r147.pvt.bridges.psc.edu:localhost/127.0.0.1:15576'
+2016-10-10 23:35:22,266 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000039_0_0' to tip task_201610102332_0001_r_000039_0, for tracker 'tracker_r155.pvt.bridges.psc.edu:localhost/127.0.0.1:15869'
+2016-10-10 23:35:26,411 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000040_0_0' to tip task_201610102332_0001_r_000040_0, for tracker 'tracker_r141.pvt.bridges.psc.edu:localhost/127.0.0.1:15658'
+2016-10-10 23:35:26,948 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000041_0_0' to tip task_201610102332_0001_r_000041_0, for tracker 'tracker_r120.pvt.bridges.psc.edu:localhost/127.0.0.1:15478'
+2016-10-10 23:35:27,330 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000042_0_0' to tip task_201610102332_0001_r_000042_0, for tracker 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:35:27,722 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000043_0_0' to tip task_201610102332_0001_r_000043_0, for tracker 'tracker_r371.pvt.bridges.psc.edu:localhost/127.0.0.1:15014'
+2016-10-10 23:35:27,727 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000044_0_0' to tip task_201610102332_0001_r_000044_0, for tracker 'tracker_r366.pvt.bridges.psc.edu:localhost/127.0.0.1:15025'
+2016-10-10 23:35:28,108 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000045_0_0' to tip task_201610102332_0001_r_000045_0, for tracker 'tracker_r121.pvt.bridges.psc.edu:localhost/127.0.0.1:15132'
+2016-10-10 23:35:28,255 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000046_0_0' to tip task_201610102332_0001_r_000046_0, for tracker 'tracker_r151.pvt.bridges.psc.edu:localhost/127.0.0.1:15962'
+2016-10-10 23:35:28,287 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000047_0_0' to tip task_201610102332_0001_r_000047_0, for tracker 'tracker_r127.pvt.bridges.psc.edu:localhost/127.0.0.1:15733'
+2016-10-10 23:35:28,556 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000048_0_0' to tip task_201610102332_0001_r_000048_0, for tracker 'tracker_r147.pvt.bridges.psc.edu:localhost/127.0.0.1:15576'
+2016-10-10 23:35:29,077 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000049_0_0' to tip task_201610102332_0001_r_000049_0, for tracker 'tracker_r152.pvt.bridges.psc.edu:localhost/127.0.0.1:15380'
+2016-10-10 23:35:29,146 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000015_0_1' to tip task_201610102332_0001_r_000015_0, for tracker 'tracker_r362.pvt.bridges.psc.edu:localhost/127.0.0.1:15702'
+2016-10-10 23:35:29,150 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000039_0_1' to tip task_201610102332_0001_r_000039_0, for tracker 'tracker_r171.pvt.bridges.psc.edu:localhost/127.0.0.1:15262'
+2016-10-10 23:35:29,420 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000007_0_0' has completed task_201610102332_0001_r_000007_0 successfully.
+2016-10-10 23:35:29,423 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000041_0_1' to tip task_201610102332_0001_r_000041_0, for tracker 'tracker_r141.pvt.bridges.psc.edu:localhost/127.0.0.1:15658'
+2016-10-10 23:35:29,618 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000040_0_1' to tip task_201610102332_0001_r_000040_0, for tracker 'tracker_r370.pvt.bridges.psc.edu:localhost/127.0.0.1:15829'
+2016-10-10 23:35:29,746 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000042_0_1' to tip task_201610102332_0001_r_000042_0, for tracker 'tracker_r156.pvt.bridges.psc.edu:localhost/127.0.0.1:15267'
+2016-10-10 23:35:29,763 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000043_0_1' to tip task_201610102332_0001_r_000043_0, for tracker 'tracker_r154.pvt.bridges.psc.edu:localhost/127.0.0.1:15404'
+2016-10-10 23:35:29,835 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000044_0_1' to tip task_201610102332_0001_r_000044_0, for tracker 'tracker_r339.pvt.bridges.psc.edu:localhost/127.0.0.1:15940'
+2016-10-10 23:35:29,952 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000012_0_0' has completed task_201610102332_0001_r_000012_0 successfully.
+2016-10-10 23:35:29,953 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000045_0_1' to tip task_201610102332_0001_r_000045_0, for tracker 'tracker_r120.pvt.bridges.psc.edu:localhost/127.0.0.1:15478'
+2016-10-10 23:35:30,013 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000046_0_1' to tip task_201610102332_0001_r_000046_0, for tracker 'tracker_r344.pvt.bridges.psc.edu:localhost/127.0.0.1:15831'
+2016-10-10 23:35:30,062 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000047_0_1' to tip task_201610102332_0001_r_000047_0, for tracker 'tracker_r163.pvt.bridges.psc.edu:localhost/127.0.0.1:15911'
+2016-10-10 23:35:30,338 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000017_0_0' has completed task_201610102332_0001_r_000017_0 successfully.
+2016-10-10 23:35:30,339 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000048_0_1' to tip task_201610102332_0001_r_000048_0, for tracker 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:35:30,730 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000019_0_0' has completed task_201610102332_0001_r_000019_0 successfully.
+2016-10-10 23:35:30,731 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_r_000049_0_1' to tip task_201610102332_0001_r_000049_0, for tracker 'tracker_r371.pvt.bridges.psc.edu:localhost/127.0.0.1:15014'
+2016-10-10 23:35:30,732 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000018_0_0' has completed task_201610102332_0001_r_000018_0 successfully.
+2016-10-10 23:35:30,733 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000037_0_0' has completed task_201610102332_0001_r_000037_0 successfully.
+2016-10-10 23:35:31,115 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000000_0_0' has completed task_201610102332_0001_r_000000_0 successfully.
+2016-10-10 23:35:31,115 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000020_0_0' has completed task_201610102332_0001_r_000020_0 successfully.
+2016-10-10 23:35:31,273 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000001_0_0' has completed task_201610102332_0001_r_000001_0 successfully.
+2016-10-10 23:35:31,273 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000021_0_0' has completed task_201610102332_0001_r_000021_0 successfully.
+2016-10-10 23:35:31,302 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000002_0_0' has completed task_201610102332_0001_r_000002_0 successfully.
+2016-10-10 23:35:31,302 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000022_0_0' has completed task_201610102332_0001_r_000022_0 successfully.
+2016-10-10 23:35:31,564 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000016_0_0' has completed task_201610102332_0001_r_000016_0 successfully.
+2016-10-10 23:35:31,564 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000038_0_0' has completed task_201610102332_0001_r_000038_0 successfully.
+2016-10-10 23:35:32,091 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000004_0_0' has completed task_201610102332_0001_r_000004_0 successfully.
+2016-10-10 23:35:32,091 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000023_0_0' has completed task_201610102332_0001_r_000023_0 successfully.
+2016-10-10 23:35:32,153 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000024_0_0' has completed task_201610102332_0001_r_000024_0 successfully.
+2016-10-10 23:35:32,158 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000005_0_0' has completed task_201610102332_0001_r_000005_0 successfully.
+2016-10-10 23:35:32,158 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000025_0_0' has completed task_201610102332_0001_r_000025_0 successfully.
+2016-10-10 23:35:32,436 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000027_0_0' has completed task_201610102332_0001_r_000027_0 successfully.
+2016-10-10 23:35:32,626 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000008_0_0' has completed task_201610102332_0001_r_000008_0 successfully.
+2016-10-10 23:35:32,626 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000028_0_0' has completed task_201610102332_0001_r_000028_0 successfully.
+2016-10-10 23:35:32,752 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000010_0_0' has completed task_201610102332_0001_r_000010_0 successfully.
+2016-10-10 23:35:32,753 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000029_0_0' has completed task_201610102332_0001_r_000029_0 successfully.
+2016-10-10 23:35:32,784 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000009_0_0' has completed task_201610102332_0001_r_000009_0 successfully.
+2016-10-10 23:35:32,784 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000030_0_0' has completed task_201610102332_0001_r_000030_0 successfully.
+2016-10-10 23:35:32,845 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000011_0_0' has completed task_201610102332_0001_r_000011_0 successfully.
+2016-10-10 23:35:32,845 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000031_0_0' has completed task_201610102332_0001_r_000031_0 successfully.
+2016-10-10 23:35:32,967 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000032_0_0' has completed task_201610102332_0001_r_000032_0 successfully.
+2016-10-10 23:35:33,018 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000013_0_0' has completed task_201610102332_0001_r_000013_0 successfully.
+2016-10-10 23:35:33,018 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000033_0_0' has completed task_201610102332_0001_r_000033_0 successfully.
+2016-10-10 23:35:33,068 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000014_0_0' has completed task_201610102332_0001_r_000014_0 successfully.
+2016-10-10 23:35:33,069 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000034_0_0' has completed task_201610102332_0001_r_000034_0 successfully.
+2016-10-10 23:35:33,350 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000035_0_0' has completed task_201610102332_0001_r_000035_0 successfully.
+2016-10-10 23:35:33,747 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000036_0_0' has completed task_201610102332_0001_r_000036_0 successfully.
+2016-10-10 23:35:35,165 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000003_0_0' has completed task_201610102332_0001_r_000003_0 successfully.
+2016-10-10 23:35:40,988 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000015_0_0' has completed task_201610102332_0001_r_000015_0 successfully.
+2016-10-10 23:35:40,988 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000039_0_0' has completed task_201610102332_0001_r_000039_0 successfully.
+2016-10-10 23:35:44,172 INFO org.apache.hadoop.mapred.JobTracker: Adding task (cleanup)'attempt_201610102332_0001_r_000015_0_1' to tip task_201610102332_0001_r_000015_0, for tracker 'tracker_r362.pvt.bridges.psc.edu:localhost/127.0.0.1:15702'
+2016-10-10 23:35:44,178 INFO org.apache.hadoop.mapred.JobTracker: Adding task (cleanup)'attempt_201610102332_0001_r_000039_0_1' to tip task_201610102332_0001_r_000039_0, for tracker 'tracker_r171.pvt.bridges.psc.edu:localhost/127.0.0.1:15262'
+2016-10-10 23:35:44,242 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000026_0_0' has completed task_201610102332_0001_r_000026_0 successfully.
+2016-10-10 23:35:44,449 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000040_0_0' has completed task_201610102332_0001_r_000040_0 successfully.
+2016-10-10 23:35:44,651 INFO org.apache.hadoop.mapred.JobTracker: Adding task (cleanup)'attempt_201610102332_0001_r_000040_0_1' to tip task_201610102332_0001_r_000040_0, for tracker 'tracker_r370.pvt.bridges.psc.edu:localhost/127.0.0.1:15829'
+2016-10-10 23:35:44,979 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000041_0_0' has completed task_201610102332_0001_r_000041_0 successfully.
+2016-10-10 23:35:47,175 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000015_0_1' from 'tracker_r362.pvt.bridges.psc.edu:localhost/127.0.0.1:15702'
+2016-10-10 23:35:47,181 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000039_0_1' from 'tracker_r171.pvt.bridges.psc.edu:localhost/127.0.0.1:15262'
+2016-10-10 23:35:47,653 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000040_0_1' from 'tracker_r370.pvt.bridges.psc.edu:localhost/127.0.0.1:15829'
+2016-10-10 23:35:47,781 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000042_0_1' has completed task_201610102332_0001_r_000042_0 successfully.
+2016-10-10 23:35:47,796 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000043_0_1' has completed task_201610102332_0001_r_000043_0 successfully.
+2016-10-10 23:35:47,890 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000044_0_1' has completed task_201610102332_0001_r_000044_0 successfully.
+2016-10-10 23:35:48,363 INFO org.apache.hadoop.mapred.JobTracker: Adding task (cleanup)'attempt_201610102332_0001_r_000042_0_0' to tip task_201610102332_0001_r_000042_0, for tracker 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:35:48,752 INFO org.apache.hadoop.mapred.JobTracker: Adding task (cleanup)'attempt_201610102332_0001_r_000044_0_0' to tip task_201610102332_0001_r_000044_0, for tracker 'tracker_r366.pvt.bridges.psc.edu:localhost/127.0.0.1:15025'
+2016-10-10 23:35:49,958 INFO org.apache.hadoop.mapred.JobTracker: attempt_201610102332_0001_r_000042_0_0 is 1595 ms debug.
+2016-10-10 23:35:51,366 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000042_0_0' from 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:35:51,755 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000044_0_0' from 'tracker_r366.pvt.bridges.psc.edu:localhost/127.0.0.1:15025'
+2016-10-10 23:35:51,759 INFO org.apache.hadoop.mapred.JobTracker: Adding task (cleanup)'attempt_201610102332_0001_r_000043_0_0' to tip task_201610102332_0001_r_000043_0, for tracker 'tracker_r371.pvt.bridges.psc.edu:localhost/127.0.0.1:15014'
+2016-10-10 23:35:53,461 INFO org.apache.hadoop.mapred.JobTracker: Adding task (cleanup)'attempt_201610102332_0001_r_000041_0_1' to tip task_201610102332_0001_r_000041_0, for tracker 'tracker_r141.pvt.bridges.psc.edu:localhost/127.0.0.1:15658'
+2016-10-10 23:35:54,095 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000047_0_1' has completed task_201610102332_0001_r_000047_0 successfully.
+2016-10-10 23:35:54,763 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000043_0_0' from 'tracker_r371.pvt.bridges.psc.edu:localhost/127.0.0.1:15014'
+2016-10-10 23:35:55,146 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000045_0_0' has completed task_201610102332_0001_r_000045_0 successfully.
+2016-10-10 23:35:55,301 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000046_0_0' has completed task_201610102332_0001_r_000046_0 successfully.
+2016-10-10 23:35:55,324 INFO org.apache.hadoop.mapred.JobTracker: Adding task (cleanup)'attempt_201610102332_0001_r_000047_0_0' to tip task_201610102332_0001_r_000047_0, for tracker 'tracker_r127.pvt.bridges.psc.edu:localhost/127.0.0.1:15733'
+2016-10-10 23:35:55,658 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000048_0_0' has completed task_201610102332_0001_r_000048_0 successfully.
+2016-10-10 23:35:56,464 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000041_0_1' from 'tracker_r141.pvt.bridges.psc.edu:localhost/127.0.0.1:15658'
+2016-10-10 23:35:57,369 INFO org.apache.hadoop.mapred.JobTracker: Adding task (cleanup)'attempt_201610102332_0001_r_000048_0_1' to tip task_201610102332_0001_r_000048_0, for tracker 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:35:58,328 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000047_0_0' from 'tracker_r127.pvt.bridges.psc.edu:localhost/127.0.0.1:15733'
+2016-10-10 23:35:59,987 INFO org.apache.hadoop.mapred.JobTracker: Adding task (cleanup)'attempt_201610102332_0001_r_000045_0_1' to tip task_201610102332_0001_r_000045_0, for tracker 'tracker_r120.pvt.bridges.psc.edu:localhost/127.0.0.1:15478'
+2016-10-10 23:36:00,041 INFO org.apache.hadoop.mapred.JobTracker: Adding task (cleanup)'attempt_201610102332_0001_r_000046_0_1' to tip task_201610102332_0001_r_000046_0, for tracker 'tracker_r344.pvt.bridges.psc.edu:localhost/127.0.0.1:15831'
+2016-10-10 23:36:00,372 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000048_0_1' from 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:36:00,768 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000049_0_1' has completed task_201610102332_0001_r_000049_0 successfully.
+2016-10-10 23:36:02,109 INFO org.apache.hadoop.mapred.JobTracker: Adding task (cleanup)'attempt_201610102332_0001_r_000049_0_0' to tip task_201610102332_0001_r_000049_0, for tracker 'tracker_r152.pvt.bridges.psc.edu:localhost/127.0.0.1:15380'
+2016-10-10 23:36:02,993 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000045_0_1' from 'tracker_r120.pvt.bridges.psc.edu:localhost/127.0.0.1:15478'
+2016-10-10 23:36:03,044 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000046_0_1' from 'tracker_r344.pvt.bridges.psc.edu:localhost/127.0.0.1:15831'
+2016-10-10 23:36:05,112 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000049_0_0' from 'tracker_r152.pvt.bridges.psc.edu:localhost/127.0.0.1:15380'
+2016-10-10 23:36:08,191 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_r_000006_0_0' has completed task_201610102332_0001_r_000006_0 successfully.
+2016-10-10 23:36:08,192 INFO org.apache.hadoop.mapred.JobTracker: Adding task 'attempt_201610102332_0001_m_000100_0_0' to tip task_201610102332_0001_m_000100_0, for tracker 'tracker_r362.pvt.bridges.psc.edu:localhost/127.0.0.1:15702'
+2016-10-10 23:36:11,195 INFO org.apache.hadoop.mapred.JobInProgress: Task 'attempt_201610102332_0001_m_000100_0_0' has completed task_201610102332_0001_m_000100_0 successfully.
+2016-10-10 23:36:11,195 INFO org.apache.hadoop.mapred.JobInProgress: Job job_201610102332_0001 has completed successfully.
+2016-10-10 23:36:11,242 INFO org.apache.hadoop.mapred.JobInProgress: FINISH_TIME = 1476156897489
+2016-10-10 23:36:11,253 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000026_1_0' from 'tracker_r362.pvt.bridges.psc.edu:localhost/127.0.0.1:15702'
+2016-10-10 23:36:11,254 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000047_1_0' from 'tracker_r362.pvt.bridges.psc.edu:localhost/127.0.0.1:15702'
+2016-10-10 23:36:11,254 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000004_0_0' from 'tracker_r362.pvt.bridges.psc.edu:localhost/127.0.0.1:15702'
+2016-10-10 23:36:11,254 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000005_0_0' from 'tracker_r362.pvt.bridges.psc.edu:localhost/127.0.0.1:15702'
+2016-10-10 23:36:11,254 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000036_0_0' from 'tracker_r362.pvt.bridges.psc.edu:localhost/127.0.0.1:15702'
+2016-10-10 23:36:11,254 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000100_0_0' from 'tracker_r362.pvt.bridges.psc.edu:localhost/127.0.0.1:15702'
+2016-10-10 23:36:11,254 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000006_0_0' from 'tracker_r362.pvt.bridges.psc.edu:localhost/127.0.0.1:15702'
+2016-10-10 23:36:11,254 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000015_0_1' from 'tracker_r362.pvt.bridges.psc.edu:localhost/127.0.0.1:15702'
+2016-10-10 23:36:11,254 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000024_0_0' from 'tracker_r362.pvt.bridges.psc.edu:localhost/127.0.0.1:15702'
+2016-10-10 23:36:11,259 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000010_0_0' from 'tracker_r157.pvt.bridges.psc.edu:localhost/127.0.0.1:15666'
+2016-10-10 23:36:11,259 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000037_0_0' from 'tracker_r157.pvt.bridges.psc.edu:localhost/127.0.0.1:15666'
+2016-10-10 23:36:11,259 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000006_1_0' from 'tracker_r157.pvt.bridges.psc.edu:localhost/127.0.0.1:15666'
+2016-10-10 23:36:11,259 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000017_1_0' from 'tracker_r157.pvt.bridges.psc.edu:localhost/127.0.0.1:15666'
+2016-10-10 23:36:11,259 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000044_1_0' from 'tracker_r157.pvt.bridges.psc.edu:localhost/127.0.0.1:15666'
+2016-10-10 23:36:11,259 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000003_0_0' from 'tracker_r157.pvt.bridges.psc.edu:localhost/127.0.0.1:15666'
+2016-10-10 23:36:11,259 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000026_0_0' from 'tracker_r157.pvt.bridges.psc.edu:localhost/127.0.0.1:15666'
+2016-10-10 23:36:11,470 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000008_1_0' from 'tracker_r141.pvt.bridges.psc.edu:localhost/127.0.0.1:15658'
+2016-10-10 23:36:11,471 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000020_1_0' from 'tracker_r141.pvt.bridges.psc.edu:localhost/127.0.0.1:15658'
+2016-10-10 23:36:11,471 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000008_0_0' from 'tracker_r141.pvt.bridges.psc.edu:localhost/127.0.0.1:15658'
+2016-10-10 23:36:11,471 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000014_0_0' from 'tracker_r141.pvt.bridges.psc.edu:localhost/127.0.0.1:15658'
+2016-10-10 23:36:11,471 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000044_0_0' from 'tracker_r141.pvt.bridges.psc.edu:localhost/127.0.0.1:15658'
+2016-10-10 23:36:11,471 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000007_0_0' from 'tracker_r141.pvt.bridges.psc.edu:localhost/127.0.0.1:15658'
+2016-10-10 23:36:11,471 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000027_0_0' from 'tracker_r141.pvt.bridges.psc.edu:localhost/127.0.0.1:15658'
+2016-10-10 23:36:11,471 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000040_0_0' from 'tracker_r141.pvt.bridges.psc.edu:localhost/127.0.0.1:15658'
+2016-10-10 23:36:11,471 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000041_0_1' from 'tracker_r141.pvt.bridges.psc.edu:localhost/127.0.0.1:15658'
+2016-10-10 23:36:11,668 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000015_0_0' from 'tracker_r370.pvt.bridges.psc.edu:localhost/127.0.0.1:15829'
+2016-10-10 23:36:11,668 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000014_1_0' from 'tracker_r370.pvt.bridges.psc.edu:localhost/127.0.0.1:15829'
+2016-10-10 23:36:11,668 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000015_1_0' from 'tracker_r370.pvt.bridges.psc.edu:localhost/127.0.0.1:15829'
+2016-10-10 23:36:11,668 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000022_1_0' from 'tracker_r370.pvt.bridges.psc.edu:localhost/127.0.0.1:15829'
+2016-10-10 23:36:11,668 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000043_1_0' from 'tracker_r370.pvt.bridges.psc.edu:localhost/127.0.0.1:15829'
+2016-10-10 23:36:11,668 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000008_0_0' from 'tracker_r370.pvt.bridges.psc.edu:localhost/127.0.0.1:15829'
+2016-10-10 23:36:11,668 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000028_0_0' from 'tracker_r370.pvt.bridges.psc.edu:localhost/127.0.0.1:15829'
+2016-10-10 23:36:11,668 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000040_0_1' from 'tracker_r370.pvt.bridges.psc.edu:localhost/127.0.0.1:15829'
+2016-10-10 23:36:11,791 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000030_1_0' from 'tracker_r156.pvt.bridges.psc.edu:localhost/127.0.0.1:15267'
+2016-10-10 23:36:11,791 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000006_0_0' from 'tracker_r156.pvt.bridges.psc.edu:localhost/127.0.0.1:15267'
+2016-10-10 23:36:11,791 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000007_0_0' from 'tracker_r156.pvt.bridges.psc.edu:localhost/127.0.0.1:15267'
+2016-10-10 23:36:11,791 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000012_0_0' from 'tracker_r156.pvt.bridges.psc.edu:localhost/127.0.0.1:15267'
+2016-10-10 23:36:11,791 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000017_0_0' from 'tracker_r156.pvt.bridges.psc.edu:localhost/127.0.0.1:15267'
+2016-10-10 23:36:11,791 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000101_0_0' from 'tracker_r156.pvt.bridges.psc.edu:localhost/127.0.0.1:15267'
+2016-10-10 23:36:11,791 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000010_0_0' from 'tracker_r156.pvt.bridges.psc.edu:localhost/127.0.0.1:15267'
+2016-10-10 23:36:11,791 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000029_0_0' from 'tracker_r156.pvt.bridges.psc.edu:localhost/127.0.0.1:15267'
+2016-10-10 23:36:11,791 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000042_0_1' from 'tracker_r156.pvt.bridges.psc.edu:localhost/127.0.0.1:15267'
+2016-10-10 23:36:11,810 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000025_0_0' from 'tracker_r154.pvt.bridges.psc.edu:localhost/127.0.0.1:15404'
+2016-10-10 23:36:11,810 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000005_1_0' from 'tracker_r154.pvt.bridges.psc.edu:localhost/127.0.0.1:15404'
+2016-10-10 23:36:11,810 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000037_1_0' from 'tracker_r154.pvt.bridges.psc.edu:localhost/127.0.0.1:15404'
+2016-10-10 23:36:11,810 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000040_1_0' from 'tracker_r154.pvt.bridges.psc.edu:localhost/127.0.0.1:15404'
+2016-10-10 23:36:11,810 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000049_1_0' from 'tracker_r154.pvt.bridges.psc.edu:localhost/127.0.0.1:15404'
+2016-10-10 23:36:11,810 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000009_0_0' from 'tracker_r154.pvt.bridges.psc.edu:localhost/127.0.0.1:15404'
+2016-10-10 23:36:11,810 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000030_0_0' from 'tracker_r154.pvt.bridges.psc.edu:localhost/127.0.0.1:15404'
+2016-10-10 23:36:11,810 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000043_0_1' from 'tracker_r154.pvt.bridges.psc.edu:localhost/127.0.0.1:15404'
+2016-10-10 23:36:11,901 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000029_0_0' from 'tracker_r339.pvt.bridges.psc.edu:localhost/127.0.0.1:15940'
+2016-10-10 23:36:11,901 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000046_0_0' from 'tracker_r339.pvt.bridges.psc.edu:localhost/127.0.0.1:15940'
+2016-10-10 23:36:11,901 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000027_1_0' from 'tracker_r339.pvt.bridges.psc.edu:localhost/127.0.0.1:15940'
+2016-10-10 23:36:11,901 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000033_1_0' from 'tracker_r339.pvt.bridges.psc.edu:localhost/127.0.0.1:15940'
+2016-10-10 23:36:11,901 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000045_1_0' from 'tracker_r339.pvt.bridges.psc.edu:localhost/127.0.0.1:15940'
+2016-10-10 23:36:11,901 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000011_0_0' from 'tracker_r339.pvt.bridges.psc.edu:localhost/127.0.0.1:15940'
+2016-10-10 23:36:11,901 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000031_0_0' from 'tracker_r339.pvt.bridges.psc.edu:localhost/127.0.0.1:15940'
+2016-10-10 23:36:11,901 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000044_0_1' from 'tracker_r339.pvt.bridges.psc.edu:localhost/127.0.0.1:15940'
+2016-10-10 23:36:11,997 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000036_1_0' from 'tracker_r120.pvt.bridges.psc.edu:localhost/127.0.0.1:15478'
+2016-10-10 23:36:11,997 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000016_0_0' from 'tracker_r120.pvt.bridges.psc.edu:localhost/127.0.0.1:15478'
+2016-10-10 23:36:11,997 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000026_0_0' from 'tracker_r120.pvt.bridges.psc.edu:localhost/127.0.0.1:15478'
+2016-10-10 23:36:11,997 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000027_0_0' from 'tracker_r120.pvt.bridges.psc.edu:localhost/127.0.0.1:15478'
+2016-10-10 23:36:11,997 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000033_0_0' from 'tracker_r120.pvt.bridges.psc.edu:localhost/127.0.0.1:15478'
+2016-10-10 23:36:11,997 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000012_0_0' from 'tracker_r120.pvt.bridges.psc.edu:localhost/127.0.0.1:15478'
+2016-10-10 23:36:11,997 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000032_0_0' from 'tracker_r120.pvt.bridges.psc.edu:localhost/127.0.0.1:15478'
+2016-10-10 23:36:11,997 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000041_0_0' from 'tracker_r120.pvt.bridges.psc.edu:localhost/127.0.0.1:15478'
+2016-10-10 23:36:11,997 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000045_0_1' from 'tracker_r120.pvt.bridges.psc.edu:localhost/127.0.0.1:15478'
+2016-10-10 23:36:12,049 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000048_1_0' from 'tracker_r344.pvt.bridges.psc.edu:localhost/127.0.0.1:15831'
+2016-10-10 23:36:12,049 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000020_0_0' from 'tracker_r344.pvt.bridges.psc.edu:localhost/127.0.0.1:15831'
+2016-10-10 23:36:12,049 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000023_0_0' from 'tracker_r344.pvt.bridges.psc.edu:localhost/127.0.0.1:15831'
+2016-10-10 23:36:12,049 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000031_0_0' from 'tracker_r344.pvt.bridges.psc.edu:localhost/127.0.0.1:15831'
+2016-10-10 23:36:12,049 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000018_1_0' from 'tracker_r344.pvt.bridges.psc.edu:localhost/127.0.0.1:15831'
+2016-10-10 23:36:12,049 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000013_0_0' from 'tracker_r344.pvt.bridges.psc.edu:localhost/127.0.0.1:15831'
+2016-10-10 23:36:12,049 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000033_0_0' from 'tracker_r344.pvt.bridges.psc.edu:localhost/127.0.0.1:15831'
+2016-10-10 23:36:12,049 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000046_0_1' from 'tracker_r344.pvt.bridges.psc.edu:localhost/127.0.0.1:15831'
+2016-10-10 23:36:12,104 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000016_1_0' from 'tracker_r163.pvt.bridges.psc.edu:localhost/127.0.0.1:15911'
+2016-10-10 23:36:12,104 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000029_1_0' from 'tracker_r163.pvt.bridges.psc.edu:localhost/127.0.0.1:15911'
+2016-10-10 23:36:12,104 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000041_1_0' from 'tracker_r163.pvt.bridges.psc.edu:localhost/127.0.0.1:15911'
+2016-10-10 23:36:12,104 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000000_0_0' from 'tracker_r163.pvt.bridges.psc.edu:localhost/127.0.0.1:15911'
+2016-10-10 23:36:12,104 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000009_0_0' from 'tracker_r163.pvt.bridges.psc.edu:localhost/127.0.0.1:15911'
+2016-10-10 23:36:12,104 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000014_0_0' from 'tracker_r163.pvt.bridges.psc.edu:localhost/127.0.0.1:15911'
+2016-10-10 23:36:12,104 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000034_0_0' from 'tracker_r163.pvt.bridges.psc.edu:localhost/127.0.0.1:15911'
+2016-10-10 23:36:12,104 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000047_0_1' from 'tracker_r163.pvt.bridges.psc.edu:localhost/127.0.0.1:15911'
+2016-10-10 23:36:12,381 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000018_0_0' from 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:36:12,381 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000002_1_0' from 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:36:12,381 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000003_1_0' from 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:36:12,381 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000024_1_0' from 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:36:12,381 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000028_1_0' from 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:36:12,381 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000017_0_0' from 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:36:12,381 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000035_0_0' from 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:36:12,381 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000042_0_0' from 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:36:12,381 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000048_0_1' from 'tracker_r333.pvt.bridges.psc.edu:localhost/127.0.0.1:15581'
+2016-10-10 23:36:12,766 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000001_0_0' from 'tracker_r366.pvt.bridges.psc.edu:localhost/127.0.0.1:15025'
+2016-10-10 23:36:12,766 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000002_0_0' from 'tracker_r366.pvt.bridges.psc.edu:localhost/127.0.0.1:15025'
+2016-10-10 23:36:12,766 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000035_0_0' from 'tracker_r366.pvt.bridges.psc.edu:localhost/127.0.0.1:15025'
+2016-10-10 23:36:12,766 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000000_1_0' from 'tracker_r366.pvt.bridges.psc.edu:localhost/127.0.0.1:15025'
+2016-10-10 23:36:12,766 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000001_1_0' from 'tracker_r366.pvt.bridges.psc.edu:localhost/127.0.0.1:15025'
+2016-10-10 23:36:12,766 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000018_0_0' from 'tracker_r366.pvt.bridges.psc.edu:localhost/127.0.0.1:15025'
+2016-10-10 23:36:12,766 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000037_0_0' from 'tracker_r366.pvt.bridges.psc.edu:localhost/127.0.0.1:15025'
+2016-10-10 23:36:12,766 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000044_0_0' from 'tracker_r366.pvt.bridges.psc.edu:localhost/127.0.0.1:15025'
+2016-10-10 23:36:12,772 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000040_0_0' from 'tracker_r371.pvt.bridges.psc.edu:localhost/127.0.0.1:15014'
+2016-10-10 23:36:12,772 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000043_0_0' from 'tracker_r371.pvt.bridges.psc.edu:localhost/127.0.0.1:15014'
+2016-10-10 23:36:12,772 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000021_1_0' from 'tracker_r371.pvt.bridges.psc.edu:localhost/127.0.0.1:15014'
+2016-10-10 23:36:12,773 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000038_1_0' from 'tracker_r371.pvt.bridges.psc.edu:localhost/127.0.0.1:15014'
+2016-10-10 23:36:12,773 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000042_1_0' from 'tracker_r371.pvt.bridges.psc.edu:localhost/127.0.0.1:15014'
+2016-10-10 23:36:12,773 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000019_0_0' from 'tracker_r371.pvt.bridges.psc.edu:localhost/127.0.0.1:15014'
+2016-10-10 23:36:12,773 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000036_0_0' from 'tracker_r371.pvt.bridges.psc.edu:localhost/127.0.0.1:15014'
+2016-10-10 23:36:12,773 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000043_0_0' from 'tracker_r371.pvt.bridges.psc.edu:localhost/127.0.0.1:15014'
+2016-10-10 23:36:12,773 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000049_0_1' from 'tracker_r371.pvt.bridges.psc.edu:localhost/127.0.0.1:15014'
+2016-10-10 23:36:13,156 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000028_0_0' from 'tracker_r121.pvt.bridges.psc.edu:localhost/127.0.0.1:15132'
+2016-10-10 23:36:13,156 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000038_0_0' from 'tracker_r121.pvt.bridges.psc.edu:localhost/127.0.0.1:15132'
+2016-10-10 23:36:13,156 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000048_0_0' from 'tracker_r121.pvt.bridges.psc.edu:localhost/127.0.0.1:15132'
+2016-10-10 23:36:13,156 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000004_1_0' from 'tracker_r121.pvt.bridges.psc.edu:localhost/127.0.0.1:15132'
+2016-10-10 23:36:13,156 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000031_1_0' from 'tracker_r121.pvt.bridges.psc.edu:localhost/127.0.0.1:15132'
+2016-10-10 23:36:13,156 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000000_0_0' from 'tracker_r121.pvt.bridges.psc.edu:localhost/127.0.0.1:15132'
+2016-10-10 23:36:13,156 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000020_0_0' from 'tracker_r121.pvt.bridges.psc.edu:localhost/127.0.0.1:15132'
+2016-10-10 23:36:13,156 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000045_0_0' from 'tracker_r121.pvt.bridges.psc.edu:localhost/127.0.0.1:15132'
+2016-10-10 23:36:13,313 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000025_1_0' from 'tracker_r151.pvt.bridges.psc.edu:localhost/127.0.0.1:15962'
+2016-10-10 23:36:13,313 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000011_0_0' from 'tracker_r151.pvt.bridges.psc.edu:localhost/127.0.0.1:15962'
+2016-10-10 23:36:13,313 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000019_0_0' from 'tracker_r151.pvt.bridges.psc.edu:localhost/127.0.0.1:15962'
+2016-10-10 23:36:13,313 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000021_0_0' from 'tracker_r151.pvt.bridges.psc.edu:localhost/127.0.0.1:15962'
+2016-10-10 23:36:13,313 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000030_0_0' from 'tracker_r151.pvt.bridges.psc.edu:localhost/127.0.0.1:15962'
+2016-10-10 23:36:13,313 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000001_0_0' from 'tracker_r151.pvt.bridges.psc.edu:localhost/127.0.0.1:15962'
+2016-10-10 23:36:13,313 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000021_0_0' from 'tracker_r151.pvt.bridges.psc.edu:localhost/127.0.0.1:15962'
+2016-10-10 23:36:13,313 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000046_0_0' from 'tracker_r151.pvt.bridges.psc.edu:localhost/127.0.0.1:15962'
+2016-10-10 23:36:13,333 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000007_1_0' from 'tracker_r127.pvt.bridges.psc.edu:localhost/127.0.0.1:15733'
+2016-10-10 23:36:13,333 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000010_1_0' from 'tracker_r127.pvt.bridges.psc.edu:localhost/127.0.0.1:15733'
+2016-10-10 23:36:13,333 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000011_1_0' from 'tracker_r127.pvt.bridges.psc.edu:localhost/127.0.0.1:15733'
+2016-10-10 23:36:13,333 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000032_1_0' from 'tracker_r127.pvt.bridges.psc.edu:localhost/127.0.0.1:15733'
+2016-10-10 23:36:13,333 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000034_1_0' from 'tracker_r127.pvt.bridges.psc.edu:localhost/127.0.0.1:15733'
+2016-10-10 23:36:13,333 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000002_0_0' from 'tracker_r127.pvt.bridges.psc.edu:localhost/127.0.0.1:15733'
+2016-10-10 23:36:13,333 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000022_0_0' from 'tracker_r127.pvt.bridges.psc.edu:localhost/127.0.0.1:15733'
+2016-10-10 23:36:13,333 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000047_0_0' from 'tracker_r127.pvt.bridges.psc.edu:localhost/127.0.0.1:15733'
+2016-10-10 23:36:13,666 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000009_1_0' from 'tracker_r147.pvt.bridges.psc.edu:localhost/127.0.0.1:15576'
+2016-10-10 23:36:13,666 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000023_1_0' from 'tracker_r147.pvt.bridges.psc.edu:localhost/127.0.0.1:15576'
+2016-10-10 23:36:13,666 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000003_0_0' from 'tracker_r147.pvt.bridges.psc.edu:localhost/127.0.0.1:15576'
+2016-10-10 23:36:13,666 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000013_0_0' from 'tracker_r147.pvt.bridges.psc.edu:localhost/127.0.0.1:15576'
+2016-10-10 23:36:13,666 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000032_0_0' from 'tracker_r147.pvt.bridges.psc.edu:localhost/127.0.0.1:15576'
+2016-10-10 23:36:13,666 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000016_0_0' from 'tracker_r147.pvt.bridges.psc.edu:localhost/127.0.0.1:15576'
+2016-10-10 23:36:13,666 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000038_0_0' from 'tracker_r147.pvt.bridges.psc.edu:localhost/127.0.0.1:15576'
+2016-10-10 23:36:13,666 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000048_0_0' from 'tracker_r147.pvt.bridges.psc.edu:localhost/127.0.0.1:15576'
+2016-10-10 23:36:14,002 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000035_1_0' from 'tracker_r155.pvt.bridges.psc.edu:localhost/127.0.0.1:15869'
+2016-10-10 23:36:14,002 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000039_1_0' from 'tracker_r155.pvt.bridges.psc.edu:localhost/127.0.0.1:15869'
+2016-10-10 23:36:14,002 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000034_0_0' from 'tracker_r155.pvt.bridges.psc.edu:localhost/127.0.0.1:15869'
+2016-10-10 23:36:14,002 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000039_0_0' from 'tracker_r155.pvt.bridges.psc.edu:localhost/127.0.0.1:15869'
+2016-10-10 23:36:14,002 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000047_0_0' from 'tracker_r155.pvt.bridges.psc.edu:localhost/127.0.0.1:15869'
+2016-10-10 23:36:14,002 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000015_0_0' from 'tracker_r155.pvt.bridges.psc.edu:localhost/127.0.0.1:15869'
+2016-10-10 23:36:14,002 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000039_0_0' from 'tracker_r155.pvt.bridges.psc.edu:localhost/127.0.0.1:15869'
+2016-10-10 23:36:14,116 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000041_0_0' from 'tracker_r152.pvt.bridges.psc.edu:localhost/127.0.0.1:15380'
+2016-10-10 23:36:14,116 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000049_0_0' from 'tracker_r152.pvt.bridges.psc.edu:localhost/127.0.0.1:15380'
+2016-10-10 23:36:14,116 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000013_1_0' from 'tracker_r152.pvt.bridges.psc.edu:localhost/127.0.0.1:15380'
+2016-10-10 23:36:14,116 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000019_1_0' from 'tracker_r152.pvt.bridges.psc.edu:localhost/127.0.0.1:15380'
+2016-10-10 23:36:14,116 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000046_1_0' from 'tracker_r152.pvt.bridges.psc.edu:localhost/127.0.0.1:15380'
+2016-10-10 23:36:14,116 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000004_0_0' from 'tracker_r152.pvt.bridges.psc.edu:localhost/127.0.0.1:15380'
+2016-10-10 23:36:14,116 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000023_0_0' from 'tracker_r152.pvt.bridges.psc.edu:localhost/127.0.0.1:15380'
+2016-10-10 23:36:14,116 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000049_0_0' from 'tracker_r152.pvt.bridges.psc.edu:localhost/127.0.0.1:15380'
+2016-10-10 23:36:14,193 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000022_0_0' from 'tracker_r171.pvt.bridges.psc.edu:localhost/127.0.0.1:15262'
+2016-10-10 23:36:14,193 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000024_0_0' from 'tracker_r171.pvt.bridges.psc.edu:localhost/127.0.0.1:15262'
+2016-10-10 23:36:14,193 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000042_0_0' from 'tracker_r171.pvt.bridges.psc.edu:localhost/127.0.0.1:15262'
+2016-10-10 23:36:14,193 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000045_0_0' from 'tracker_r171.pvt.bridges.psc.edu:localhost/127.0.0.1:15262'
+2016-10-10 23:36:14,193 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_m_000012_1_0' from 'tracker_r171.pvt.bridges.psc.edu:localhost/127.0.0.1:15262'
+2016-10-10 23:36:14,193 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000005_0_0' from 'tracker_r171.pvt.bridges.psc.edu:localhost/127.0.0.1:15262'
+2016-10-10 23:36:14,193 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000025_0_0' from 'tracker_r171.pvt.bridges.psc.edu:localhost/127.0.0.1:15262'
+2016-10-10 23:36:14,193 INFO org.apache.hadoop.mapred.JobTracker: Removed completed task 'attempt_201610102332_0001_r_000039_0_1' from 'tracker_r171.pvt.bridges.psc.edu:localhost/127.0.0.1:15262'

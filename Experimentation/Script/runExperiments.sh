@@ -137,20 +137,20 @@ do
 
                                         GRIDMIX_HOME=$HADOOP/src/benchmarks/gridmix2
                                         cd $GRIDMIX_HOME;
-                                        ./rungridmix_2 | tee ${LOG}/${VER}_${BENCH}_${N}${I}_m${FILE}_f${F}_r${RUN}
-                                        TIME=`sed -n '/ExecutionTime:/p' ${LOG}/${VER}_${BENCH}_${N}${I}_m${FILE}_f${F}_r${RUN} | sed -r 's/([^0-9]*([0-9]*)){1}.*/\2/'`
-                                        echo "${TIME}_${VER}_${BENCH}_${N}${I}_m${FILE}_f${F}_r${RUN}" >> ${LOG}/dump
+                                        ./rungridmix_2 | tee ${LOG}/${VER}_${BENCH}_${N}${I}_m${FILE}_f${F}_r${RUN}.log
+                                        TIME=`sed -n '/ExecutionTime:/p' ${LOG}/${VER}_${BENCH}_${N}${I}_m${FILE}_f${F}_r${RUN}.log | sed -r 's/([^0-9]*([0-9]*)){1}.*/\2/'`
+                                        echo "${TIME}_${VER}_${BENCH}_${N}${I}_m${FILE}_f${F}_r${RUN}" >> ${LOG}/consolidation.log
 
                                         STAT_LOG=`find ${HADOOP}/logs/hadoop-${USERNAME}-jobtracker-*.log`
 
                                         for S in ${STATISTICS};
                                         do
                                              S_TIME=`sed -n "/\b${S} = \b/p" "${STAT_LOG}" | sed -r "s/^(.*)(\b${S} = \b)([0-9]*)$/\3/"`
-                                             echo "${S} = ${S_TIME}" >> ${LOG}/dump
+                                             echo "${S} = ${S_TIME}" >> ${LOG}/consolidation.log
                                         done
                                         ls ${STAT_LOG};
-                                        ls ${LOG}/${VER}_${BENCH}_${N}${I}_m${FILE}_f${F}_r${RUN};
-                                        cp ${STAT_LOG} ${LOG}/${VER}_${BENCH}_${N}${I}_m${FILE}_f${F}_r${RUN}_jobtracker;
+                                        ls ${LOG}/${VER}_${BENCH}_${N}${I}_m${FILE}_f${F}_r${RUN}.log;
+                                        cp ${STAT_LOG} ${LOG}/${VER}_${BENCH}_${N}${I}_m${FILE}_f${F}_r${RUN}_jobtracker.log;
      				   
                                    done
                               done

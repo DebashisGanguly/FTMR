@@ -1,0 +1,163 @@
+packageJobJar: [] [/local/hadoop/hadoop-0.20.1-FRFT/contrib/streaming/hadoop-0.20.1-streaming.jar] /tmp/streamjob875183356164330954.jar tmpDir=null
+total 1 jobs
+Jobs in waiting state: 1
+Jobs in ready state: 0
+Jobs in running state: 0
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+Jobs in waiting state: 0
+Jobs in ready state: 0
+Jobs in running state: 1
+Jobs in success state: 0
+Jobs in failed state: 0
+
+
+1 jobs succeeded
+JobId	job_201610102345_0001
+JobName	GridmixStreamingSorter.small
+job_201610102345_0001.GridmixStreamingSorter.small.FileSystemCounters.FILE_BYTES_READ	27238686039
+job_201610102345_0001.GridmixStreamingSorter.small.FileSystemCounters.FILE_BYTES_WRITTEN	81718482981
+job_201610102345_0001.GridmixStreamingSorter.small.FileSystemCounters.HDFS_BYTES_READ	54229925830
+job_201610102345_0001.GridmixStreamingSorter.small.FileSystemCounters.HDFS_BYTES_WRITTEN	27101855515
+job_201610102345_0001.GridmixStreamingSorter.small.mapEndTime	1476158114124
+job_201610102345_0001.GridmixStreamingSorter.small.mapExecutionTimeStats.avg	145391
+job_201610102345_0001.GridmixStreamingSorter.small.mapExecutionTimeStats.max	150086
+job_201610102345_0001.GridmixStreamingSorter.small.mapExecutionTimeStats.medium	145849
+job_201610102345_0001.GridmixStreamingSorter.small.mapExecutionTimeStats.min	141438
+job_201610102345_0001.GridmixStreamingSorter.small.mapExecutionTimeStats.numOfItems	402
+job_201610102345_0001.GridmixStreamingSorter.small.mapStartTime	1476157959879
+job_201610102345_0001.GridmixStreamingSorter.small.numOfMapTasks	402
+job_201610102345_0001.GridmixStreamingSorter.small.numOfReduceTasks	201
+job_201610102345_0001.GridmixStreamingSorter.small.org.apache.hadoop.mapred.JobInProgress$Counter.DATA_LOCAL_MAPS	324
+job_201610102345_0001.GridmixStreamingSorter.small.org.apache.hadoop.mapred.JobInProgress$Counter.RACK_LOCAL_MAPS	78
+job_201610102345_0001.GridmixStreamingSorter.small.org.apache.hadoop.mapred.JobInProgress$Counter.TOTAL_LAUNCHED_MAPS	402
+job_201610102345_0001.GridmixStreamingSorter.small.org.apache.hadoop.mapred.JobInProgress$Counter.TOTAL_LAUNCHED_REDUCES	223
+job_201610102345_0001.GridmixStreamingSorter.small.org.apache.hadoop.mapred.Task$Counter.COMBINE_INPUT_RECORDS	0
+job_201610102345_0001.GridmixStreamingSorter.small.org.apache.hadoop.mapred.Task$Counter.COMBINE_OUTPUT_RECORDS	0
+job_201610102345_0001.GridmixStreamingSorter.small.org.apache.hadoop.mapred.Task$Counter.MAP_INPUT_BYTES	54203711030
+job_201610102345_0001.GridmixStreamingSorter.small.org.apache.hadoop.mapred.Task$Counter.MAP_INPUT_RECORDS	48593890
+job_201610102345_0001.GridmixStreamingSorter.small.org.apache.hadoop.mapred.Task$Counter.MAP_OUTPUT_BYTES	54291911736
+job_201610102345_0001.GridmixStreamingSorter.small.org.apache.hadoop.mapred.Task$Counter.MAP_OUTPUT_RECORDS	48593890
+job_201610102345_0001.GridmixStreamingSorter.small.org.apache.hadoop.mapred.Task$Counter.REDUCE_INPUT_GROUPS	19830222
+job_201610102345_0001.GridmixStreamingSorter.small.org.apache.hadoop.mapred.Task$Counter.REDUCE_INPUT_RECORDS	24296945
+job_201610102345_0001.GridmixStreamingSorter.small.org.apache.hadoop.mapred.Task$Counter.REDUCE_OUTPUT_RECORDS	24296945
+job_201610102345_0001.GridmixStreamingSorter.small.org.apache.hadoop.mapred.Task$Counter.REDUCE_SHUFFLE_BYTES	27091503274
+job_201610102345_0001.GridmixStreamingSorter.small.org.apache.hadoop.mapred.Task$Counter.SPILLED_RECORDS	72890835
+job_201610102345_0001.GridmixStreamingSorter.small.reduceEndTime	1476158129526
+job_201610102345_0001.GridmixStreamingSorter.small.reduceExecutionTimeStats.avg	8728
+job_201610102345_0001.GridmixStreamingSorter.small.reduceExecutionTimeStats.max	11002
+job_201610102345_0001.GridmixStreamingSorter.small.reduceExecutionTimeStats.medium	9233
+job_201610102345_0001.GridmixStreamingSorter.small.reduceExecutionTimeStats.min	6598
+job_201610102345_0001.GridmixStreamingSorter.small.reduceExecutionTimeStats.numOfItems	201
+job_201610102345_0001.GridmixStreamingSorter.small.reduceStartTime	1476157959879
+job_201610102345_0001.jobStatus	successful
+GridMix results:
+Total num of Jobs: 1
+ExecutionTime: 180
